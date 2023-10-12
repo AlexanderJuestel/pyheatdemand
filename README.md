@@ -1,4 +1,4 @@
-# PyHD - PyHeatDemand - Processing Heat Demand Data
+# PyHD - PyHeatDemand - Processing Tool Heat Demand Data
 
 <a name="overview"></a>
 # Overview 
