@@ -22,6 +22,13 @@ environment.yml and use `conda env create -f environment.yml` to ensure that all
 Make sure that you have downloaded the environment file in that case. Alternatively, you can fork and clone the 
 repository or clone it directly from the repository page.
 
+<a name="workflow"></a>
+## General Workflow
+
+<p align="center"><img src="https://raw.githubusercontent.com/AlexanderJuestel/pyhd/docs/images/fig1.png" width="600">
+
+
+
 <a name="ref"></a>
 ## References
 
