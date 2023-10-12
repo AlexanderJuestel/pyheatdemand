@@ -1,0 +1,14 @@
+name: pyhd
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.10
+  - geopandas
+  - rasterio
+  - pip
+  - pip:
+      pyhd
+      matplotlib
+      tqdm
+      geopy
+      osmnx
