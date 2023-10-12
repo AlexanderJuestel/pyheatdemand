@@ -10,22 +10,42 @@ data. The heat demand data can be provided as Raster, gridded polygon Shapefile,
 street network linestring Shapefile, point Shapefiles representing the heat demand of a single building or an 
 administrative area, and lastly postal addresses provided as CSV files.  
 
-The package is a result of the works of Herbst et al., (2021) within the 
-[Interreg NWE project DGE Rollout, NWE 892](http://www.nweurope.eu/DGE-Rollout). The final heat demand map is also 
-accessible within the [DGE Rollout Webviewer](https://data.geus.dk/egdi/?mapname=dgerolloutwebtool#baslay=baseMapGEUS&extent=39620,-1581250,8465360,8046630&layers=dge_heat_final).
+The package is a continuation of the results of Herbst et al., (2021) within the 
+[Interreg NWE project DGE Rollout, NWE 892](http://www.nweurope.eu/DGE-Rollout). E. Herbst and E. Khashfe compiled the 
+original heat demand map as part of their respective master thesis project at RWTH Aachen University. The final heat 
+demand map is also accessible within the [DGE Rollout Webviewer](https://data.geus.dk/egdi/?mapname=dgerolloutwebtool#baslay=baseMapGEUS&extent=39620,-1581250,8465360,8046630&layers=dge_heat_final).
 
 
 <a name="installation"></a>
 ## Installation
 **PyHeatDemand** can be installed via PyPi using `pip install pyhd`. It is recommended to use the provided 
-environment.yml and use `conda env create -f environment.yml` to ensure that all dependencies are installed corredctly. 
+environment.yml and use `conda env create -f environment.yml` to ensure that all dependencies are installed correctly. 
 Make sure that you have downloaded the environment file in that case. Alternatively, you can fork and clone the 
 repository or clone it directly from the repository page.
 
 <a name="workflow"></a>
 ## General Workflow
 
-<p align="center"><img src="https://raw.githubusercontent.com/AlexanderJuestel/pyhd/blob/main/docs/images/fig1.png" width="600">
+The general workflow involves creating a global mask of quadratic polygons (e.g. 10 km x 10 km) covering the entire 
+studied area. This is especially used for larger areas such as states, countries or the Interreg NWE region to subdivide 
+the area into smaller areas. Depending on the size of the input heat demand data, the corresponding underlying global 
+mask polygons are selected and the final (e.g. 100 m x 100 m) resolution polygon grid is created. This grid including 
+the input heat demand data is need to calculate the final heat demand map. 
+![Fig1](docs/images/fig1.png)
+
+The actual heat demand data is divided into four categories or data types:
+* Data Type 1: Heat demand raster data or gridded polygon (vector) data, different scales possible
+* Data Type 2: Heat demand data as vector data; building footprints as polygons, street network as linestrings, 
+single houses as points
+* Data Type 3: Heat demand as points representative for an administrative area
+* Data Type 4: Other forms of Heat Demand data such as addresses with assciated heat demand or heat demand provided
+as usage of other fuels, e.g. gas demand, biomass demand etc.
+
+Processing steps for Data Types 1 + 2
+![Fig1](docs/images/fig2.png)
+
+Processing steps for Data Types 3
+![Fig1](docs/images/fig3.png)
 
 
 
