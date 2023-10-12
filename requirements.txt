@@ -1,0 +1,6 @@
+geopandas
+rasterio
+matplotlib
+tqdm
+geopy
+osmnx
