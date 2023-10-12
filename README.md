@@ -25,7 +25,7 @@ repository or clone it directly from the repository page.
 <a name="workflow"></a>
 ## General Workflow
 
-<p align="center"><img src="https://raw.githubusercontent.com/AlexanderJuestel/pyhd/docs/images/fig1.png" width="600">
+<p align="center"><img src="https://raw.githubusercontent.com/AlexanderJuestel/pyhd/blob/main/docs/images/fig1.png" width="600">
 
 
 
