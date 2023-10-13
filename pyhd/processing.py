@@ -277,7 +277,7 @@ def rasterize_gdf_hd(gdf_hd: gpd.GeoDataFrame,
         raise TypeError('The xsize must be provided as int')
 
     # Checking that the ysize is of type int
-    if not isinstance(xsize, int):
+    if not isinstance(ysize, int):
         raise TypeError('The ysize must be provided as int')
 
     # Creating array with the length of polygons in x and y direction
