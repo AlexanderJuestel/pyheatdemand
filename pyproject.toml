@@ -47,6 +47,8 @@ dependencies = [
 
 [project.optional-dependencies]
 optionals = []
+test = [
+    'geopandas',]
 
 [project.urls]
 Documentation = ''
