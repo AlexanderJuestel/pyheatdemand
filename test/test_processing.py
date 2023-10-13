@@ -67,7 +67,7 @@ def test_create_polygon_mask_error():
 
 
 @pytest.mark.parametrize('path',
-                         ['../data/Data_Type_I_Raster.tif'])
+                         ['data/Data_Type_I_Raster.tif'])
 def test_vectorize_raster(path):
     from pyhd.processing import vectorize_raster
 
@@ -80,7 +80,7 @@ def test_vectorize_raster(path):
 
 
 @pytest.mark.parametrize('path',
-                         ['../data/Data_Type_I_Raster.tif'])
+                         ['data/Data_Type_I_Raster.tif'])
 def test_vectorize_raster_error(path):
     from pyhd.processing import vectorize_raster
 
@@ -123,9 +123,9 @@ def test_create_outline_error():
 
 
 @pytest.mark.parametrize('mask_gdf',
-                         [gpd.read_file('../data/Interreg_NWE_mask_500m_EPSG3034.shp')])
+                         [gpd.read_file('data/Interreg_NWE_mask_500m_EPSG3034.shp')])
 @pytest.mark.parametrize('hd_gdf',
-                         [gpd.read_file('../data/Data_Type_I_Vector_HD_Data.shp')])
+                         [gpd.read_file('data/Data_Type_I_Vector_HD_Data.shp')])
 def test_calculate_hd(mask_gdf, hd_gdf):
     from pyhd.processing import calculate_hd
 
@@ -156,9 +156,9 @@ def test_calculate_hd(mask_gdf, hd_gdf):
 
 
 @pytest.mark.parametrize('mask_gdf',
-                         [gpd.read_file('../data/Interreg_NWE_mask_500m_EPSG3034.shp')])
+                         [gpd.read_file('data/Interreg_NWE_mask_500m_EPSG3034.shp')])
 @pytest.mark.parametrize('hd_gdf',
-                         [gpd.read_file('../data/Data_Type_I_Vector_HD_Data.shp')])
+                         [gpd.read_file('data/Data_Type_I_Vector_HD_Data.shp')])
 def test_calculate_hd_points(mask_gdf, hd_gdf):
     from pyhd.processing import calculate_hd
 
@@ -179,9 +179,9 @@ def test_calculate_hd_points(mask_gdf, hd_gdf):
 
 
 @pytest.mark.parametrize('mask_gdf',
-                         [gpd.read_file('../data/Interreg_NWE_mask_500m_EPSG3034.shp')])
+                         [gpd.read_file('data/Interreg_NWE_mask_500m_EPSG3034.shp')])
 @pytest.mark.parametrize('hd_gdf',
-                         [gpd.read_file('../data/Data_Type_II_Vector_lines.shp')])
+                         [gpd.read_file('data/Data_Type_II_Vector_lines.shp')])
 def test_calculate_hd_lines(mask_gdf, hd_gdf):
     from pyhd.processing import calculate_hd
 
@@ -201,9 +201,9 @@ def test_calculate_hd_lines(mask_gdf, hd_gdf):
 
 
 @pytest.mark.parametrize('mask_gdf',
-                         [gpd.read_file('../data/Interreg_NWE_mask_500m_EPSG3034.shp')])
+                         [gpd.read_file('data/Interreg_NWE_mask_500m_EPSG3034.shp')])
 @pytest.mark.parametrize('hd_gdf',
-                         [gpd.read_file('../data/Data_Type_I_Vector_HD_Data.shp')])
+                         [gpd.read_file('data/Data_Type_I_Vector_HD_Data.shp')])
 def test_calculate_hd_error(mask_gdf, hd_gdf):
     from pyhd.processing import calculate_hd
 
@@ -222,9 +222,9 @@ def test_calculate_hd_error(mask_gdf, hd_gdf):
 
 
 @pytest.mark.parametrize('mask_gdf',
-                         [gpd.read_file('../data/Interreg_NWE_mask_500m_EPSG3034.shp')])
+                         [gpd.read_file('data/Interreg_NWE_mask_500m_EPSG3034.shp')])
 @pytest.mark.parametrize('hd_gdf',
-                         [gpd.read_file('../data/Data_Type_I_Vector_HD_Data.shp')])
+                         [gpd.read_file('data/Data_Type_I_Vector_HD_Data.shp')])
 def test_rasterize_gdf_hd(mask_gdf, hd_gdf):
     from pyhd.processing import rasterize_gdf_hd, calculate_hd
 
@@ -236,23 +236,23 @@ def test_rasterize_gdf_hd(mask_gdf, hd_gdf):
     assert gdf_hd.crs == hd_gdf.crs
 
     try:
-        os.remove('../data/Data_Type_I_Vector.tif')
+        os.remove('data/Data_Type_I_Vector.tif')
     except FileNotFoundError:
         pass
 
     rasterize_gdf_hd(gdf_hd=gdf_hd,
-                     path_out='../data/Data_Type_I_Vector.tif',
+                     path_out='data/Data_Type_I_Vector.tif',
                      crs='EPSG:3034',
                      xsize=100,
                      ysize=100)
 
-    os.remove('../data/Data_Type_I_Vector.tif')
+    os.remove('data/Data_Type_I_Vector.tif')
 
 
 @pytest.mark.parametrize('mask_gdf',
-                         [gpd.read_file('../data/Interreg_NWE_mask_500m_EPSG3034.shp')])
+                         [gpd.read_file('data/Interreg_NWE_mask_500m_EPSG3034.shp')])
 @pytest.mark.parametrize('hd_gdf',
-                         [gpd.read_file('../data/Data_Type_I_Vector_HD_Data.shp')])
+                         [gpd.read_file('data/Data_Type_I_Vector_HD_Data.shp')])
 def test_rasterize_gdf_hd_error(mask_gdf, hd_gdf):
     from pyhd.processing import rasterize_gdf_hd, calculate_hd
 
@@ -265,38 +265,38 @@ def test_rasterize_gdf_hd_error(mask_gdf, hd_gdf):
 
     with pytest.raises(TypeError):
         rasterize_gdf_hd(gdf_hd=[gdf_hd],
-                         path_out='../data/Data_Type_I_Vector.tif',
+                         path_out='data/Data_Type_I_Vector.tif',
                          crs='EPSG:3034',
                          xsize=100,
                          ysize=100)
     with pytest.raises(TypeError):
         rasterize_gdf_hd(gdf_hd=gdf_hd,
-                         path_out=['../data/Data_Type_I_Vector.tif'],
+                         path_out=['data/Data_Type_I_Vector.tif'],
                          crs='EPSG:3034',
                          xsize=100,
                          ysize=100)
     with pytest.raises(TypeError):
         rasterize_gdf_hd(gdf_hd=gdf_hd,
-                         path_out='../data/Data_Type_I_Vector.tif',
+                         path_out='data/Data_Type_I_Vector.tif',
                          crs=['EPSG:3034'],
                          xsize=100,
                          ysize=100)
     with pytest.raises(TypeError):
         rasterize_gdf_hd(gdf_hd=gdf_hd,
-                         path_out='../data/Data_Type_I_Vector.tif',
+                         path_out='data/Data_Type_I_Vector.tif',
                          crs='EPSG:3034',
                          xsize=[100],
                          ysize=100)
     with pytest.raises(TypeError):
         rasterize_gdf_hd(gdf_hd=gdf_hd,
-                         path_out='../data/Data_Type_I_Vector.tif',
+                         path_out='data/Data_Type_I_Vector.tif',
                          crs='EPSG:3034',
                          xsize=100,
                          ysize=[100])
 
 
 @pytest.mark.parametrize('df',
-                         [pd.read_csv('../data/Data_Type_III_Point_Addresses.csv')])
+                         [pd.read_csv('data/Data_Type_III_Point_Addresses.csv')])
 def test_obtain_coordinates_from_addresses(df):
     from pyhd.processing import obtain_coordinates_from_addresses
     df['PLZ'] = df['PLZ'].astype(int)
@@ -315,7 +315,7 @@ def test_obtain_coordinates_from_addresses(df):
 
 
 @pytest.mark.parametrize('df',
-                         [pd.read_csv('../data/Data_Type_III_Point_Addresses.csv')])
+                         [pd.read_csv('data/Data_Type_III_Point_Addresses.csv')])
 def test_obtain_coordinates_from_addresses_error(df):
     from pyhd.processing import obtain_coordinates_from_addresses
     df['PLZ'] = df['PLZ'].astype(int)
