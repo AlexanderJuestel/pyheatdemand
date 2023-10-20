@@ -1,4 +1,4 @@
-# PyHD - PyHeatDemand - Processing Tool Heat Demand Data
+# PyHD - PyHeatDemand - Processing Tool for Heat Demand Data
 
 <a name="overview"></a>
 # Overview 
@@ -47,7 +47,10 @@ Processing steps for Data Types 1 + 2
 Processing steps for Data Types 3
 ![Fig1](docs/images/fig3.png)
 
-
+## Continuous Integration
+A CI is present to test the current code. It can be initiated using `pytest --cov` within the `test` folder. After 
+running the tests, `coverage report -m` can be executed to get an report on the coverage and which lines are not covered
+by the tests.
 
 <a name="ref"></a>
 ## References
