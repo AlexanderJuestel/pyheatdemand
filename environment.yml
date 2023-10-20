@@ -4,7 +4,7 @@ channels:
 dependencies:
   - python>=3.10
   - geopandas
-  - rasterio
+  - rasterstas # also installing rasterio
   - pip
   - pip:
       pyhd

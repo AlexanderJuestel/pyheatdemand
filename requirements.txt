@@ -1,5 +1,5 @@
 geopandas
-rasterio
+rasterstats # also installing rasterio
 matplotlib
 tqdm
 geopy
