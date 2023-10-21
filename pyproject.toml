@@ -59,8 +59,8 @@ test = [
     ]
 
 [project.urls]
-Documentation = ''
-Home = ''
+#Documentation = ''
+#Home = ''
 "Bug Tracker" = 'https://github.com/AlexanderJuestel/pyhd/issues'
 Repository = 'https://github.com/AlexanderJuestel/pyhd'
 "Source Code" = 'https://github.com/AlexanderJuestel/pyhd'
