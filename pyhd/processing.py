@@ -11,6 +11,8 @@ from shapely.geometry import Polygon, shape, box, Point
 from itertools import product
 import rasterio
 from rasterio.features import shapes
+from rasterio.merge import merge
+from rasterstats import zonal_stats
 import os
 import pyproj
 from typing import Union
@@ -24,19 +26,35 @@ def create_polygon_mask(gdf: gpd.GeoDataFrame,
                         crop_gdf: bool = False) -> gpd.GeoDataFrame:
     """Create a mask GeoDataFrame consisting of squares with a defined step_size.
 
-    Parameters:
+    Parameters
     ----------
         gdf : gpd.GeoDataFrame
             GeoDataFrame over which a mask is created.
         step_size : int
-            Size of the rasterized squares in meters.
-        crop_gdf : bool
-            Boolean to either crop the GeoDataFrame to the outline or return it as is.
+            Size of the rasterized squares in meters, e.g. ``step_size=100``.
+        crop_gdf : bool, default: ``False``
+            Boolean to either crop the GeoDataFrame to the outline or return it as is, e.g. ``crop_gdf=False``.
 
-    Returns:
+    Returns
     --------
         gdf_mask : gpd.GeoDataFrame
             GeoDataFrame containing the masked polygons.
+
+    Raises
+    ______
+        TypeError
+            If the wrong input data types are provided.
+
+    Examples
+    ________
+
+        >>> mask = create_polygon_mask(gdf=gdf, step_size=100, crop_gdf=True)
+        >>> mask
+            geometry
+        0   POLYGON ((2651470.877 2135999.353, 2661470.877...
+        1   POLYGON ((2651470.877 2145999.353, 2661470.877...
+        2   POLYGON ((2651470.877 2155999.353, 2661470.877...
+
 
     """
 
@@ -80,16 +98,30 @@ def create_polygon_mask(gdf: gpd.GeoDataFrame,
 def vectorize_raster(path: str) -> gpd.GeoDataFrame:
     """Vectorize Raster.
 
-    Parameters:
+    Parameters
     ___________
         path : str
-            Path to raster file.
+            Path to raster file, e.g. ``path='raster.tif'``
 
-    Returns:
+    Returns
     ________
         gdf : gpd.GeoDataFrame
             GeoDataFrame containing the Polygons of the vectorized raster.
 
+    Raises
+    ______
+        TypeError
+            If the wrong input data types are provided.
+
+    Examples
+    ________
+
+        >>> gdf = vectorize_raster(path='raster.tif')
+        >>> gdf
+            geometry                                            class
+        0   POLYGON ((4038305.864 3086142.360, 4038305.864...   0.292106
+        1   POLYGON ((4038405.844 3086142.360, 4038405.844...   41.289803
+        2   POLYGON ((4038505.823 3086142.360, 4038505.823...   61.701653
     """
 
     # Checking that the path is provided as str
@@ -118,15 +150,29 @@ def vectorize_raster(path: str) -> gpd.GeoDataFrame:
 def create_outline(gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     """Create outline from GeoDataFrame.
 
-    Parameters:
+    Parameters
     ___________
         gdf : gpd.GeoDataFrame
             GeoDataFrame holding the Heat Demand Data.
 
-    Returns:
+    Returns
     ________
         outline : gpd.GeoDataFrame
             Outline GeoDataFrame.
+
+    Raises
+    ______
+        TypeError
+            If the wrong input data types are provided.
+
+    Examples
+    ________
+
+        >>> gdf = processing.create_outline(gdf=gdf)
+        >>> gdf
+            geometry
+        0   POLYGON ((3744005.190 2671457.082, 3744005.190...
+
     """
 
     # Checking that the gdf is of type GeoDataFrame
@@ -142,25 +188,45 @@ def calculate_hd(hd_gdf: gpd.GeoDataFrame,
                  hd_data_column: str = ''):
     """Calculate Heat Demand.
 
-    Parameters:
-    ___________
+    Parameters
+    __________
         hd_gdf : gpd.GeoDataFrame
             Heat demand data as GeoDataFrame.
         mask_gdf : gpd.GeoDataFrame
             Mask for the output Heat Demand Data.
-        hd_data_str : str
-            Name of the column that contains the Heat Demand Data.
+        hd_data_column : str
+            Name of the column that contains the Heat Demand Data, e.g. ``hd_data_column='HD'``.
 
-    Returns:
-    ________
+    Returns
+    _______
 
         gdf_hd : gpd.GeoDataFrame
             Output GeoDataFrame with Heat Demand Data.
+
+    Raises
+    ______
+        TypeError
+            If the wrong input data types are provided.
+
+    Examples
+    ________
+
+        >>> gdf_hd = processing.calculate_hd(hd_gdf=hd_gdf, mask_gdf=mask_gdf, hd_data_column='HD')
+        >>> gdf_hd
+            HD           geometry
+        0   111.620963   POLYGON ((3726770.877 2671399.353, 3726870.877...
+        1   142.831789   POLYGON ((3726770.877 2671499.353, 3726870.877...
+        2   20.780601    POLYGON ((3726770.877 2671699.353, 3726870.877...
+
     """
 
     # Checking that the hd_gdf is of type GeoDataFrame
     if not isinstance(hd_gdf, gpd.GeoDataFrame):
         raise TypeError('The heat demand gdf must be provided as GeoDataFrame')
+
+    # Checking that the HD Data Column is in the HD GeoDataFrame
+    if not hd_data_column in hd_gdf:
+        raise ValueError('%s is not a column in the GeoDataFrame' % hd_data_column)
 
     # Checking that the mask_gdf is of type GeoDataFrame
     if not isinstance(mask_gdf, gpd.GeoDataFrame):
@@ -246,18 +312,29 @@ def rasterize_gdf_hd(gdf_hd: gpd.GeoDataFrame,
                      ysize: int = 100):
     """Rasterize Heat Demand GeoDataFrame and save as raster.
 
-    Parameters:
+    Parameters
     ___________
         gdf_hd : GeoDataFrame
             GeoDataFrame with Heat Demand Data.
         path_out : str
-            Output file path for the heat demand raster.
-        crs : str, pyproj.crs.crs.CRS
-            Output coordinate reference system.
-        xsize : int
-            Cell size of the output raster.
-        ysize : int
-            Cell size of the output raster.
+            Output file path for the heat demand raster, e.g. ``path_out='raster.tif'``.
+        crs : str, pyproj.crs.crs.CRS, default: ``'EPSG:3034'``
+            Output coordinate reference system, e.g. ``crs='EPSG:3034'``.
+        xsize : int, default: ``100``
+            Cell size of the output raster, e.g. ``xsize=100``.
+        ysize : int, default: ``100``
+            Cell size of the output raster, e.g. ``ysize=100``.
+
+    Raises
+    ______
+        TypeError
+            If the wrong input data types are provided.
+
+    Examples
+    ________
+
+        >>> rasterize_gdf_hd(gdf_hd=gdf_hd, path_out='raster.tif', crs='EPSG:3034', xsize=100, ysize=100)
+
     """
 
     # Checking that the gdf_hd if of type GeoDataFrame
@@ -334,25 +411,42 @@ def obtain_coordinates_from_addresses(df: pd.DataFrame,
                                       output_crs: Union[str, pyproj.crs.crs.CRS]) -> gpd.GeoDataFrame:
     """Obtain coordinates from building addresses.
 
-    Parameters:
+    Parameters
     ___________
         df : pd.DataFrame
             DataFrame containing the address data.
         street_column : str
-            Name for the column containing the street name.
+            Name for the column containing the street name, e.g. ``street_column='Street'``.
         house_number_column : str
-            Name for the column containing the house number.
+            Name for the column containing the house number, e.g. ``house_number_column='Number'``.
         postal_code_column : str
-            Name for the column containing the postal code.
+            Name for the column containing the postal code, e.g. ``postal_code_column='Postal Code'``.
         location_column : str
-            Name for the column containing the location name.
+            Name for the column containing the location name, e.g. ``location_column='City'``.
         output_crs : str, pyproj.crs.crs.CRS
-            Output coordinate reference system.
+            Output coordinate reference system, e.g. ``crs='EPSG:3034'``
 
-    Returns:
+    Returns
     ________
-        gdf = gpd.GeoDataFrame
+        gdf : gpd.GeoDataFrame
             Output GeoDataFrame containing the Coordinates of the street addresses.
+
+    Raises
+    ______
+        TypeError
+            If the wrong input data types are provided.
+
+    Examples
+    ________
+
+        >>> gdf_addresses = obtain_coordinates_from_addresses(df=df, street_column='Street',
+        ... house_number_column='Number', postal_code_column='Postal Code', location_column='City',
+        ... output_crs='EPSG:3034')
+        >>> gdf_addresses
+            Unnamed: 0         HeatDemand     Street        Number   Postal Code    City    address                     geometry
+        0   0                  431905.208696  Rathausplatz  1        59174          Kamen   Rathausplatz 1 59174 Kamen  POINT (3843562.447 2758094.896)
+        1   1                  1858.465217    Rathausplatz  1        59174          Kamen   Rathausplatz 1 59174 Kamen  POINT (3843562.447 2758094.896)
+        2   2                  28594.673913   Rathausplatz  4        59174          Kamen   Rathausplatz 4 59174 Kamen  POINT (3843569.733 2758193.784)
 
     """
 
@@ -407,17 +501,30 @@ def get_building_footprint(point: shapely.geometry.Point,
                            dist: int) -> gpd.GeoDataFrame:
     """Get Building footprint from Shapely Point.
 
-    Parameters:
+    Parameters
     ___________
         point : shapely.geometry.Point
-            Point that corresponds to a building. CRS must be 'EPSG:4326'.
+            Point that corresponds to a building. CRS must be 'EPSG:4326', e.g. ``point=Point(6.54, 51.23)``.
         dist : int
-            Distance around the point to get features.
+            Distance around the point to get features, e.g. ``dist=25``.
 
-    Returns:
+    Returns
     ________
         gdf : gpd.GeoDataFrame
             GeoDataFrame containing the building footprint.
+
+    Raises
+    ______
+        TypeError
+            If the wrong input data types are provided.
+
+    Examples
+    ________
+
+        >>> gdf_building = get_building_footprint(point=Point(6.54, 51.23), dist=25)
+        >>> gdf_building
+             element_type  osmid    nodes                                              addr:city  addr:housenumber   addr:postcode  addr:street   amenity
+        0    way           60170820 [747404971, 1128780263, 1128780085, 1128780530...  Kamen      1                  59174          Rathausplatz  townhall
 
     """
 
@@ -445,19 +552,33 @@ def get_building_footprints(points: gpd.GeoDataFrame,
                             perform_sjoin: bool = True):
     """Get Building footprints from GeoDataFrame.
 
-    Parameters:
+    Parameters
     ___________
         points : gpd.GeoDataFrame
             GeoDataFrame containing the Points.
         dist : int
-            Distance around the points to get features.
-        perform_sjoin : bool
-            Boolean to perform a spatial join to filter out additional buildings.
+            Distance around the points to get features, e.g. ``dist=25``.
+        perform_sjoin : bool, default: ``True``
+            Boolean to perform a spatial join to filter out additional buildings, e.g. ``perform_sjoin=True``.
 
-    Returns:
+    Returns
     ________
         gdf : gpd.GeoDataFrame
             GeoDataFrame containing the building footprints.
+
+    Raises
+    ______
+        TypeError
+            If the wrong input data types are provided.
+
+    Examples
+    ________
+
+        >>> gdf_buildings = get_building_footprints(points=gdf_addresses, dist=25)
+        >>> gdf_buildings
+             element_type  osmid    nodes                                              addr:city  addr:housenumber   addr:postcode  addr:street   amenity
+        0    way           60170820 [747404971, 1128780263, 1128780085, 1128780530...  Kamen      1                  59174          Rathausplatz  townhall
+        1    way           60170821 [747405971, 1128781263, 1128784085, 1128786530...  Kamen      5                  59174          Rathausplatz  townhall
 
     """
 
@@ -495,46 +616,174 @@ def get_building_footprints(points: gpd.GeoDataFrame,
 
     return gdf
 
-#def merge_rasters(rasters: list):
-    #"""Merge rasters with different heat demand values.
 
-    #:return:
-    #"""
-#def stitch_raster():
+def merge_rasters(file_names: list,
+                  path_out: str) -> rasterio.io.DatasetReader:
+    """Merge rasters.
 
-# def calculate_final_hd(hd_data: Union[rasterio.io.DatasetReader,
-#                                      gpd.GeoDataFrame,
-#                                      pd.DataFrame,
-#                                      str],
-#                       global_mask_data: gpd.GeoDataFrame,
-#                       output_crs: Union[str,
-#                                         pyproj.crs.crs.CRS],
-#                       output_resolution: int,
-#                       save_as_raster: bool = False) -> gpd.GeoDataFrame:
-#    """Calculate Heat Demand for any kind of provided input data.
-#
-#    Parameters:
-#    ___________
-#        hd_data : Union[rasterio.io.DatasetReader, gpd.GeoDataFrame, pd.DataFrame, str]
-#            Input Heat Demand Data
-#        global_mask_data : gpd.GeoDataFrame
-#            Global mask provided as GeoDataFrame
-#        output_crs : Union[str, pyproj.crs.crs.CRS]
-#            Output Coordinate Reference System
-#        output_resolution : int
-#            Cell size of the output
-#        save_as_raster : bool
-#            Boolean value to store the result as raster
-#    Returns:
-#         gdf_hd : gpd.GeoDataFrame
-#            Resulting Heat Demand Data as GeoDataFrame
-#    """
+    Parameters
+    ___________
+        file_names : list
+            List of file names, e.g. ``file_names=['raster1.tif', 'raster2.tif']``.
+        path_out : str
+            Output path for merged raster, e.g. ``path_out='raster_merged.tif'``.
 
-#    if not isinstance(hd_data, (rasterio.io.DatasetReader,
-#                                      gpd.GeoDataFrame,
-#                                      pd.DataFrame,
-#                                      str)):
-#        raise TypeError('Heat Demand Data must be provided as Raster data through rasterio, Vector data through '
-#                        'GeoPandas, DataFrame through Pandas or as string')
-#
-#    if
+    Returns
+    ________
+        mosaic : rasterio.io.DatasetReader
+            Merged raster.
+
+    Raises
+    ______
+        TypeError
+            If the wrong input data types are provided.
+
+    Examples
+    ________
+
+        >>> merge_rasters(file_names=['raster1.tif', 'raster2.tif'], path_out='raster_merged.tif')
+
+    """
+
+    # Checking that the file names are stored in a list
+    if not isinstance(file_names, list):
+        raise TypeError('The file names must be provided as list')
+
+    # Opening Files
+    files = [rasterio.open(path) for path in file_names]
+
+    # Creating Mosaic
+    mosaic, out_trans = merge(files)
+
+    # Copying Meta Data
+    out_meta = files[0].meta.copy()
+
+    # Updating Meta Data
+    out_meta.update({"driver": "GTiff",
+                     "height": mosaic.shape[1],
+                     "width": mosaic.shape[2],
+                     "transform": out_trans,
+                     "crs": files[0].crs
+                     }
+                    )
+
+    # Removing existing file
+    os.remove(path_out)
+
+    # Saving file
+    with rasterio.open(path_out,
+                       "w",
+                       **out_meta) as dest:
+        dest.write(mosaic)
+
+    # Closing file
+    dest.close()
+
+    print('Raster successfully merged')
+
+
+def calculate_zonal_stats(path_mask: str,
+                          path_raster: str,
+                          crs: Union[str, pyproj.crs.crs.CRS],
+                          calculate_heated_area: bool = True
+                          ) -> gpd.GeoDataFrame:
+    """Calculate zonal statistics and return GeoDataFrame.
+
+    Parameters
+    ___________
+        path_mask : str
+            Path to the mask for the zonal statistics, e.g. ``path_mask='mask.shp'``.
+        path_raster : str
+            Path to the raster for the zonal statistics, e.g. ``path_raster='raster.tif'``.
+        crs : str, pyproj.crs.crs.CRS
+            Coordinate Reference System to pass to the GeoDataFrame, e.g. ``crs='EPSG:3034'``.
+        calculate_heated_area : bool, default: ``True``
+            Boolean value to calculate the heated area, e.g. ``calculate_heated_area=True``.
+
+    Returns
+    ________
+        gdf : gpd.GeoDataFrame
+            Output GeoDataFrame containing the input geometries and the output zonal statistics.
+
+    Raises
+    ______
+        TypeError
+            If the wrong input data types are provided.
+
+    Examples
+    ________
+
+        >>> gdf_stats = calculate_zonal_stats(path_mask='mask.shp', path_raster='raster.tif', crs='EPSG:3034')
+        >>> gdf_stats
+            geometry                                           min          max          std        median      Area (planimetric) Total Heat Demand   Average Heat demand per unit area    Share of Total HD [%]  Share of Total Area [%]   Heatet Area   Share of Heated Area [%]
+        0   POLYGON ((3854043.358 2686588.658, 3854042.704...  3.024974e-06 21699.841028 351.107975 88.114117   7.471599e+09       4.689531e+07        206.001944                           21.437292              23.485618                 2.276161e+09  30.464174
+        1   POLYGON ((3922577.630 2751867.434, 3922590.877...  6.662710e-08 40566.944918 265.277509 46.066755   6.086689e+09       2.959064e+07        134.484551                           13.526791              19.132405                 2.200020e+09  36.144783
+        2   MULTIPOLYGON (((3815551.417 2711668.010, 38155...  3.148388e-06 71665.631370 382.872868 106.194020  6.866552e+09       5.063581e+07        217.321986                           23.147186              21.583762                 2.329694e+09  33.928151
+
+    """
+
+    # Checking that the path to the mask is of type string
+    if not isinstance(path_mask, str):
+        raise TypeError('The path to the mask must be provided as string')
+
+    # Checking that the path to the raster is of type string
+    if not isinstance(path_raster, str):
+        raise TypeError('The path to the raster must be provided as string')
+
+    # Checking that the CRS is of type string or a pyproj CRS object
+    if not isinstance(crs, (str, pyproj.crs.crs.CRS)):
+        raise TypeError('The CRS must be provided as string or pyproj object')
+
+    # Checking that the boolean value for calculate_heated_area is a boolean
+    if not isinstance(calculate_heated_area, bool):
+        raise TypeError('calculate_heatead_area value must be provided as bool')
+
+    # Calculating zonal statistics
+    stats = zonal_stats(vectors=path_mask,
+                        raster=path_raster,
+                        stats="count min mean max median sum std",
+                        geojson_out=True)
+
+    # Converting zonal statistics to GeoDataFrame
+    gdf = gpd.GeoDataFrame.from_features(stats)
+
+    # Calculating total heat demand
+    total_hd = sum(gdf['sum'])
+
+    # Calculating total area
+    total_area = sum(gdf.area)
+
+    # Assigning the area of the Polygons to the DataFrame
+    # NB: GeoPandas calculated the planimetric area; for larger regions, the ellipsoidal area should be calculated
+    gdf['Area (planimetric)'] = gdf.area
+
+    # Calculating the total heat demand per geometry
+    gdf['Total Heat Demand'] = gdf['sum']
+
+    # Calculating the average heat demand per unit area
+    gdf['Average Heat demand per unit area'] = gdf['mean']
+
+    # Calculating share of total heat demand for every geometry
+    gdf['Share of Total HD [%]'] = gdf['sum']*100/total_hd
+
+    # Calculating share of total area for every geometry
+    gdf['Share of Total Area [%]'] = gdf.area*100/total_area
+
+    if calculate_heated_area:
+        # Opening raster to get resolution
+        raster = rasterio.open(path_raster)
+
+        # Calculating for heated area
+        gdf['Heatet Area'] = gdf['count']*raster.res[0]*raster.res[1]
+
+        # Calculating share for heated area
+        gdf['Share of Heated Area [%]'] = gdf['Heatet Area']*100/gdf.area
+
+    # Adding CRS manually as it is not passed from rasterstats,
+    # see also https://github.com/perrygeo/python-rasterstats/issues/295
+    gdf.crs = crs
+
+    # Dropping columns
+    gdf = gdf.drop(['sum', 'mean', 'count'], axis=1)
+
+    return gdf
