@@ -37,6 +37,13 @@ The following list (sorted by name) shows the authors with substantial contribut
 * Eileen Herbst
 * Elias Humm (former Khashfe)
 
+Resources
+~~~~~~~~~
+
+* `PyHD Github Repository <https://github.com/AlexanderJuestel/pyhd>`_
+* `PyHD Issue Tracker <https://github.com/AlexanderJuestel/pyhd/issues>`_
+* `PyHD Discussion Forum <https://github.com/AlexanderJuestel/pyhd/discussions>`_ 
+
 Citing PyHD
 ~~~~~~~~~~~
 If you are using **PyHD** for your scientific research, please remember to cite our work.
