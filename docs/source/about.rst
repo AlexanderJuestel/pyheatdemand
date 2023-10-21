@@ -5,13 +5,13 @@ About
 
 **PyHD** is an open-source Python package for processing and harmonizing multi-scale-multi-type heat demand input data for
 constructing heat demand maps (raster). Knowledge about the heat demand (MWh/area/year) of a respective building,
-district, city, state, country or even on a continental scale is crucial for an adequate heat demand planning or
+district, city, state, country, or even on a continental scale is crucial for adequate heat demand planning or
 planning for providing power plant capacities. Mapping of the heat demand may also identify potential areas for new
-district heating networks or even geothermal power plants for a climate-friendly heat production.
+district heating networks or even geothermal power plants for climate-friendly heat production.
 
 The aim of **PyHD** is to provide processing tools for heat demand input data of various categories on various scales. This
 includes heat demand input data provided as rasters or gridded polygons, heat demand input data associated with administrative areas
-(points or polygons), to building footprints (polygons), to street segments (lines), or to addresses directly provided in
+(points or polygons), with building footprints (polygons), with street segments (lines), or with addresses directly provided in
 MWh but also as gas usage, district heating usage, or sources of heat. It is also possible to calculate the heat demand
 based on a set of cultural data sets (building footprints, height of the buildings, population density, building type, etc.).
 The study area is first divided into a coarse
@@ -61,6 +61,13 @@ If you are using **PyHD** for your scientific research, please remember to cite 
 FAIR Principle
 ~~~~~~~~~~~~~~
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> 789976cec3fc7fbd47fde37bfbb02cf7dbadf46f
+=======
+>>>>>>> 85139dfcf4870d1453b8dc45ca21ba4b19dc11f2
 The developers of PyHD want to make the API, the tutorials and examples meet and adhere to the FAIR data principles (e.g. `FAIR Principles <https://www.nature.com/articles/sdata201618#:~:text=This%20article%20describes%20four%20foundational,contemporary%2C%20formal%20scholarly%20digital%20publishing.>`_).
 
 **Findable**
