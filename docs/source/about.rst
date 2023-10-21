@@ -61,6 +61,10 @@ If you are using **PyHD** for your scientific research, please remember to cite 
 FAIR Principle
 ~~~~~~~~~~~~~~
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 789976cec3fc7fbd47fde37bfbb02cf7dbadf46f
 The developers of PyHD want to make the API, the tutorials and examples meet and adhere to the FAIR data principles (e.g. `FAIR Principles <https://www.nature.com/articles/sdata201618#:~:text=This%20article%20describes%20four%20foundational,contemporary%2C%20formal%20scholarly%20digital%20publishing.>`_).
 
 **Findable**
