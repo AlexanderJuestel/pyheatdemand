@@ -29,16 +29,18 @@ district, city, state, country or even on a continental scale is crucial for an 
 planning for providing power plant capacities. Mapping of the heat demand may also identify potential areas for new
 district heating networks or even geothermal power plants for a climate-friendly heat production. 
 
-The aim of **PyHD** is to provide processing tools for heat demand input data of various categories on various scales. This 
-includes heat demand input data provided as raster or gridded polygon, heat demand input data associated with an administrative area 
-(point or polygon), to a building footprint (polygon), to a street segment (line), or to an address directly provided in 
+The aim of **PyHD** is to provide processing tools for heat demand input data of various categories on various scales. This
+includes heat demand input data provided as rasters or gridded polygons, heat demand input data associated with administrative areas
+(points or polygons), to building footprints (polygons), to street segments (lines), or to addresses directly provided in
 MWh but also as gas usage, district heating usage, or sources of heat. It is also possible to calculate the heat demand
-based on a set of cultural data sets (building footprints, height of the buildings, population density, building type, etc.). 
-The study area is first divided into a coarse 
-mask before heat demands are calculated and harmonized for each cell with the size of the target resolution (e.g. 100 m 
-x 100 m for states). We hereby make use of different spatial operations implemented in the GeoPandas and Shapely 
-packages. Next to processing tools for the heat demand input data, workflows for analyzing the final heat demand map through 
+based on a set of cultural data sets (building footprints, height of the buildings, population density, building type, etc.).
+The study area is first divided into a coarse
+mask before heat demands are calculated and harmonized for each cell with the size of the target resolution (e.g. 100 m
+x 100 m for states). We hereby make use of different spatial operations implemented in the GeoPandas and Shapely
+packages. Next to processing tools for the heat demand input data, workflows for analyzing the final heat demand map through
 the rasterstats package are provided. 
+
+**PyHD** was developed as a result of works carried out within the Interreg NWE project DGE Rollout (Rollout of Deep Geothermal Energy).
 
 
 # Statement of need 
@@ -132,7 +134,7 @@ If no heat demand input data is available, the heat demand can be estimated usin
 Heat demand maps may contain millions of cells. Evaluating each cell would not be feasible. Therefore, **PyHD** utilizes the rasterstats package [@rasterstats] returning statistical values of the heat demand map for further analysis and results reporting.
 
 # PyHeatDemand Outlook
-The development and maintenance of **PyHD** will continue in the future. In addition, we welcome contributions of users in the form of questions how to use **PyHD**, bug reports, and feature requests. 
+The development and maintenance of **PyHD** will continue in the future. This will include adding bottom-up workflows based on building specifics to calculate the heat flow. In addition, we welcome contributions of users in the form of questions how to use **PyHD**, bug reports, and feature requests. 
 
 # PyHeatDemand Resources 
 

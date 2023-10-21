@@ -137,7 +137,7 @@ def test_calculate_hd(mask_gdf, hd_gdf):
     assert gdf_hd.crs == hd_gdf.crs
 
     hd_gdf_multi = gpd.GeoDataFrame(geometry=[MultiPolygon([hd_gdf.geometry.values])],
-                                                  crs='EPSG:3034')
+                                    crs='EPSG:3034')
     hd_gdf_multi['WOHNGEB_WB'] = 100
 
     gdf_hd = calculate_hd(hd_gdf=hd_gdf_multi,
@@ -219,6 +219,11 @@ def test_calculate_hd_error(mask_gdf, hd_gdf):
         gdf_hd = calculate_hd(hd_gdf=hd_gdf,
                               mask_gdf=mask_gdf,
                               hd_data_column=['WOHNGEB_WB'])
+
+    with pytest.raises(ValueError):
+        gdf_hd = calculate_hd(hd_gdf=hd_gdf,
+                              mask_gdf=mask_gdf,
+                              hd_data_column='WOHNGEB_W')
 
 
 @pytest.mark.parametrize('mask_gdf',
@@ -396,14 +401,14 @@ def test_get_building_footprints():
     from pyhd.processing import get_building_footprints
 
     points = gpd.GeoDataFrame(geometry=[Point(6.07868, 50.77918)],
-                           crs='EPSG:4326')
+                              crs='EPSG:4326')
 
     gdf = get_building_footprints(points=points,
                                   dist=250,
                                   perform_sjoin=True)
 
     assert isinstance(gdf, gpd.GeoDataFrame)
-    assert len(gdf)==1
+    assert len(gdf) == 1
 
     gdf = get_building_footprints(points=points,
                                   dist=250,
@@ -439,3 +444,71 @@ def test_get_building_footprints_error():
         gdf = get_building_footprints(points=points,
                                       dist=250,
                                       perform_sjoin=[True])
+
+
+def test_merge_rasters():
+    from pyhd.processing import merge_rasters
+
+    raster_list = os.listdir('../data/rasters/')
+    raster_list = [os.path.join(os.path.abspath('../data/rasters/'), path) for path in raster_list]
+
+    merge_rasters(raster_list, '../data/Raster_merged.tif')
+
+
+def test_merge_rasters_error():
+    from pyhd.processing import merge_rasters
+
+    raster_list = os.listdir('../data/rasters/')
+    raster_list = [os.path.join(os.path.abspath('../data/rasters/'), path) for path in raster_list]
+
+    with pytest.raises(TypeError):
+        merge_rasters(raster_list[0], '../data/Raster_merged.tif')
+
+    with pytest.raises(TypeError):
+        merge_rasters(raster_list, ['../data/Raster_merged.tif'])
+
+
+def test_calculate_zonal_stats():
+    from pyhd.processing import calculate_zonal_stats
+
+    gdf_stats = calculate_zonal_stats("data/nw_dvg_krs.shp",
+                                      "data/HD_RBZ_Köln.tif",
+                                      'EPSG:3034',
+                                      calculate_heated_area=True)
+
+    assert isinstance(gdf_stats, gpd.GeoDataFrame)
+
+    gdf_stats = calculate_zonal_stats("data/nw_dvg_krs.shp",
+                                      "data/HD_RBZ_Köln.tif",
+                                      'EPSG:3034',
+                                      calculate_heated_area=False)
+
+    assert isinstance(gdf_stats, gpd.GeoDataFrame)
+
+
+def test_calculate_zonal_stats_error():
+    from pyhd.processing import calculate_zonal_stats
+
+    with pytest.raises(TypeError):
+        calculate_zonal_stats(["data/nw_dvg_krs.shp"],
+                              "data/HD_RBZ_Köln.tif",
+                              'EPSG:3034',
+                              calculate_heated_area=False)
+
+    with pytest.raises(TypeError):
+        calculate_zonal_stats("data/nw_dvg_krs.shp",
+                              ["data/HD_RBZ_Köln.tif"],
+                              'EPSG:3034',
+                              calculate_heated_area=False)
+
+    with pytest.raises(TypeError):
+        calculate_zonal_stats("data/nw_dvg_krs.shp",
+                              "data/HD_RBZ_Köln.tif",
+                              ['EPSG:3034'],
+                              calculate_heated_area=False)
+
+    with pytest.raises(TypeError):
+        calculate_zonal_stats("data/nw_dvg_krs.shp",
+                              "data/HD_RBZ_Köln.tif",
+                              'EPSG:3034',
+                              calculate_heated_area='False')
