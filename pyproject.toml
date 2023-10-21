@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 packages = [ "pyhd" ]
 
 [project]
-name = "GemGIS"
+name = "PyHD"
 
 maintainers = [
     {name = "Alexander Jüstel", email = "alexander.juestel@rwth-aachen.de"},
@@ -34,7 +34,7 @@ classifiers = [
     'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
     'Operating System :: OS Independent',
 ]
-# These dependencies are needed to import GemGIS successfully
+# These dependencies are needed to import PyHD successfully
 # These dependencies will automatically install other packages like numpy, pandas or matplotlib
 dependencies = [
     'geopandas',
@@ -72,6 +72,6 @@ version_scheme = "post-release"
 # (so there isn't a + in the version)
 local_scheme = "no-local-version"
 # This _version_generated.py file is a file that you'll never want to add to version control - so you'll want to add it to your gitignore file. but when you build your package, setuptools_Scm creates it. and it contains version information that you will pull into your package below.
-write_to = "gemgis/_version_generated.py"
+write_to = "pyhd/_version_generated.py"
 write_to_template = '__version__ = "v{version}"'
 

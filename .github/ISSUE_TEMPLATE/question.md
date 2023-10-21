@@ -1,6 +1,6 @@
 ---
 name: Question
-about: Ask a question about GemGIS
+about: Ask a question about PyHD
 title: ''
 labels: ''
 assignees: ''
