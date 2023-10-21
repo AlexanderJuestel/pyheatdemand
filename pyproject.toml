@@ -47,6 +47,14 @@ dependencies = [
 
 [project.optional-dependencies]
 optionals = []
+
+build = [
+    'setuptools',
+    'wheel',
+    'twine',
+    'build'
+      ]
+      
 test = [
     'pytest',
     'pytest-cov',
