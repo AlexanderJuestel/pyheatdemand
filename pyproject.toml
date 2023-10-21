@@ -38,7 +38,7 @@ classifiers = [
 # These dependencies will automatically install other packages like numpy, pandas or matplotlib
 dependencies = [
     'geopandas',
-    'rasterio',
+    'rasterstats',
     'matplotlib',
     'tqdm',
     'geopy',
@@ -48,7 +48,15 @@ dependencies = [
 [project.optional-dependencies]
 optionals = []
 test = [
-    'geopandas',]
+    'pytest',
+    'pytest-cov',
+    'geopandas',
+    'rasterstats',
+    'matplotlib',
+    'tqdm',
+    'geopy',
+    'osmnx',
+    ]
 
 [project.urls]
 Documentation = ''

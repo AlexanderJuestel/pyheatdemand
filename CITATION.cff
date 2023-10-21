@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use PyHd, please cite it as below."
+authors:
+  - family-names: "Jüstel"
+    given-names: "Alexander"
+    orcid: https://orcid.org/0000-0003-0980-7479
+  - family-names: "Strozyk"
+    given-names: "Frank"
+    orcid: ames: "Alexander"
+    orcid: https://orcid.org/0000-0002-3067-831X
+title: "PyHD - PyHeatDemand - Processing Tool for Heat Demand Data"
+version: 0.0.1
+doi: https://doi.org/10.21105/joss.xxxx
+date-released: 2023-10-31
+url: "https://github.com/AlexanderJuestel/pyhd/"

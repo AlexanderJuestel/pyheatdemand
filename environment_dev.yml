@@ -1,0 +1,15 @@
+name: pyhd
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.10
+  - geopandas
+  - rasterstas # also installing rasterio
+  - pip
+  - pip:
+    - pyhd
+    - matplotlib
+    - tqdm
+    - geopy
+    - osmnx
+    - sphinx_book_theme==0.3.3
