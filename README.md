@@ -18,10 +18,11 @@ demand map is also accessible within the [DGE Rollout Webviewer](https://data.ge
 
 <a name="installation"></a>
 ## Installation
-**PyHeatDemand** can be installed via PyPi using `pip install pyhd`. It is recommended to use the provided 
+**PyHD** can be installed via PyPi using `pip install pyhd` or via Anaconda using `conda install -c conda-forge pyhd`. 
+It is recommended to use the provided 
 environment.yml and use `conda env create -f environment.yml` to ensure that all dependencies are installed correctly. 
 Make sure that you have downloaded the environment file in that case. Alternatively, you can fork and clone the 
-repository or clone it directly from the repository page.
+repository or clone it directly from the repository page. An additional `requirements.txt` provides a list of all necessary dependencies.
 
 <a name="workflow"></a>
 ## General Workflow
@@ -33,12 +34,12 @@ mask polygons are selected and the final (e.g. 100 m x 100 m) resolution polygon
 the input heat demand data is need to calculate the final heat demand map. 
 ![Fig1](docs/images/fig1.png)
 
-The actual heat demand data is divided into four categories or data types:
-* Data Type 1: Heat demand raster data or gridded polygon (vector) data, different scales possible
-* Data Type 2: Heat demand data as vector data; building footprints as polygons, street network as linestrings, 
+The actual heat demand data is divided into four categories or data categories:
+* Data Category 1: Heat demand raster data or gridded polygon (vector) data, different scales possible
+* Data Category 2: Heat demand data as vector data; building footprints as polygons, street network as linestrings, 
 single houses as points
-* Data Type 3: Heat demand as points representative for an administrative area
-* Data Type 4: Other forms of Heat Demand data such as addresses with assciated heat demand or heat demand provided
+* Data Category 3: Heat demand as points representative for an administrative area
+* Data Category 4: Other forms of Heat Demand data such as addresses with assciated heat demand or heat demand provided
 as usage of other fuels, e.g. gas demand, biomass demand etc.
 
 Processing steps for Data Types 1 + 2

@@ -29,7 +29,7 @@ district, city, state, country or even on a continental scale is crucial for an 
 planning for providing power plant capacities. Mapping of the heat demand may also identify potential areas for new
 district heating networks or even geothermal power plants for a climate-friendly heat production. 
 
-The aim of **PyHD** is to provide processing tools for heat demand input data of various types on various scales. This 
+The aim of **PyHD** is to provide processing tools for heat demand input data of various categories on various scales. This 
 includes heat demand input data provided as raster or gridded polygon, heat demand input data associated with an administrative area 
 (point or polygon), to a building footprint (polygon), to a street segment (line), or to an address directly provided in 
 MWh but also as gas usage, district heating usage, or sources of heat. It is also possible to calculate the heat demand
@@ -64,7 +64,7 @@ administrative area (point or polygon), with a building footprint (polygon), wit
 address directly provided in MWh but also as gas usage, district heating usage, or other sources of heat. The resulting 
 heat demand map data can be analyzed using zonal statistics and can be compared to other administrative areas when working
 on regional or national scales. If heat demand maps already exist for a specific region, they can be analyzed using tools within **PyHD**.
-With **PyHD**, it has never been easier to create and analyze heat demand maps. 
+With **PyHD**, it has never been easier to create and analyze heat demand maps.  
 
 
 # PyHeatDemand Functionality 
@@ -75,23 +75,28 @@ Heat demand maps can be calculated using either a top-down approach or a bottom-
 aggregated heat demand input data for a certain area will be distributed according to higher resolution data sets (e.g. population density, landuse, etc.).
 In contrast to that, the bottom-up approach allows aggregating heat demand of higher resolution data sets to a lower resolution (e.g. from building level to a 100 m x 100 m raster).
 
-![Input and output data for top-down and bottom-up approaches. Note, that the resulting spatial resolution can be the same for both approaches, but the spatial value of information is usually lower using a top-down approach. \label{fig1}](../docs/images/fig0.png)
+![Input and output data for top-down and bottom-up approaches. Note, that the resulting spatial resolution can be the same for both approaches, but the spatial value of information is usually lower using a top-down approach. \label{fig0}](../docs/images/fig0.png)
 
 **PyHD** processes geospatial data such as vector data (points, lines, polygons), raster data or address data. Therefore, 
 we make use of the functionality implemented in well-known geospatial packages such as GeoPandas [@geopandas], Rasterio [@rasterio], GeoPy [@geopy], or OSMnx [@osmnx]
 and their underlying dependencies such as Shapely [@shapely], Pandas [@pandas], or NumPy [@numpy]. 
 
-The creation of a heat demand map follows a general workflow (Fig. \ref{fig1}) followed a data-type-specific workflow for five defined 
+The creation of a heat demand map follows a general workflow (Fig. \ref{fig1}) followed a data-category-specific workflow for five defined 
 input data categories (Fig. \ref{fig2} \& \ref{fig3}). The different input data categories are listed in the table below. 
 
 | Data category |       Description       |
 |---------------------------------------------------------------------------------------------------------------------|--------------------------|
 | 1 | HD data provided as $100\ast100\:m^2$ raster or polygon grid with the same or in a different coordinate reference system                   |
-| 2 | HD data provided as buildings footprints or street segments |                         |
+|---------------------------------------------------------------------------------------------------------------------|--------------------------|
+| 2 | HD data provided as buildings footprints or street segments |                         
+|---------------------------------------------------------------------------------------------------------------------|--------------------------|
 | 3 | HD data provided as a point or polygon layer, which contains the sum of the HD for regions of official administrative units |                                                                                   |  |
+|---------------------------------------------------------------------------------------------------------------------|--------------------------|
 | 4 | HD data provided in other data formats such as HD data associated with addresses |
+|---------------------------------------------------------------------------------------------------------------------|--------------------------|
 | 5 | No HD data available for the region |
-                                                     
+|---------------------------------------------------------------------------------------------------------------------|--------------------------|
+                                               
 Depending on the scale of the heat demand map (regional or national), a global polygon mask is created with a cell size of 
 10 km by 10 km, for instance, and the target coordinate reference system. This mask is used to divide the study area into smaller chunks for a more reliable processing 
 as only data within each mask will be processed separately. If necessary, the global mask will be cropped to the extent of the
@@ -102,7 +107,7 @@ in the calculation of the heat demand or the resulting rasters can be added to a
 
 ![The main steps from creating a coarse matrix to a fine matrix to calculating the final heat demand data. \label{fig1}](../docs/images/fig1.png)
 
-The data processing for data categories 1 and 2 are very similar (Fig. \ref{fig2}) and correspond to a bottom-up approach. For the case of a raster for type 1, the raster is converted into gridded polygons. 
+The data processing for data categories 1 and 2 are very similar (Fig. \ref{fig2}) and correspond to a bottom-up approach. For the case of a raster for category 1, the raster is converted into gridded polygons. 
 Gridded polygons and building footprints are treated equally. The polygons containing the heat demand data are, if necessary, 
 reprojected to the coordinate reference system and are overlain with the local mask (e.g. 100 m x 100 m cells). 
 This cuts each heat demand polygon with the respective mask polygon. The heat demand of each subpolygon is proportional to its area compared to the area of the original polygon. 
@@ -113,14 +118,14 @@ The heat demand for all subpolygons in each cell is aggregated to result in the 
 The data processing for data category 3 corresponds to a top-down approach. The heat demand represented as points for an administrative unit will be distributed across the area using higher resolution data sets. 
 In the case illustrated below, the distribution of Hotmaps data [@hotmaps] is used to distribute the available heat demands for the given administrative areas.
 For each administrative area, the provided total heat demand will distributed according to the share of each Hotmap cell compared to the total Hotmaps heat demand of the respective area.
-The provided heat demand is now distributed across the cells and will treated from now on as type 1 or 2 input data to calculate the final heat demand map.  
+The provided heat demand is now distributed across the cells and will treated from now on as category 1 or 2 input data to calculate the final heat demand map.  
 
 ![The main steps of the methodology to process the provided HD polygons for the heat demand data category 3. \label{fig3}](../docs/images/fig3.png)
 
 The data processing for data category 4 corresponds to a bottom-up approach. Here, the addresses will be converted using the GeoPy geolocator to coordinates. 
 Based on these, the building footprints are extracted from OpenStreet Maps using OSMnx. From there on, the data will be treated as data category 2.
 
-If no heat demand input data is available, the heat demand can be estimated using cultural data such as population density, landuse, and building specific heat usages [@novosel, @meha].
+If no heat demand input data is available, the heat demand can be estimated using cultural data such as population density, landuse, and building specific heat usages [@novosel; @meha].
 
 ## Processing Heat Demand Map Data
 
@@ -133,10 +138,12 @@ The development and maintenance of **PyHD** will continue in the future. In addi
 
 The following resources are available for **PyHD**
 
-* PyHD Github Repository: https://github.com/AlexanderJuestel/pyhd
+* [PyHD Github Repository](https://github.com/AlexanderJuestel/pyhd)
+* [DGE Rollout Webviewer](https://data.geus.dk/egdi/?mapname=dgerolloutwebtool#baslay=baseMapGEUS&extent=39620,-1581250,8465360,8046630&layers=dge_heat_final) 
 
 # Acknowledgements
 
 We would like to thank the open-source community for providing and constantly developing great tools that can be combined and utilized for specific tasks such as working with heat demand data. 
+The original codebase was developed within the framework of the Interreg NWE project DGE Rollout (Rollout for Deep Geothermal Energy) by Eileen Herbst and Elias Khashfe [@herbst]. It was rewritten and optimized for **PyHD**.
 
 # References
