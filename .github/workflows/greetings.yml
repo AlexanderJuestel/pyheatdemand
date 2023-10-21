@@ -17,10 +17,10 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           issue-message: 'Hello and welcome! Thanks for posting your first issue in the PyHD project! Someone from our
           developers will get back to you. If your question is support related, we may transfer it to the
-          [Discussions](https://github.com/cgre-aachen/gemgis/discussions).'
+          [Discussions](https://github.com/AlexanderJuestel/pyhd/discussions).'
           pr-message: >
-            🚀 Thanks for opening your first pull request in GemGIS! 🚀
-            Please make sure you read the [Contributing Guide](https://github.com/cgre-aachen/gemgis/blob/main/CONTRIBUTING.rst) and follow the [Code of Conduct](https://github.com/cgre-aachen/gemgis/blob/main/CODE_OF_CONDUCT.md).
+            🚀 Thanks for opening your first pull request in PyHD! 🚀
+            Please make sure you read the [Contributing Guide](https://github.com/AlexanderJuestel/pyhd/blob/main/CONTRIBUTING.rst) and follow the [Code of Conduct](https://github.com/AlexanderJuestel/pyhd/blob/main/CODE_OF_CONDUCT.md).
             A few things to keep in mind:
               - Remember to run the tests locally to make debugging issues easier.
               - If you need help writing tests, take a look at the existing ones for inspiration. If you do not know where to start, let us know and we will walk you through it.

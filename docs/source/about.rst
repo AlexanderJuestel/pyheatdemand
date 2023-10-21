@@ -61,10 +61,11 @@ If you are using **PyHD** for your scientific research, please remember to cite 
 FAIR Principle
 ~~~~~~~~~~~~~~
 
-The developers of GemGIS want to make the API, the tutorials and examples meet and adhere to the FAIR data principles (e.g. `FAIR Principles <https://www.nature.com/articles/sdata201618#:~:text=This%20article%20describes%20four%20foundational,contemporary%2C%20formal%20scholarly%20digital%20publishing.>`_).
+
+The developers of PyHD want to make the API, the tutorials and examples meet and adhere to the FAIR data principles (e.g. `FAIR Principles <https://www.nature.com/articles/sdata201618#:~:text=This%20article%20describes%20four%20foundational,contemporary%2C%20formal%20scholarly%20digital%20publishing.>`_).
 
 **Findable**
-With each release, the data stored in the PyHD repositories are uploaded to Zenodo where a persistent identifier is provided for each release. The data for the latest release of GemGIS can be found at `https://zenodo.org/record/ <https://zenodo.org/record/>`_. It is referred to Zenodo as the Github repositories do not strictly fulfill the criteria of having a globally unique and persistent identifier assigned to the (meta)data. However, all code and data can currently be found at `https://github.com/AlexanderJuestel/pyhd <https://github.com/AlexanderJuestel/pyhd>`_.
+With each release, the data stored in the PyHD repositories are uploaded to Zenodo where a persistent identifier is provided for each release. The data for the latest release of PyHD can be found at `https://zenodo.org/record/ <https://zenodo.org/record/>`_. It is referred to Zenodo as the Github repositories do not strictly fulfill the criteria of having a globally unique and persistent identifier assigned to the (meta)data. However, all code and data can currently be found at `https://github.com/AlexanderJuestel/pyhd <https://github.com/AlexanderJuestel/pyhd>`_.
 
 **Accessible**
 The files stored in the respective Zenodo repositories can be downloaded without registration as ZIP file. In addition, the data can be downloaded from the aforementioned Github repositories without registration as ZIP files or via `git <https://git-scm.com/>`_. The functionality of PyHD can be easily accessed through installing the software using `conda-forge <https://anaconda.org/conda-forge/pyhd/files>`_ or `pip <https://pypi.org/project/pyhd/>`_. Please see also the `Installation Instructions <installation>` provided.

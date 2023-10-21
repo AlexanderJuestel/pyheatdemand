@@ -1,4 +1,4 @@
-# This workflow automatically creates a JOSS Paper Draft of the GemGIS Paper
+# This workflow automatically creates a JOSS Paper Draft of the PyHD Paper
 
 name: joss_draft
 
