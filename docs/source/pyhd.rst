@@ -1,3 +1,5 @@
+.. _pyhd_ref:
+
 PyHD API Reference
 ==================
 
