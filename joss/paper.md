@@ -29,15 +29,9 @@ district, city, state, country or even on a continental scale is crucial for an 
 planning for providing power plant capacities. Mapping of the heat demand may also identify potential areas for new
 district heating networks or even geothermal power plants for a climate-friendly heat production. 
 
-<<<<<<< HEAD
 The aim of **PyHD** is to provide processing tools for heat demand input data of various categories on various scales. This
 includes heat demand input data provided as rasters or gridded polygons, heat demand input data associated with administrative areas
 (points or polygons), to building footprints (polygons), to street segments (lines), or to addresses directly provided in
-=======
-The aim of **PyHD** is to provide processing tools for heat demand input data of various categories on various scales. This 
-includes heat demand input data provided as raster or gridded polygon, heat demand input data associated with an administrative area 
-(point or polygon), to a building footprint (polygon), to a street segment (line), or to an address directly provided in 
->>>>>>> 789976cec3fc7fbd47fde37bfbb02cf7dbadf46f
 MWh but also as gas usage, district heating usage, or sources of heat. It is also possible to calculate the heat demand
 based on a set of cultural data sets (building footprints, height of the buildings, population density, building type, etc.).
 The study area is first divided into a coarse
