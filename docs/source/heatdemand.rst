@@ -34,19 +34,20 @@ Several Jupyter Notebooks are available that demonstrate the functionality of **
 
 .. toctree::
    :maxdepth: 4
+   :caption: Examples
 
-   ../../notebooks/01_Interreg_NWE_Mask_10km
-   ../../notebooks/02_Processing_Data_Type_I_Raster
-   ../../notebooks/03_Processing_Data_Type_I_Vector
-   ../../notebooks/04_Processing_Data_Type_II_Vector_Polygons
-   ../../notebooks/05_Processing_Data_Type_II_Vector_Lines
-   ../../notebooks/06_Processing_Data_Type_III_Point_Coordinates
-   ../../notebooks/07_Processing_Data_Type_III_Point_Data_Addresses
-   ../../notebooks/08_Processing_Data_Type_IV_Vector_Polygons
-   ../../notebooks/09_Processing_Data_Type_III_Point_Coordinates
-   ../../notebooks/10_Processing_Data_Type_V_No_Heat_Demand_Values
-   ../../notebooks/11_Processing_Data_Merging_and_Stitching_Resulting_Rasters
-   ../../notebooks/12_Processing_Results
+   notebooks/01_Interreg_NWE_Mask_10km
+   notebooks/02_Processing_Data_Type_I_Raster
+   notebooks/03_Processing_Data_Type_I_Vector
+   notebooks/04_Processing_Data_Type_II_Vector_Polygons
+   notebooks/05_Processing_Data_Type_II_Vector_Lines
+   notebooks/06_Processing_Data_Type_III_Point_Coordinates
+   notebooks/07_Processing_Data_Type_III_Point_Data_Addresses
+   notebooks/08_Processing_Data_Type_IV_Vector_Polygons
+   notebooks/09_Processing_Data_Type_III_Point_Coordinates
+   notebooks/10_Processing_Data_Type_V_No_Heat_Demand_Values
+   notebooks/11_Processing_Data_Merging_and_Stitching_Resulting_Rasters
+   notebooks/12_Processing_Results
 
 Processing Heat Demand Input Data
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
