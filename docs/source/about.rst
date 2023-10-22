@@ -21,7 +21,7 @@ packages. The final heat demand map will be created utilizing the `Rasterio <htt
 the `Rasterstats <https://pythonhosted.org/rasterstats/>`_ package are provided.
 
 **PyHD** was developed since 2023 as a result of works carried out within the `Interreg NWE project DGE Rollout (Rollout of Deep Geothermal Energy) <https://vb.nweurope.eu/projects/project-search/dge-rollout-roll-out-of-deep-geothermal-energy-in-nwe/>`_.
-The original codebase was developed in 2021 as part of two master thesis projects at `RWTH Aachen University, Germany <https://www.rwth-aachen.de/go/id/a/>`_, and have been presented at a conference in 2021 (Herbst et al., 2021). The code base has been optimized and extended for this open-source package.
+The original codebase was developed in 2021 as part of two master thesis projects at `RWTH Aachen University, Germany <https://www.rwth-aachen.de/go/id/a/>`_, and have been presented at a conference in 2021 (`Herbst et al., 2021 <http://dx.doi.org/10.48380/dggv-j2wj-nk88>`_). The code base has been optimized and extended for this open-source package.
 The resulting heat demand for North-West Europe has been published on the websites of the `DGE Rollout Webviewer <https://data.geus.dk/egdi/?mapname=dgerolloutwebtool#baslay=baseMapGEUS&extent=39620,-1581250,8465360,8046630&layers=dge_heat_final>`_.
 
 .. image:: ../images/fig2.png
@@ -260,7 +260,8 @@ apply, that proxy's public statement of acceptance of any version is
 permanent authorization for you to choose that version for the
 Library.
 
-References:
+References
+~~~~~~~~~~
 
 Herbst, E., Khashfe, E., Jüstel, A., Strozyk, F. & Kukla, P., 2021. A Heat Demand Map of North-West Europe – its impact
 on supply areas and identification of potential production areas for deep geothermal energy. GeoKarlsruhe 2021,
