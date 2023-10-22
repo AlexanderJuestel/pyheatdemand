@@ -51,7 +51,7 @@ exclude_patterns = []
 #
 html_theme = 'sphinx_book_theme'
 html_title = "PyHD - PyHeatDemand - Processing Tool for Heat Demand Data"
-html_logo = "images/Modern1.png"
+html_logo = "images/PyHD_Logo_long.png"
 html_favicon = "images/favicon.ico"
 
 # Add any paths that contain custom static files (such as style sheets) here,
