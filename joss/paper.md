@@ -119,7 +119,7 @@ The heat demand for all subpolygons in each cell is aggregated to result in the 
 
 The data processing for data category 3 corresponds to a top-down approach. The heat demand represented as points for an administrative unit will be distributed across the area using higher-resolution data sets. 
 In the case illustrated below, the distribution of Hotmaps data [@hotmaps] is used to distribute the available heat demands for the given administrative areas.
-For each administrative area, the provided total heat demand will distributed according to the share of each Hotmap cell compared to the total Hotmaps heat demand of the respective area.
+For each administrative area, the provided total heat demand will distributed according to the share of each Hotmaps cell compared to the total Hotmaps heat demand of the respective area.
 The provided heat demand is now distributed across the cells and will treated from now on as category 1 or 2 input data to calculate the final heat demand map.  
 
 ![The main steps of the methodology to process the provided HD polygons for the heat demand data category 3. \label{fig3}](../docs/images/fig3.png)
