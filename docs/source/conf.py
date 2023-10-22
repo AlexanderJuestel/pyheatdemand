@@ -33,6 +33,7 @@ release = '0.0.1'
 extensions = [
     'sphinx_book_theme',
     'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon',
     'sphinx_copybutton',
     'nbsphinx',
 ]
