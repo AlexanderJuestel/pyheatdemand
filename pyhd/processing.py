@@ -89,6 +89,10 @@ def create_polygon_mask(gdf: gpd.GeoDataFrame,
     gdf_mask = gpd.GeoDataFrame(geometry=polygons,
                                 crs=gdf.crs)
 
+    # Dropping duplicate cells
+    gdf_mask = gdf_mask.drop_duplicates(ignore_index=True)
+
+    # Cropping the gdf if crop_gdf is True
     if crop_gdf:
         gdf_mask = gdf_mask.sjoin(gdf).reset_index()[['geometry']]
 

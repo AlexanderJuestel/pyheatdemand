@@ -87,10 +87,7 @@ Depending on the scale of the heat demand map (regional or national), a global `
 10 km by 10 km, for instance, and the target `coordinate reference system <https://docs.qgis.org/3.28/en/docs/gentle_gis_introduction/coordinate_reference_systems.html>`_.
 This mask is used to divide the study area into smaller chunks for a more reliable processing
 as only data within each mask will be processed separately. If necessary, the global mask will be cropped to the extent of the
-available heat demand input data and populated with `polygons <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_ having already the final cell size such as 100 m x 100 m.
-For each cell, the cumulated heat demand in each cell will be calculated. The final `polygon <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_ grid will be rasterized and merged with adjacent global cells
-to form a mosaic, the final heat demand map. If several input datasets are available for a region, i.e. different sources of energy, they can either be included
-in the calculation of the heat demand or the resulting rasters can be added to a final heat demand map.
+available heat demand input data.
 
 .. image:: ../images/fig1.png
 
@@ -98,19 +95,37 @@ in the calculation of the heat demand or the resulting rasters can be added to a
 
     # Creating global 10 km x 10 km mask and cropping it to the borders of the provided administrative areas.
     # NB: The image below shows cells with a size of 50 km x 50 km for better visualization.
-    borders = gpd.read_file('path/to/file.shp')
+    from pyhd import processing
+    import geopandas as gpd
+
+    borders = gpd.read_file('path/to/borders.shp')
     mask_10km = processing.create_polygon_mask(gdf=borders, step_size=10000, crop_gdf=True)
 
-.. image:: ../images/fig_methods 1.png
+.. image:: ../images/fig_methods1.png
 
 Creating Local Mask
 ~~~~~~~~~~~~~~~~~~~
 
+The global mask will be populated with `polygons <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_ having already the final cell size such as 100 m x 100 m. Prior to that we are using a spatial join to crop the global mask to the extent of one administrative unit.
+
 .. code-block:: python
 
+    # Performing spatial join to crop global mask to outline of one administrative unit
+    outline_administrative_unit = gpd.read_file('path/to/outline.shp')
+    mask_10km_cropped = mask_10km.sjoin(outline_administrative_unit).reset_index(drop=True).drop('index_right', axis=1)
+    mask_10km_cropped = mask_10km_cropped.drop_duplicates().reset_index(drop=True)
+
     # Creating local 100 m x 100 m mask for one of the administrative areas
+    mask_100m_cropped = [processing.create_polygon_mask(gdf=mask_10km[i:i+1],
+                                                   step_size=100,
+                                                   crop_gdf=True) for i in tqdm(range(len(mask_10km_cropped)))]
+                                            mask_100m_cropped
 
+.. image:: ../images/fig_methods2.png
 
+For each cell, the cumulated heat demand in each cell will be calculated. The final `polygon <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_ grid will be rasterized and merged with adjacent global cells
+to form a mosaic, the final heat demand map. If several input datasets are available for a region, i.e. different sources of energy, they can either be included
+in the calculation of the heat demand or the resulting rasters can be added to a final heat demand map.
 
 
 The data processing for data categories 1 and 2 are very similar (Fig. 3) and correspond to a bottom-up approach. In the case of a raster for category 1, the raster is converted into gridded `polygons <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_.
