@@ -10,7 +10,7 @@ The main dependencies of PyHD are `GeoPandas <https://geopandas.org/en/stable/>`
 `Rasterstats <https://pythonhosted.org/rasterstats/>`_ for analyzing the resulting heat demand maps and more secondary dependencies like `Pandas <https://pandas.pydata.org/>`_, `NumPy <https://numpy.org/>`_, `Shapely <https://shapely.readthedocs.io/en/stable/manual.html>`_, etc.
 
 Installation via PyPi
-~~~~~~~~~~~~~~~~~~~~~
+---------------------
 
 PyHD can be installed via `PyPi <https://pypi.org/>`_ using::
 
@@ -18,7 +18,7 @@ PyHD can be installed via `PyPi <https://pypi.org/>`_ using::
 
 
 Installation via Anaconda
-~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------
 
 PyHD is also available from `conda-forge <https://conda-forge.org/>`_::
 
@@ -26,7 +26,7 @@ PyHD is also available from `conda-forge <https://conda-forge.org/>`_::
 
 
 Forking or cloning the repository
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------------
 
 The PyHD repository can be forked or cloned from https://github.com/AlexanderJuestel/pyhd::
 

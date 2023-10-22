@@ -29,7 +29,7 @@ The resulting heat demand for North-West Europe has been published on the websit
 The main steps of the methodology to process the provided HD.
 
 Authors
-~~~~~~~
+-------
 The following list (sorted by name) shows the authors with substantial contributions to the conception or design of the software. The authors also provided new code or revised existing code and documentation.
 
 
@@ -39,7 +39,7 @@ The following list (sorted by name) shows the authors with substantial contribut
 * `Frank Strozyk <https://www.ieg.fraunhofer.de/de/ueber-uns/mitarbeitende/strozyk.html>`_
 
 Resources
-~~~~~~~~~
+---------
 
 * `PyHD Documentation <https://pyhd.readthedocs.io/en/latest/index.html>`_
 * `PyHD Github Repository <https://github.com/AlexanderJuestel/pyhd>`_
@@ -50,7 +50,7 @@ Resources
 * `DGE Rollout Webviewer <https://data.geus.dk/egdi/?mapname=dgerolloutwebtool#baslay=baseMapGEUS&extent=39620,-1581250,8465360,8046630&layers=dge_heat_final>`_
 
 Citing PyHD
-~~~~~~~~~~~
+-----------
 If you are using **PyHD** for your scientific research, please remember to cite our work.
 
 .. code::
@@ -71,7 +71,7 @@ If you are using **PyHD** for your scientific research, please remember to cite 
 * `CITATION.md <https://github.com/AlexanderJuestel/pyhd/tree/main/CITATION.md>`_
 
 FAIR Principle
-~~~~~~~~~~~~~~
+--------------
 
 The developers of PyHD want to make the API, the tutorials and examples meet and adhere to the FAIR data principles (e.g. `FAIR Principles <https://www.nature.com/articles/sdata201618#:~:text=This%20article%20describes%20four%20foundational,contemporary%2C%20formal%20scholarly%20digital%20publishing.>`_).
 
@@ -92,7 +92,7 @@ The provision of tutorials, examples and in fact this documentation makes the da
 
 
 License
-~~~~~~~
+-------
 
                    GNU LESSER GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
@@ -261,7 +261,7 @@ permanent authorization for you to choose that version for the
 Library.
 
 References
-~~~~~~~~~~
+----------
 
 Herbst, E., Khashfe, E., Jüstel, A., Strozyk, F. & Kukla, P., 2021. A Heat Demand Map of North-West Europe – its impact
 on supply areas and identification of potential production areas for deep geothermal energy. GeoKarlsruhe 2021,

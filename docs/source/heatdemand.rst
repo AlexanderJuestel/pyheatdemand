@@ -28,7 +28,7 @@ on regional or national scales. If heat demand maps already exist for a specific
 With **PyHD**, it has never been easier to create and analyze heat demand maps.
 
 Demonstration Notebooks for Heat Demand Calculations
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------------------------
 
 Several Jupyter Notebooks are available that demonstrate the functionality of **PyHD**.
 
@@ -50,7 +50,7 @@ Several Jupyter Notebooks are available that demonstrate the functionality of **
    notebooks/12_Processing_Results
 
 Processing Heat Demand Input Data
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------------
 
 Heat demand maps can be calculated using either a top-down approach or a bottom-up approach (Fig. 1). For the top-down approach,
 aggregated heat demand input data for a certain area will be distributed according to higher resolution data sets (e.g. population density, landuse, etc.).
@@ -80,15 +80,38 @@ input data categories (Fig. 3 & 4). The different input data categories are list
 | 5             | No HD data available for the region                                                                                         |
 +---------------+-----------------------------------------------------------------------------------------------------------------------------+
 
-Depending on the scale of the heat demand map (regional or national), a global `polygon <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_ mask is created with a cell size of
-10 km by 10 km, for instance, and the target `coordinate reference system <https://docs.qgis.org/3.28/en/docs/gentle_gis_introduction/coordinate_reference_systems.html>`_. This mask is used to divide the study area into smaller chunks for a more reliable processing
+Creating Global Mask
+~~~~~~~~~~~~~~~~~~~~~
+
+Depending on the scale of the heat demand map (regional or national), a global `polygon <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_ mask is created from provided administrative boundaries with a cell size of
+10 km by 10 km, for instance, and the target `coordinate reference system <https://docs.qgis.org/3.28/en/docs/gentle_gis_introduction/coordinate_reference_systems.html>`_.
+This mask is used to divide the study area into smaller chunks for a more reliable processing
 as only data within each mask will be processed separately. If necessary, the global mask will be cropped to the extent of the
-available heat demand input data and populated with `polygons <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_ having already the final cell size such as 100 m x 100 m. For each cell,
-the cumulated heat demand in each cell will be calculated. The final `polygon <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_ grid will be rasterized and merged with adjacent global cells
+available heat demand input data and populated with `polygons <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_ having already the final cell size such as 100 m x 100 m.
+For each cell, the cumulated heat demand in each cell will be calculated. The final `polygon <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_ grid will be rasterized and merged with adjacent global cells
 to form a mosaic, the final heat demand map. If several input datasets are available for a region, i.e. different sources of energy, they can either be included
 in the calculation of the heat demand or the resulting rasters can be added to a final heat demand map.
 
 .. image:: ../images/fig1.png
+
+.. code-block:: python
+
+    # Creating global 10 km x 10 km mask and cropping it to the borders of the provided administrative areas.
+    # NB: The image below shows cells with a size of 50 km x 50 km for better visualization.
+    borders = gpd.read_file('path/to/file.shp')
+    mask_10km = processing.create_polygon_mask(gdf=borders, step_size=10000, crop_gdf=True)
+
+.. image:: ../images/fig_methods 1.png
+
+Creating Local Mask
+~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+    # Creating local 100 m x 100 m mask for one of the administrative areas
+
+
+
 
 The data processing for data categories 1 and 2 are very similar (Fig. 3) and correspond to a bottom-up approach. In the case of a raster for category 1, the raster is converted into gridded `polygons <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_.
 Gridded `polygons <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_ and building footprints are treated equally. The `polygons <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_ containing the heat demand data are, if necessary,
@@ -111,6 +134,6 @@ Based on these, the building footprints are extracted from OpenStreet Maps using
 If no heat demand input data is available, the heat demand can be estimated using cultural data such as population density, landuse, and building-specific heat usage.
 
 Processing Heat Demand Map Data
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------
 
 Heat demand maps may contain millions of cells. Evaluating each cell would not be feasible. Therefore, **PyHD** utilizes the `rasterstats <https://github.com/perrygeo/python-rasterstats/>`_ package returning statistical values of the heat demand map for further analysis and results reporting.

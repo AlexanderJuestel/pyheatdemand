@@ -13,7 +13,7 @@ As PyHD is an open-source and a community-driven project, we need people like yo
 - Adding new functionality to the package
 
 How to get started with PyHD?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------
 - Work through the examples and tutorials or work with your own data.
 - If you run into a problem and you think it is not related to PyHD directly but rather to the installation or your data or something just does not work, have a look at our `Github Discussion <https://github.com/AlexanderJuestel/pyhd/discussions>`_ to ask your question. Maybe someone already had the same issue before and the answer is already available.
 - If you run into a problem and you think it is related to PyHD directly please `open a new issue on Github <https://github.com/AlexanderJuestel/pyhd/issues/new?assignees=&labels=&template=bug_report.md&title=>`_. Our template will guide you through the necessary information.
@@ -22,12 +22,12 @@ How to get started with PyHD?
 - If you find typos or other error in our README or the documentation open a new issue or fix the error right away by opening a pull request.
 
 How to get in touch with the PyHD developers?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------------------------
 
 You can reach the developers of PyHD either by opening a new issue on Github (feature request or bug report), open a pull request to contribute directly to the package, ask a question in the Github Discussions forum or via the `Slack workspace of the Software Underground <https://softwareunderground.org/slack>`_.
 
 How to contribute code?
-~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------
 
 **Is this your first contribution?**
 
