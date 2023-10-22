@@ -33,7 +33,7 @@ Demonstration Notebooks for Heat Demand Calculations
 Several Jupyter Notebooks are available that demonstrate the functionality of **PyHD**.
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 1
    :caption: Examples
 
    notebooks/01_Interreg_NWE_Mask_10km
