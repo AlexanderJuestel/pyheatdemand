@@ -146,7 +146,7 @@ in the calculation of the heat demand or the resulting rasters can be added to a
 .. code-block:: python
 
     processing.rasterize_gdf_hd(heat_demand,
-                     path_out='path/to/head_demand.tif',
+                     path_out='path/to/heat_demand.tif',
                      crs = 'EPSG:3034',
                      xsize = 500,
                      ysize = 500)
@@ -182,7 +182,7 @@ Heat demand maps may contain millions of cells. Evaluating each cell would not b
 .. code-block:: python
 
     gdf_stats = processing.calculate_zonal_stats('path/to/vector.shp',
-                                                 'path/to/head_demand.tif',
+                                                 'path/to/heat_demand.tif',
                                                  'EPSG:3034')
     gdf_stats['coords'] = gdf_stats['geometry'].apply(lambda x: x.representative_point().coords[:])
     gdf_stats['coords'] = [coords[0] for coords in gdf_stats['coords']]
