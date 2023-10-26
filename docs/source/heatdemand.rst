@@ -134,7 +134,7 @@ For each cell, the cumulated heat demand in each cell will be calculated.
     heat_demand_list = [processing.calculate_hd(hd_gdf=gdf_hd, mask_gdf=mask_100m_cropped[i], hd_data_column='HD_column') for i in tqdm(range(len(mask_100m_cropped)))]
     heat_demand = pd.concat(heat_demand_list).reset_index(drop=True)
 
- .. image:: ../images/fig_methods3.png
+.. image:: ../images/fig_methods3.png
 
 Rasterizing Heat Demand
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -151,7 +151,7 @@ in the calculation of the heat demand or the resulting rasters can be added to a
                      xsize = 500,
                      ysize = 500)
 
- .. image:: ../images/fig_methods4.png
+.. image:: ../images/fig_methods4.png
 
 
 The data processing for data categories 1 and 2 are very similar (Fig. 3) and correspond to a bottom-up approach. In the case of a raster for category 1, the raster is converted into gridded `polygons <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_.
@@ -187,4 +187,4 @@ Heat demand maps may contain millions of cells. Evaluating each cell would not b
     gdf_stats['coords'] = gdf_stats['geometry'].apply(lambda x: x.representative_point().coords[:])
     gdf_stats['coords'] = [coords[0] for coords in gdf_stats['coords']]
 
- .. image:: ../images/fig_methods5.png
+.. image:: ../images/fig_methods5.png
