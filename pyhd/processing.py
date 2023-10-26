@@ -362,8 +362,8 @@ def rasterize_gdf_hd(gdf_hd: gpd.GeoDataFrame,
         raise TypeError('The ysize must be provided as int')
 
     # Creating array with the length of polygons in x and y direction
-    x = np.arange(gdf_hd.total_bounds[0], gdf_hd.total_bounds[2], 100)
-    y = np.arange(gdf_hd.total_bounds[1], gdf_hd.total_bounds[3], 100)
+    x = np.arange(gdf_hd.total_bounds[0], gdf_hd.total_bounds[2], xsize)
+    y = np.arange(gdf_hd.total_bounds[1], gdf_hd.total_bounds[3], ysize)
 
     # Creating matrix
     matrix = np.zeros(len(y) * len(x)).reshape(len(y),

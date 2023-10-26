@@ -48,6 +48,7 @@ Several Jupyter Notebooks are available that demonstrate the functionality of **
    notebooks/10_Processing_Data_Type_V_No_Heat_Demand_Values
    notebooks/11_Processing_Data_Merging_and_Stitching_Resulting_Rasters
    notebooks/12_Processing_Results
+   notebooks/13_Processing_and_merging_heat_demand_data_for_NRW
 
 Processing Heat Demand Input Data
 ---------------------------------
@@ -119,13 +120,38 @@ The global mask will be populated with `polygons <https://shapely.readthedocs.io
     mask_100m_cropped = [processing.create_polygon_mask(gdf=mask_10km[i:i+1],
                                                    step_size=100,
                                                    crop_gdf=True) for i in tqdm(range(len(mask_10km_cropped)))]
-                                            mask_100m_cropped
+    mask_100m = pd.concat(mask_100m_cropped)
 
 .. image:: ../images/fig_methods2.png
 
-For each cell, the cumulated heat demand in each cell will be calculated. The final `polygon <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_ grid will be rasterized and merged with adjacent global cells
+Calculating Heat Demand
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+For each cell, the cumulated heat demand in each cell will be calculated.
+
+.. code-block:: python
+
+    gdf_hd = gpd.read_file('path/to/hd_data.shp')
+    heat_demand_list = [processing.calculate_hd(hd_gdf=gdf_hd, mask_gdf=mask_100m_cropped[i], hd_data_column='HD_column') for i in tqdm(range(len(mask_100m_cropped)))]
+    heat_demand = pd.concat(heat_demand_list).reset_index(drop=True)
+
+ .. image:: ../images/fig_methods3.png
+
+Rasterizing Heat Demand
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The final `polygon <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_ grid will be rasterized and merged with adjacent global cells
 to form a mosaic, the final heat demand map. If several input datasets are available for a region, i.e. different sources of energy, they can either be included
 in the calculation of the heat demand or the resulting rasters can be added to a final heat demand map.
+
+.. code-block:: python
+
+    processing.rasterize_gdf_hd(heat_demand,
+                     path_out='path/to/head_demand.tif',
+                     crs = 'EPSG:3034',
+                     xsize = 500,
+                     ysize = 500)
+
+ .. image:: ../images/fig_methods4.png
 
 
 The data processing for data categories 1 and 2 are very similar (Fig. 3) and correspond to a bottom-up approach. In the case of a raster for category 1, the raster is converted into gridded `polygons <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_.
@@ -152,3 +178,13 @@ Processing Heat Demand Map Data
 -------------------------------
 
 Heat demand maps may contain millions of cells. Evaluating each cell would not be feasible. Therefore, **PyHD** utilizes the `rasterstats <https://github.com/perrygeo/python-rasterstats/>`_ package returning statistical values of the heat demand map for further analysis and results reporting.
+
+.. code-block:: python
+
+    gdf_stats = processing.calculate_zonal_stats('path/to/vector.shp',
+                                                 'path/to/head_demand.tif',
+                                                 'EPSG:3034')
+    gdf_stats['coords'] = gdf_stats['geometry'].apply(lambda x: x.representative_point().coords[:])
+    gdf_stats['coords'] = [coords[0] for coords in gdf_stats['coords']]
+
+ .. image:: ../images/fig_methods5.png
