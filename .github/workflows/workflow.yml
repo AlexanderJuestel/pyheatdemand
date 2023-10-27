@@ -28,8 +28,7 @@ jobs:
       run: |
         pip install pytest
         pip install pytest-cov
-        pytest --cov=./
-      #--cov-report=xml
+        pytest --cov=./ --cov-report=xml
     - name: Debug
       run: |
         ls -R  # List all files and directories recursively
@@ -42,7 +41,8 @@ jobs:
         #coverage/reports/
         env_vars: OS,PYTHON
         fail_ci_if_error: true
-        files: ./coverage1.xml,./coverage2.xml,!./cache
+        files: ./coverage.xml
+        #,./coverage2.xml,!./cache
         flags: unittests
         name: codecov-umbrella
         verbose: true
