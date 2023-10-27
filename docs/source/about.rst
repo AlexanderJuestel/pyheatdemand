@@ -4,8 +4,8 @@ About
 =====
 
 **PyHD** is an open-source Python package for processing and harmonizing multi-scale-multi-type heat demand input data for
-constructing heat demand maps (raster). Knowledge about the heat demand (MWh/area/year) of a respective building,
-district, city, state, country, or even on a continental scale is crucial for adequate heat demand planning or
+constructing local to transnational harmonized heat demand maps (rasters). Knowledge about the heat demand (MWh/area/year) of a respective building,
+district, city, state, country, or even on a continental scale is crucial for an adequate heat demand analysis or
 planning for providing power plant capacities. Mapping of the heat demand may also identify potential areas for new
 district heating networks or even geothermal power plants for climate-friendly heat production.
 
