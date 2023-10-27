@@ -449,23 +449,23 @@ def test_get_building_footprints_error():
 def test_merge_rasters():
     from pyhd.processing import merge_rasters
 
-    raster_list = os.listdir('../data/rasters/')
-    raster_list = [os.path.join(os.path.abspath('../data/rasters/'), path) for path in raster_list]
+    raster_list = os.listdir('data/rasters/')
+    raster_list = [os.path.join(os.path.abspath('data/rasters/'), path) for path in raster_list]
 
-    merge_rasters(raster_list, '../data/Raster_merged.tif')
+    merge_rasters(raster_list, 'data/Raster_merged.tif')
 
 
 def test_merge_rasters_error():
     from pyhd.processing import merge_rasters
 
-    raster_list = os.listdir('../data/rasters/')
-    raster_list = [os.path.join(os.path.abspath('../data/rasters/'), path) for path in raster_list]
+    raster_list = os.listdir('data/rasters/')
+    raster_list = [os.path.join(os.path.abspath('data/rasters/'), path) for path in raster_list]
 
     with pytest.raises(TypeError):
-        merge_rasters(raster_list[0], '../data/Raster_merged.tif')
+        merge_rasters(raster_list[0], 'data/Raster_merged.tif')
 
     with pytest.raises(TypeError):
-        merge_rasters(raster_list, ['../data/Raster_merged.tif'])
+        merge_rasters(raster_list, ['data/Raster_merged.tif'])
 
 
 def test_calculate_zonal_stats():
