@@ -19,7 +19,7 @@ jobs:
       run: |
         pip install -r requirements.txt
     - name: Generate coverage report
-      working-directory: ./test
+      #working-directory: ./test
       run: |
         pip install pytest
         pip install pytest-cov
