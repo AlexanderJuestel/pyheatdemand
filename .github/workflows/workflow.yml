@@ -23,13 +23,16 @@ jobs:
       run: |
         ls -R  # List all files and directories recursively
         pwd    # Print the current working directory
-
     - name: Generate coverage report
       working-directory: ./test
       run: |
         pip install pytest
         pip install pytest-cov
         pytest --cov=./ --cov-report=xml
+    - name: Debug
+      run: |
+        ls -R  # List all files and directories recursively
+        pwd    # Print the current working directory
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
