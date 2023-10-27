@@ -245,7 +245,7 @@ def calculate_hd(hd_gdf: gpd.GeoDataFrame,
         hd_gdf = hd_gdf.to_crs(mask_gdf.crs)
 
     if any(shapely.get_type_id(hd_gdf.geometry) == 6):
-        hd_gdf = hd_gdf.explode().reset_index(drop=True)
+        hd_gdf = hd_gdf.explode(index_parts=True).reset_index(drop=True)
 
     if all(shapely.get_type_id(hd_gdf.geometry) == 3):
         # Assigning area of original geometries to GeoDataFrame
