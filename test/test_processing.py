@@ -181,7 +181,7 @@ def test_calculate_hd_points(mask_gdf, hd_gdf):
 @pytest.mark.parametrize('mask_gdf',
                          [gpd.read_file('data/Interreg_NWE_mask_500m_EPSG3034.shp')])
 @pytest.mark.parametrize('hd_gdf',
-                         [gpd.read_file('data/Data_Type_II_Vector_lines.shp')])
+                         [gpd.read_file('data/Data_Type_II_Vector_Lines.shp')])
 def test_calculate_hd_lines(mask_gdf, hd_gdf):
     from pyhd.processing import calculate_hd
 
