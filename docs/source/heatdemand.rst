@@ -84,7 +84,7 @@ input data categories (Fig. 3 & 4). The different input data categories are list
 Creating Global Mask
 ~~~~~~~~~~~~~~~~~~~~~
 
-Depending on the scale of the heat demand map (regional or national), a global `polygon <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_ mask is created from provided administrative boundaries with a cell size of
+Depending on the scale of the heat demand map (local, regional, national, or even transnational), a global `polygon <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_ mask is created from provided administrative boundaries with a cell size of
 10 km by 10 km, for instance, and the target `coordinate reference system <https://docs.qgis.org/3.28/en/docs/gentle_gis_introduction/coordinate_reference_systems.html>`_.
 This mask is used to divide the study area into smaller chunks for a more reliable processing
 as only data within each mask will be processed separately. If necessary, the global mask will be cropped to the extent of the
@@ -153,6 +153,8 @@ in the calculation of the heat demand or the resulting rasters can be added to a
 
 .. image:: ../images/fig_methods4.png
 
+Processing data categories 1 and 2
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The data processing for data categories 1 and 2 are very similar (Fig. 3) and correspond to a bottom-up approach. In the case of a raster for category 1, the raster is converted into gridded `polygons <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_.
 Gridded `polygons <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_ and building footprints are treated equally. The `polygons <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_ containing the heat demand data are, if necessary,
@@ -162,6 +164,9 @@ The heat demand for all subpolygons in each cell is aggregated to result in the 
 
 .. image:: ../images/fig2.png
 
+Processing data category 3
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 The data processing for data category 3 corresponds to a top-down approach. The heat demand represented as points for an administrative unit will be distributed across the area using higher-resolution data sets.
 In the case illustrated below, the distribution of `Hotmaps <https://www.hotmaps-project.eu/>`_ data is used to distribute the available heat demands for the given administrative areas.
 For each administrative area, the provided total heat demand will distributed according to the share of each `Hotmaps <https://www.hotmaps-project.eu/>`_ cell compared to the total `Hotmaps <https://www.hotmaps-project.eu/>`_ heat demand of the respective area.
@@ -169,8 +174,14 @@ The provided heat demand is now distributed across the cells and will treated fr
 
 .. image:: ../images/fig3.png
 
+Processing data category 4
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 The data processing for data category 4 corresponds to a bottom-up approach. Here, the addresses will be converted using the `GeoPy <https://geopy.readthedocs.io/en/stable/>`_ geolocator to coordinates.
 Based on these, the building footprints are extracted from OpenStreet Maps using `OSMnx <https://osmnx.readthedocs.io/en/stable/>`_. From there on, the data will be treated as data category 2.
+
+Processing data category 5
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If no heat demand input data is available, the heat demand can be estimated using cultural data such as population density, landuse, and building-specific heat usage.
 

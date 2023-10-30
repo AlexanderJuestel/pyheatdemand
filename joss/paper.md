@@ -13,7 +13,7 @@ authors:
     orcid: 0000-0002-3067-831X
     affiliation: 2
 affiliations:
- - name: RWTH Aachen University , Computational Geoscience and Reservoir Engineering, Wüllnerstraße 2, 52062 Aachen, Germany
+ - name: RWTH Aachen University, Geological Institute, Wüllnerstraße 2, 52062 Aachen, Germany
    index: 1
  - name: Fraunhofer IEG, Fraunhofer Research Institution for Energy Infrastructures and Geothermal Systems IEG, Kockerellstraße 17, 52062 Aachen, Germany
    index: 2
