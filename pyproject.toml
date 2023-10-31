@@ -4,7 +4,7 @@ requires = ["setuptools>=68.1.2",
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = [ "pyhd" ]
+packages = [ "pyheatdemand" ]
 
 [project]
 name = "PyHD"
@@ -34,7 +34,7 @@ classifiers = [
     'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
     'Operating System :: OS Independent',
 ]
-# These dependencies are needed to import PyHD successfully
+# These dependencies are needed to import PyHeatDemand successfully
 # These dependencies will automatically install other packages like numpy, pandas or matplotlib
 dependencies = [
     'geopandas',
@@ -69,9 +69,9 @@ test = [
 [project.urls]
 Documentation = 'https://pyhd.readthedocs.io/en/latest/index.html'
 Home = 'https://pyhd.readthedocs.io/en/latest/index.html'
-"Bug Tracker" = 'https://github.com/AlexanderJuestel/pyhd/issues'
-Repository = 'https://github.com/AlexanderJuestel/pyhd'
-"Source Code" = 'https://github.com/AlexanderJuestel/pyhd'
+"Bug Tracker" = 'https://github.com/AlexanderJuestel/pyheatdemand/issues'
+Repository = 'https://github.com/AlexanderJuestel/pyheatdemand'
+"Source Code" = 'https://github.com/AlexanderJuestel/pyheatdemand'
 
 [tool.setuptools_scm]
 # Make sure setuptools uses version based on the last created tag
@@ -80,6 +80,6 @@ version_scheme = "post-release"
 # (so there isn't a + in the version)
 local_scheme = "no-local-version"
 # This _version_generated.py file is a file that you'll never want to add to version control - so you'll want to add it to your gitignore file. but when you build your package, setuptools_Scm creates it. and it contains version information that you will pull into your package below.
-write_to = "pyhd/_version_generated.py"
+write_to = "pyheatdemand/_version_generated.py"
 write_to_template = '__version__ = "v{version}"'
 
