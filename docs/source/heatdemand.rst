@@ -21,11 +21,13 @@ solutions are therefore necessary for this branch to reduce greenhouse gas emiss
 residential and commercial sectors are easily accessible and assessable. With the new directives regarding energy
 efficiency, it becomes necessary for every city or commune to evaluate their heat demand. And this is where **PyHD**
 comes into place. Combining the functionality of well-known geospatial Python libraries, the open-source package **PyHD** provides tools for public entities, researchers, or students for processing heat demand input data associated with an
+
 administrative area (`point <https://shapely.readthedocs.io/en/stable/reference/shapely.Point.html>`_ or `polygon <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_), with a building footprint (`polygon <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_), with a street segment (`line <https://shapely.readthedocs.io/en/stable/reference/shapely.LineString.html>`_), or with an
 address directly provided in MWh but also as gas usage, district heating usage, or other sources of heat. The resulting
 heat demand map data can be analyzed using zonal statistics and can be compared to other administrative areas when working
 on regional or national scales. If heat demand maps already exist for a specific region, they can be analyzed using tools within **PyHD**.
 With **PyHD**, it has never been easier to create and analyze heat demand maps.
+
 
 Demonstration Notebooks for Heat Demand Calculations
 ----------------------------------------------------
