@@ -24,6 +24,7 @@ bibliography: paper.bib
 
 # Summary
 **PyHD** is an open-source Python package for processing and harmonizing multi-scale-multi-type heat demand input data for
+
 constructing local to transnational harmonized heat demand maps (rasters). Knowledge about the heat demand (MWh/area/year) of a respective building, 
 district, city, state, country, or even on a continental scale is crucial for an adequate heat demand analysis or 
 planning for providing power plant capacities. Mapping of the heat demand may also identify potential areas for new
@@ -32,6 +33,7 @@ district heating networks or even geothermal power plants for climate-friendly h
 The aim of **PyHD** is to provide processing tools for heat demand input data of various categories on various scales. This
 includes heat demand input data provided as rasters or gridded polygons, heat demand input data associated with administrative areas
 (points or polygons), with building footprints (polygons), with street segments (lines), or with addresses directly provided in
+
 MWh but also as gas usage, district heating usage, or sources of heat. It is also possible to calculate the heat demand
 based on a set of cultural data sets (building footprints, height of the buildings, population density, building type, etc.).
 The study area is first divided into a coarse
@@ -116,6 +118,7 @@ The heat demand for all subpolygons in each cell is aggregated to result in the 
 
 ![The main steps of the methodology to process the provided HD polygons for the heat demand data categories 1 and 2. \label{fig2}](../docs/images/fig2.png)
 
+
 The data processing for data category 3 corresponds to a top-down approach (Fig. \ref{fig3} bottom). The heat demand represented as points for an administrative unit will be distributed across the area using higher-resolution data sets. 
 In the case illustrated below, the distribution of Hotmaps data [@hotmaps] is used to distribute the available heat demands for the given administrative areas.
 For each administrative area, the provided total heat demand will distributed according to the share of each Hotmaps cell compared to the total Hotmaps heat demand of the respective area.
@@ -126,6 +129,7 @@ The provided heat demand is now distributed across the cells and will treated fr
 The data processing for data category 4 corresponds to a bottom-up approach. Here, the addresses will be converted using the GeoPy geolocator to coordinates. 
 Based on these, the building footprints are extracted from OpenStreet Maps using OSMnx. From there on, the data will be treated as data category 2.
 
+
 If no heat demand input data is available, the heat demand can be estimated using cultural data such as population density, landuse, and building-specific heat usage [@novosel; @meha] which will be implemented in a later development stage.
 
 ## Processing Heat Demand Map Data
@@ -133,6 +137,7 @@ If no heat demand input data is available, the heat demand can be estimated usin
 Heat demand maps may contain millions of cells. Evaluating each cell would not be feasible. Therefore, **PyHD** utilizes the rasterstats package [@rasterstats] returning statistical values of the heat demand map for further analysis and results reporting.
 
 # State of the field
+
 Python libraries for calculating heat demands are sparse, especially for aggregating heat demand on various scales and categories. While UrbanHeatPro [@urbanheatpro] utilizes a bottom-up approach to calculate heat demand profiles for urban areas, the Heat package by Malcolm Peacock [@heat] generates heat demand time series from weather for EU countries. 
 Repositories containing processing code for larger transnational heat demand projects like Hotmaps and Heat Roadmap Europe are unknown.
 
