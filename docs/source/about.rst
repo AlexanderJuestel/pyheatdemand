@@ -3,14 +3,14 @@
 About
 =====
 
-**PyHD** is an open-source Python package for processing and harmonizing multi-scale-multi-type heat demand input data for
+**PyHeatDemand** is an open-source Python package for processing and harmonizing multi-scale-multi-type heat demand input data for
 
 constructing local to transnational harmonized heat demand maps (rasters). Knowledge about the heat demand (MWh/area/year) of a respective building,
 district, city, state, country, or even on a continental scale is crucial for an adequate heat demand analysis or
 planning for providing power plant capacities. Mapping of the heat demand may also identify potential areas for new
 district heating networks or even geothermal power plants for climate-friendly heat production.
 
-The aim of **PyHD** is to provide processing tools for heat demand input data of various categories on various scales. This
+The aim of **PyHeatDemand** is to provide processing tools for heat demand input data of various categories on various scales. This
 includes heat demand input data provided as rasters or gridded polygons, heat demand input data associated with administrative areas
 (points or polygons), with building footprints (polygons), with street segments (lines), or with addresses directly provided in
 MWh but also as gas usage, district heating usage, or sources of heat. It is also possible to calculate the heat demand
@@ -21,7 +21,7 @@ x 100 m for states). We hereby make use of different spatial operations implemen
 packages. The final heat demand map will be created utilizing the `Rasterio <https://rasterio.readthedocs.io/en/stable/>`_ package. Next to processing tools for the heat demand input data, workflows for analyzing the final heat demand map through
 the `Rasterstats <https://pythonhosted.org/rasterstats/>`_ package are provided.
 
-**PyHD** was developed since 2023 as a result of works carried out within the `Interreg NWE project DGE Rollout (Rollout of Deep Geothermal Energy) <https://vb.nweurope.eu/projects/project-search/dge-rollout-roll-out-of-deep-geothermal-energy-in-nwe/>`_.
+**PyHeatDemand** was developed since 2023 as a result of works carried out within the `Interreg NWE project DGE Rollout (Rollout of Deep Geothermal Energy) <https://vb.nweurope.eu/projects/project-search/dge-rollout-roll-out-of-deep-geothermal-energy-in-nwe/>`_.
 The original codebase was developed in 2021 as part of two master thesis projects at `RWTH Aachen University, Germany <https://www.rwth-aachen.de/go/id/a/>`_, and have been presented at a conference in 2021 (`Herbst et al., 2021 <http://dx.doi.org/10.48380/dggv-j2wj-nk88>`_). The code base has been optimized and extended for this open-source package.
 The resulting heat demand for North-West Europe has been published on the websites of the `DGE Rollout Webviewer <https://data.geus.dk/egdi/?mapname=dgerolloutwebtool#baslay=baseMapGEUS&extent=39620,-1581250,8465360,8046630&layers=dge_heat_final>`_.
 
@@ -42,17 +42,17 @@ The following list (sorted by name) shows the authors with substantial contribut
 Resources
 ---------
 
-* `PyHD Documentation <https://pyhd.readthedocs.io/en/latest/index.html>`_
-* `PyHD Github Repository <https://github.com/AlexanderJuestel/pyhd>`_
-* `PyHD Issue Tracker <https://github.com/AlexanderJuestel/pyhd/issues>`_
-* `PyHD Discussion Forum <https://github.com/AlexanderJuestel/pyhd/discussions>`_
-* `PyHD on PyPi <https://pypi.org/project/pyhd/>`_
-* `PyHD on conda-forge <https://anaconda.org/conda-forge/pyhd>`_
+* `PyHeatDemand Documentation <https://pyhd.readthedocs.io/en/latest/index.html>`_
+* `PyHeatDemand Github Repository <https://github.com/AlexanderJuestel/pyheatdemand>`_
+* `PyHeatDemand Issue Tracker <https://github.com/AlexanderJuestel/pyheatdemand/issues>`_
+* `PyHeatDemand Discussion Forum <https://github.com/AlexanderJuestel/pyheatdemand/discussions>`_
+* `PyHeatDemand on PyPi <https://pypi.org/project/pyheatdemand/>`_
+* `PyHeatDemand on conda-forge <https://anaconda.org/conda-forge/pyheatdemand>`_
 * `DGE Rollout Webviewer <https://data.geus.dk/egdi/?mapname=dgerolloutwebtool#baslay=baseMapGEUS&extent=39620,-1581250,8465360,8046630&layers=dge_heat_final>`_
 
-Citing PyHD
+Citing PyHeatDemand
 -----------
-If you are using **PyHD** for your scientific research, please remember to cite our work.
+If you are using **PyHeatDemand** for your scientific research, please remember to cite our work.
 
 .. code::
 
@@ -64,23 +64,23 @@ If you are using **PyHD** for your scientific research, please remember to cite 
     number = {xx},
     pages = {xxxx},
     author = {Alexander Jüstel and Frank Strozyk},
-    title = {PyHD - PyHeatDemand - Processing Tool for Heat Demand Data},
+    title = {PyHeatDemand - Processing Tool for Heat Demand Data},
     journal = {Journal of Open Source Software}
     }
 
-* `CITATION.cff <https://github.com/AlexanderJuestel/pyhd/tree/main/CITATION.cff>`_
-* `CITATION.md <https://github.com/AlexanderJuestel/pyhd/tree/main/CITATION.md>`_
+* `CITATION.cff <https://github.com/AlexanderJuestel/pyheatdemand/tree/main/CITATION.cff>`_
+* `CITATION.md <https://github.com/AlexanderJuestel/pyheatdemand/tree/main/CITATION.md>`_
 
 FAIR Principle
 --------------
 
-The developers of PyHD want to make the API, the tutorials and examples meet and adhere to the FAIR data principles (e.g. `FAIR Principles <https://www.nature.com/articles/sdata201618#:~:text=This%20article%20describes%20four%20foundational,contemporary%2C%20formal%20scholarly%20digital%20publishing.>`_).
+The developers of PyHeatDemand want to make the API, the tutorials and examples meet and adhere to the FAIR data principles (e.g. `FAIR Principles <https://www.nature.com/articles/sdata201618#:~:text=This%20article%20describes%20four%20foundational,contemporary%2C%20formal%20scholarly%20digital%20publishing.>`_).
 
 **Findable**
-With each release, the data stored in the PyHD repositories are uploaded to Zenodo where a persistent identifier is provided for each release. The data for the latest release of PyHD can be found at `https://zenodo.org/record/ <https://zenodo.org/record/>`_. It is referred to Zenodo as the Github repositories do not strictly fulfill the criteria of having a globally unique and persistent identifier assigned to the (meta)data. However, all code and data can currently be found at `https://github.com/AlexanderJuestel/pyhd <https://github.com/AlexanderJuestel/pyhd>`_.
+With each release, the data stored in the PyHeatDemand repositories are uploaded to Zenodo where a persistent identifier is provided for each release. The data for the latest release of PyHeatDemand can be found at `https://zenodo.org/record/ <https://zenodo.org/record/>`_. It is referred to Zenodo as the Github repositories do not strictly fulfill the criteria of having a globally unique and persistent identifier assigned to the (meta)data. However, all code and data can currently be found at `https://github.com/AlexanderJuestel/pyheatdemand <https://github.com/AlexanderJuestel/pyhd>`_.
 
 **Accessible**
-The files stored in the respective Zenodo repositories can be downloaded without registration as ZIP file. In addition, the data can be downloaded from the aforementioned Github repositories without registration as ZIP files or via `git <https://git-scm.com/>`_. The functionality of PyHD can be easily accessed through installing the software using `conda-forge <https://anaconda.org/conda-forge/pyhd/files>`_ or `pip <https://pypi.org/project/pyhd/>`_. Please see also the `Installation Instructions <installation>` provided.
+The files stored in the respective Zenodo repositories can be downloaded without registration as ZIP file. In addition, the data can be downloaded from the aforementioned Github repositories without registration as ZIP files or via `git <https://git-scm.com/>`_. The functionality of PyHeatDemand can be easily accessed through installing the software using `conda-forge <https://anaconda.org/conda-forge/pyheatdemand/files>`_ or `pip <https://pypi.org/project/pyheatdemand/>`_. Please see also the `Installation Instructions <installation>` provided.
 
 **Interoperable**
 No commercial software is needed to read or alter the data provided in the repositories. Files containing code can be opened with any text editor, vector and raster data can be opened with open-source software such as `QGIS <https://qgis.org/en/site/>`_ or the respective Python libraries such as GeoPandas or Rasterio. Mesh data can also be opened using text editors or Python packages such as PyVista or open-source software like Blender. We mostly use file formats that are common to the geospatial community (.shp, .tif, ZMAP-Grids, etc.) and that are not proprietary.

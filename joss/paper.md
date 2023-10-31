@@ -1,5 +1,5 @@
 ---
-title: 'PyHD - PyHeatDemand - Processing Tool for Heat Demand Data'
+title: 'PyHeatDemand - Processing Tool for Heat Demand Data'
 tags:
   - Python
   - spatial data 
@@ -23,14 +23,14 @@ bibliography: paper.bib
 ---
 
 # Summary
-**PyHD** is an open-source Python package for processing and harmonizing multi-scale-multi-type heat demand input data for
+**PyHeatDemand** is an open-source Python package for processing and harmonizing multi-scale-multi-type heat demand input data for
 
 constructing local to transnational harmonized heat demand maps (rasters). Knowledge about the heat demand (MWh/area/year) of a respective building, 
 district, city, state, country, or even on a continental scale is crucial for an adequate heat demand analysis or 
 planning for providing power plant capacities. Mapping of the heat demand may also identify potential areas for new
 district heating networks or even geothermal power plants for climate-friendly heat production. 
 
-The aim of **PyHD** is to provide processing tools for heat demand input data of various categories on various scales. This
+The aim of **PyHeatDemand** is to provide processing tools for heat demand input data of various categories on various scales. This
 includes heat demand input data provided as rasters or gridded polygons, heat demand input data associated with administrative areas
 (points or polygons), with building footprints (polygons), with street segments (lines), or with addresses directly provided in
 
@@ -42,7 +42,7 @@ x 100 m for states). We hereby make use of different spatial operations implemen
 packages. The final heat demand map will be created utilizing the Rasterio package. Next to processing tools for the heat demand input data, workflows for analyzing the final heat demand map through
 the Rasterstats package are provided. 
 
-**PyHD** was developed as a result of works carried out within the Interreg NWE project DGE Rollout (Rollout of Deep Geothermal Energy).
+**PyHeatDemand** was developed as a result of works carried out within the Interreg NWE project DGE Rollout (Rollout of Deep Geothermal Energy).
 
 
 # Statement of need 
@@ -62,13 +62,13 @@ raster) cumulated for one year (lower temporal resolution) for different sectors
 sectors. Maps for the industrial heat demand are not available as the input data is not publicly available or can be deduced from cultural data. Customized
 solutions are therefore necessary for this branch to reduce greenhouse gas emissions. Heat demand input values for the
 residential and commercial sectors are easily accessible and assessable. With the new directives regarding energy 
-efficiency, it becomes necessary for every city or commune to evaluate their heat demand. And this is where **PyHD** 
-comes into place. Combining the functionality of well-known geospatial Python libraries, the open-source package **PyHD** provides tools for public entities, researchers, or students for processing heat demand input data associated with an
+efficiency, it becomes necessary for every city or commune to evaluate their heat demand. And this is where **PyHeatDemand** 
+comes into place. Combining the functionality of well-known geospatial Python libraries, the open-source package **PyHeatDemand** provides tools for public entities, researchers, or students for processing heat demand input data associated with an
 administrative area (point or polygon), with a building footprint (polygon), with a street segment (line), or with an 
 address directly provided in MWh but also as gas usage, district heating usage, or other sources of heat. The resulting 
 heat demand map data can be analyzed using zonal statistics and can be compared to other administrative areas when working
-on regional or national scales. If heat demand maps already exist for a specific region, they can be analyzed using tools within **PyHD**.
-With **PyHD**, it has never been easier to create and analyze heat demand maps.  
+on regional or national scales. If heat demand maps already exist for a specific region, they can be analyzed using tools within **PyHeatDemand**.
+With **PyHeatDemand**, it has never been easier to create and analyze heat demand maps.  
 
 # PyHeatDemand Functionality 
 
@@ -80,7 +80,7 @@ In contrast to that, the bottom-up approach allows aggregating heat demand of hi
 
 ![Input and output data for top-down and bottom-up approaches. Note, that the resulting spatial resolution can be the same for both approaches, but the spatial value of information is usually lower using a top-down approach. \label{fig0}](../docs/images/fig0.png)
 
-**PyHD** processes geospatial data such as vector data (points, lines, polygons), raster data or address data. Therefore, 
+**PyHeatDemand** processes geospatial data such as vector data (points, lines, polygons), raster data or address data. Therefore, 
 we make use of the functionality implemented in well-known geospatial packages such as GeoPandas [@geopandas], Rasterio [@rasterio], Rasterstats [@rasterstats], GeoPy [@geopy], or OSMnx [@osmnx]
 and their underlying dependencies such as Shapely [@shapely], Pandas [@pandas], or NumPy [@numpy]. 
 
@@ -133,7 +133,7 @@ If no heat demand input data is available, the heat demand can be estimated usin
 
 ## Processing Heat Demand Map Data
 
-Heat demand maps may contain millions of cells. Evaluating each cell would not be feasible. Therefore, **PyHD** utilizes the rasterstats package [@rasterstats] returning statistical values of the heat demand map for further analysis and results reporting.
+Heat demand maps may contain millions of cells. Evaluating each cell would not be feasible. Therefore, **PyHeatDemand** utilizes the rasterstats package [@rasterstats] returning statistical values of the heat demand map for further analysis and results reporting.
 
 # State of the field
 
@@ -142,19 +142,19 @@ Repositories containing processing code for larger transnational heat demand pro
 
 
 # PyHeatDemand Outlook
-The development and maintenance of **PyHD** will continue in the future. This will include adding bottom-up workflows based on building specifics to calculate the heat demand. In addition, we welcome contributions of users in the form of questions on how to use **PyHD**, bug reports, and feature requests. 
+The development and maintenance of **PyHeatDemand** will continue in the future. This will include adding bottom-up workflows based on building specifics to calculate the heat demand. In addition, we welcome contributions of users in the form of questions on how to use **PyHeatDemand**, bug reports, and feature requests. 
 
 # PyHeatDemand Resources 
 
-The following resources are available for **PyHD**
+The following resources are available for **PyHeatDemand**
 
-* [PyHD Github Repository](https://github.com/AlexanderJuestel/pyhd)
-* [PyHD Documentation](https://pyhd.readthedocs.io/en/latest/index.html)
+* [PyHeatDemand Github Repository](https://github.com/AlexanderJuestel/pyheatdemand)
+* [PyHeatDemand Documentation](https://pyhd.readthedocs.io/en/latest/index.html)
 * [DGE Rollout Webviewer](https://data.geus.dk/egdi/?mapname=dgerolloutwebtool#baslay=baseMapGEUS&extent=39620,-1581250,8465360,8046630&layers=dge_heat_final) 
 
 # Acknowledgements
 
 We would like to thank the open-source community for providing and constantly developing and maintaining great tools that can be combined and utilized for specific tasks such as working with heat demand data. 
-The original codebase was developed within the framework of the Interreg NWE project DGE Rollout (Rollout for Deep Geothermal Energy) by Eileen Herbst and Elias Khashfe [@herbst]. It was rewritten and optimized for **PyHD**.
+The original codebase was developed within the framework of the Interreg NWE project DGE Rollout (Rollout for Deep Geothermal Energy) by Eileen Herbst and Elias Khashfe [@herbst]. It was rewritten and optimized for **PyHeatDemand**.
 
 # References

@@ -38,7 +38,7 @@ Contributing to PyHD
 Sphinx Gallery Building
 -----------------------
 
-Example and tutorial notebooks are stored in the root folder under examples. In order to use Sphinx Gallery, these notebooks have to be converted to ``.py`` files. This can be done using the Anaconda prompt. Navigate to the ``pyhd`` folder containing the ``.py`` file and execute
+Example and tutorial notebooks are stored in the root folder under examples. In order to use Sphinx Gallery, these notebooks have to be converted to ``.py`` files. This can be done using the Anaconda prompt. Navigate to the ``pyheatdemand`` folder containing the ``.py`` file and execute
 
     # python ipynb_to_py.py 
     

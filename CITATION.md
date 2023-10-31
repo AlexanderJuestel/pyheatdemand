@@ -1,4 +1,4 @@
-If you use PyHD for any published work, please cite it using the reference
+If you use PyHeatDemand for any published work, please cite it using the reference
 below:
 
 @article{Jüstel2024,
@@ -9,6 +9,6 @@ below:
     number = {xx},
     pages = {xxxx},
     author = {Alexander Jüstel and Frank Strozyk},
-    title = {PyHD - PyHeatDemand - Processing Tool for Heat Demand Data},
+    title = {PyHeatDemand - Processing Tool for Heat Demand Data},
     journal = {Journal of Open Source Software}
     }

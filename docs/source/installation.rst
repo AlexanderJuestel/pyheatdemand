@@ -14,7 +14,7 @@ Installation via PyPi
 
 PyHD can be installed via `PyPi <https://pypi.org/>`_ using::
 
-    pip install pyhd
+    pip install pyheatdemand
 
 
 Installation via Anaconda
@@ -22,14 +22,14 @@ Installation via Anaconda
 
 PyHD is also available from `conda-forge <https://conda-forge.org/>`_::
 
-    conda install -c conda-forge pyhd
+    conda install -c conda-forge pyheatdemand
 
 
 Forking or cloning the repository
 ---------------------------------
 
-The PyHD repository can be forked or cloned from https://github.com/AlexanderJuestel/pyhd::
+The PyHD repository can be forked or cloned from https://github.com/AlexanderJuestel/pyheatdemand::
 
-    git clone https://github.com/AlexanderJuestel/pyhd.git
+    git clone https://github.com/AlexanderJuestel/pyheatdemand.git
 
-A list of `requirements.txt <https://github.com/AlexanderJuestel/pyhd/blob/main/requirements.txt>`_ and an `environment.yml <https://github.com/AlexanderJuestel/pyhd/blob/main/environment.yml>`_ can be found in the repository.
+A list of `requirements.txt <https://github.com/AlexanderJuestel/pyheatdemand/blob/main/requirements.txt>`_ and an `environment.yml <https://github.com/AlexanderJuestel/pyheatdemand/blob/main/environment.yml>`_ can be found in the repository.
