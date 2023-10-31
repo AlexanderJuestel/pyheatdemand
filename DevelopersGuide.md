@@ -15,8 +15,8 @@ PyPi release
 A PyPi release it automatically being created using Github Actions when a new Github release is published.
 
 
-Contributing to PyHD
-----------------------
+Contributing to PyHeatDemand
+----------------------------
 
 ### Type of commits:
 

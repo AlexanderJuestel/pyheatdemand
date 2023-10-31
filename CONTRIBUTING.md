@@ -1,6 +1,6 @@
 # Contributing
 
-We welcome and encourage everyone to contribute to PyHD! 
+We welcome and encourage everyone to contribute to PyHeatDemand! 
 Contributions can be questions, bug reports, feature requests and new code. 
 Here is how to get started.
 
@@ -8,7 +8,7 @@ Here is how to get started.
 
 ### Questions
 
-For questions about PyHD (e.g. its applications, functionality, and usage), 
+For questions about PyHeatDemand (e.g. its applications, functionality, and usage), 
 please [search the existing issues for related questions](https://github.com/AlexanderJuestel/pyhheatdemand/issues).
 If your question has not already been asked, then [make a new issue](https://github.com/AlexanderJuestel/pyhheatdemand/issues/new/choose).
 
@@ -21,7 +21,7 @@ Whenever possible, provide tracebacks and/or error messages, screenshots, and sa
 
 ### Feature Requests
 
-We encourage users to submit ideas for improvements to the PyHD project. For
+We encourage users to submit ideas for improvements to the PyHeatDemand project. For
 this please create an issue on the
  [issue page](https://github.com/AlexanderJuestel/pyhheatdemand/issues) with the *Feature 
  Request* template and label. Please make sure to use a descriptive title and to
@@ -89,7 +89,7 @@ In general we discourage contributing third party code.
 Our test suite uses [`pytest`](https://docs.pytest.org/). 
 You should be familiar with `pytest` before contributing.
 Please run all tests locally before creating a pull request. 
-You can do this by running `pytest` via your terminal in your PyHD folder:
+You can do this by running `pytest` via your terminal in your PyHeatDemand folder:
 ```bash
 cd ./path/to/pyhheatdemand
 pytest

@@ -1,4 +1,4 @@
-.. _pyhd_ref:
+.. _pyheatdemand_ref:
 
 PyHeatDemand API Reference
 ===========================

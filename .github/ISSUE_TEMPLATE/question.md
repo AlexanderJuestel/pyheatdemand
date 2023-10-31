@@ -1,6 +1,6 @@
 ---
 name: Question
-about: Ask a question about PyHD
+about: Ask a question about PyHeatDemand
 title: ''
 labels: ''
 assignees: ''

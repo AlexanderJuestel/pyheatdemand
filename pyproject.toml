@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 packages = [ "pyheatdemand" ]
 
 [project]
-name = "PyHD"
+name = "PyHeatDemand"
 
 maintainers = [
     {name = "Alexander Jüstel", email = "alexander.juestel@rwth-aachen.de"},

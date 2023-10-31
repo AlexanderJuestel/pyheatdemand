@@ -53,7 +53,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '**.ipynb_checkpoints']
 # a list of builtin themes.
 #
 html_theme = 'sphinx_book_theme'
-html_title = "PyHD - PyHeatDemand - Processing Tool for Heat Demand Data"
+html_title = "PyHeatDemand - Processing Tool for Heat Demand Data"
 html_logo = "../images/PyHD_Logo_long.png"
 html_favicon = "../images/favicon.ico"
 

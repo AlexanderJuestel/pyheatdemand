@@ -15,7 +15,7 @@ on:
 jobs:
   paper:
     runs-on: ubuntu-latest
-    name: PyHD JOSS Paper Draft
+    name: PyHeatDemand JOSS Paper Draft
     steps:
       - name: Checkout
         uses: actions/checkout@v2
