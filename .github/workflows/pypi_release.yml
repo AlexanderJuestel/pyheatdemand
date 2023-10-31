@@ -14,11 +14,12 @@ jobs:
 
     steps:
 
-    # Need the tags so that setuptools-scm can form a valid version number
-    - name: Fetch git tags
-      run: git fetch origin main 'refs/tags/*:refs/tags/*'
+    
 
     - uses: actions/checkout@v2
+    # Need the tags so that setuptools-scm can form a valid version number
+    - name: Fetch git tags
+      run: git fetch origin 'refs/tags/*:refs/tags/*'
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
