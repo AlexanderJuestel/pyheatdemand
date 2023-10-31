@@ -10,27 +10,39 @@ jobs:
       OS: ${{ matrix.os }}
       PYTHON: '3.10'
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
     - name: Setup Python
-      uses: actions/setup-python@master
+      uses: actions/setup-python@v2
       with:
         python-version: '3.10'
     - name: Install Dependencies
       run: |
+        pip install --upgrade pip
         pip install -r requirements.txt
+    - name: Debug
+      run: |
+        ls -R  # List all files and directories recursively
+        pwd    # Print the current working directory
     - name: Generate coverage report
+      working-directory: ./test
       run: |
         pip install pytest
         pip install pytest-cov
         pytest --cov=./ --cov-report=xml
+    - name: Debug
+      run: |
+        ls -R  # List all files and directories recursively
+        pwd    # Print the current working directory
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        directory: ./coverage/reports/
+        directory: ./
+        #coverage/reports/
         env_vars: OS,PYTHON
         fail_ci_if_error: true
-        files: ./coverage1.xml,./coverage2.xml,!./cache
+        files: coverage.xml
+        #,./coverage2.xml,!./cache
         flags: unittests
         name: codecov-umbrella
         verbose: true

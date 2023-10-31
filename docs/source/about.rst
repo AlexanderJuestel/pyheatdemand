@@ -4,8 +4,9 @@ About
 =====
 
 **PyHD** is an open-source Python package for processing and harmonizing multi-scale-multi-type heat demand input data for
-constructing heat demand maps (raster). Knowledge about the heat demand (MWh/area/year) of a respective building,
-district, city, state, country, or even on a continental scale is crucial for adequate heat demand planning or
+
+constructing local to transnational harmonized heat demand maps (rasters). Knowledge about the heat demand (MWh/area/year) of a respective building,
+district, city, state, country, or even on a continental scale is crucial for an adequate heat demand analysis or
 planning for providing power plant capacities. Mapping of the heat demand may also identify potential areas for new
 district heating networks or even geothermal power plants for climate-friendly heat production.
 
@@ -16,12 +17,12 @@ MWh but also as gas usage, district heating usage, or sources of heat. It is als
 based on a set of cultural data sets (building footprints, height of the buildings, population density, building type, etc.).
 The study area is first divided into a coarse
 mask before heat demands are calculated and harmonized for each cell with the size of the target resolution (e.g. 100 m
-x 100 m for states). We hereby make use of different spatial operations implemented in the GeoPandas and Shapely
-packages. Next to processing tools for the heat demand input data, workflows for analyzing the final heat demand map through
-the rasterstats package are provided.
+x 100 m for states). We hereby make use of different spatial operations implemented in the `GeoPandas <https://geopandas.org/en/stable/>`_ and `Shapely <https://shapely.readthedocs.io/en/stable/manual.html>`_
+packages. The final heat demand map will be created utilizing the `Rasterio <https://rasterio.readthedocs.io/en/stable/>`_ package. Next to processing tools for the heat demand input data, workflows for analyzing the final heat demand map through
+the `Rasterstats <https://pythonhosted.org/rasterstats/>`_ package are provided.
 
 **PyHD** was developed since 2023 as a result of works carried out within the `Interreg NWE project DGE Rollout (Rollout of Deep Geothermal Energy) <https://vb.nweurope.eu/projects/project-search/dge-rollout-roll-out-of-deep-geothermal-energy-in-nwe/>`_.
-The original codebase was developed in 2021 as part of two master thesis projects at RWTH Aachen University, Germany, and have been presented at a conference in 2021 (Herbst et al., 2021). The code base has been optimized and extended for this open-source package.
+The original codebase was developed in 2021 as part of two master thesis projects at `RWTH Aachen University, Germany <https://www.rwth-aachen.de/go/id/a/>`_, and have been presented at a conference in 2021 (`Herbst et al., 2021 <http://dx.doi.org/10.48380/dggv-j2wj-nk88>`_). The code base has been optimized and extended for this open-source package.
 The resulting heat demand for North-West Europe has been published on the websites of the `DGE Rollout Webviewer <https://data.geus.dk/egdi/?mapname=dgerolloutwebtool#baslay=baseMapGEUS&extent=39620,-1581250,8465360,8046630&layers=dge_heat_final>`_.
 
 .. image:: ../images/fig2.png
@@ -29,16 +30,28 @@ The resulting heat demand for North-West Europe has been published on the websit
 The main steps of the methodology to process the provided HD.
 
 Authors
-~~~~~~~
+-------
 The following list (sorted by name) shows the authors with substantial contributions to the conception or design of the software. The authors also provided new code or revised existing code and documentation.
 
 
 * Alexander Jüstel (`@AlexanderJuestel <https://github.com/AlexanderJuestel/>`_)
-* Eileen Herbst
-* Elias Humm (former Khashfe)
+* `Eileen Herbst <https://www.linkedin.com/in/eileen-herbst-9a3084231/>`_
+* `Elias Humm (former Khashfe) <https://www.linkedin.com/in/elias-h-929059177/>`_
+* `Frank Strozyk <https://www.ieg.fraunhofer.de/de/ueber-uns/mitarbeitende/strozyk.html>`_
+
+Resources
+---------
+
+* `PyHD Documentation <https://pyhd.readthedocs.io/en/latest/index.html>`_
+* `PyHD Github Repository <https://github.com/AlexanderJuestel/pyhd>`_
+* `PyHD Issue Tracker <https://github.com/AlexanderJuestel/pyhd/issues>`_
+* `PyHD Discussion Forum <https://github.com/AlexanderJuestel/pyhd/discussions>`_
+* `PyHD on PyPi <https://pypi.org/project/pyhd/>`_
+* `PyHD on conda-forge <https://anaconda.org/conda-forge/pyhd>`_
+* `DGE Rollout Webviewer <https://data.geus.dk/egdi/?mapname=dgerolloutwebtool#baslay=baseMapGEUS&extent=39620,-1581250,8465360,8046630&layers=dge_heat_final>`_
 
 Citing PyHD
-~~~~~~~~~~~
+-----------
 If you are using **PyHD** for your scientific research, please remember to cite our work.
 
 .. code::
@@ -59,15 +72,8 @@ If you are using **PyHD** for your scientific research, please remember to cite 
 * `CITATION.md <https://github.com/AlexanderJuestel/pyhd/tree/main/CITATION.md>`_
 
 FAIR Principle
-~~~~~~~~~~~~~~
+--------------
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> 789976cec3fc7fbd47fde37bfbb02cf7dbadf46f
-=======
->>>>>>> 85139dfcf4870d1453b8dc45ca21ba4b19dc11f2
 The developers of PyHD want to make the API, the tutorials and examples meet and adhere to the FAIR data principles (e.g. `FAIR Principles <https://www.nature.com/articles/sdata201618#:~:text=This%20article%20describes%20four%20foundational,contemporary%2C%20formal%20scholarly%20digital%20publishing.>`_).
 
 **Findable**
@@ -87,7 +93,7 @@ The provision of tutorials, examples and in fact this documentation makes the da
 
 
 License
-~~~~~~~
+-------
 
                    GNU LESSER GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
@@ -255,7 +261,8 @@ apply, that proxy's public statement of acceptance of any version is
 permanent authorization for you to choose that version for the
 Library.
 
-References:
+References
+----------
 
 Herbst, E., Khashfe, E., Jüstel, A., Strozyk, F. & Kukla, P., 2021. A Heat Demand Map of North-West Europe – its impact
 on supply areas and identification of potential production areas for deep geothermal energy. GeoKarlsruhe 2021,

@@ -4,29 +4,29 @@ Installation
 ============
 
 PyHD is supported for Python version 3.10 and younger. Previous versions are officially not supported.
-It is recommended to create a new virtual environment using Anaconda before using PyHD.
-The main dependencies of PyHD are GeoPandas and Rasterio for the vector data and raster data processing, Matplotlib for plotting,
-GeoPy for extracting coordinates from addresses, OSMnx for getting OpenStreet Maps building footprints from coordinates,
-Rasterstats for analyzing the resulting heat demand maps and more secondary dependencies like Pandas, NumPy, Shapely, etc.
+It is recommended to create a new virtual environment using the `Anaconda Distribution <https://www.anaconda.com/download>`_ before using PyHD.
+The main dependencies of PyHD are `GeoPandas <https://geopandas.org/en/stable/>`_ and `Rasterio <https://rasterio.readthedocs.io/en/stable/>`_ for the vector data and raster data processing, `Matplotlib <https://matplotlib.org/>`_ for plotting,
+`GeoPy <https://geopy.readthedocs.io/en/stable/>`_ for extracting coordinates from addresses, `OSMnx <https://osmnx.readthedocs.io/en/stable/>`_ for getting `OpenStreet Maps <https://www.openstreetmap.org/#map=6/51.330/10.453>`_ building footprints from coordinates,
+`Rasterstats <https://pythonhosted.org/rasterstats/>`_ for analyzing the resulting heat demand maps and more secondary dependencies like `Pandas <https://pandas.pydata.org/>`_, `NumPy <https://numpy.org/>`_, `Shapely <https://shapely.readthedocs.io/en/stable/manual.html>`_, etc.
 
 Installation via PyPi
-~~~~~~~~~~~~~~~~~~~~~
+---------------------
 
-PyHD can be installed via PyPi using::
+PyHD can be installed via `PyPi <https://pypi.org/>`_ using::
 
     pip install pyhd
 
 
 Installation via Anaconda
-~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------
 
-PyHD is also available from conda-forge::
+PyHD is also available from `conda-forge <https://conda-forge.org/>`_::
 
     conda install -c conda-forge pyhd
 
 
 Forking or cloning the repository
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------------
 
 The PyHD repository can be forked or cloned from https://github.com/AlexanderJuestel/pyhd::
 

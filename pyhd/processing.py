@@ -89,6 +89,10 @@ def create_polygon_mask(gdf: gpd.GeoDataFrame,
     gdf_mask = gpd.GeoDataFrame(geometry=polygons,
                                 crs=gdf.crs)
 
+    # Dropping duplicate cells
+    gdf_mask = gdf_mask.drop_duplicates(ignore_index=True)
+
+    # Cropping the gdf if crop_gdf is True
     if crop_gdf:
         gdf_mask = gdf_mask.sjoin(gdf).reset_index()[['geometry']]
 
@@ -241,7 +245,7 @@ def calculate_hd(hd_gdf: gpd.GeoDataFrame,
         hd_gdf = hd_gdf.to_crs(mask_gdf.crs)
 
     if any(shapely.get_type_id(hd_gdf.geometry) == 6):
-        hd_gdf = hd_gdf.explode().reset_index(drop=True)
+        hd_gdf = hd_gdf.explode(index_parts=True).reset_index(drop=True)
 
     if all(shapely.get_type_id(hd_gdf.geometry) == 3):
         # Assigning area of original geometries to GeoDataFrame
@@ -358,8 +362,8 @@ def rasterize_gdf_hd(gdf_hd: gpd.GeoDataFrame,
         raise TypeError('The ysize must be provided as int')
 
     # Creating array with the length of polygons in x and y direction
-    x = np.arange(gdf_hd.total_bounds[0], gdf_hd.total_bounds[2], 100)
-    y = np.arange(gdf_hd.total_bounds[1], gdf_hd.total_bounds[3], 100)
+    x = np.arange(gdf_hd.total_bounds[0], gdf_hd.total_bounds[2], xsize)
+    y = np.arange(gdf_hd.total_bounds[1], gdf_hd.total_bounds[3], ysize)
 
     # Creating matrix
     matrix = np.zeros(len(y) * len(x)).reshape(len(y),
@@ -715,7 +719,7 @@ def calculate_zonal_stats(path_mask: str,
 
         >>> gdf_stats = calculate_zonal_stats(path_mask='mask.shp', path_raster='raster.tif', crs='EPSG:3034')
         >>> gdf_stats
-            geometry                                           min          max          std        median      Area (planimetric) Total Heat Demand   Average Heat demand per unit area    Share of Total HD [%]  Share of Total Area [%]   Heatet Area   Share of Heated Area [%]
+            geometry                                           min          max          std        median      Area (planimetric) Total Heat Demand   Average Heat demand per unit area    Share of Total HD [%]  Share of Total Area [%]   Heated Area   Share of Heated Area [%]
         0   POLYGON ((3854043.358 2686588.658, 3854042.704...  3.024974e-06 21699.841028 351.107975 88.114117   7.471599e+09       4.689531e+07        206.001944                           21.437292              23.485618                 2.276161e+09  30.464174
         1   POLYGON ((3922577.630 2751867.434, 3922590.877...  6.662710e-08 40566.944918 265.277509 46.066755   6.086689e+09       2.959064e+07        134.484551                           13.526791              19.132405                 2.200020e+09  36.144783
         2   MULTIPOLYGON (((3815551.417 2711668.010, 38155...  3.148388e-06 71665.631370 382.872868 106.194020  6.866552e+09       5.063581e+07        217.321986                           23.147186              21.583762                 2.329694e+09  33.928151
@@ -774,10 +778,10 @@ def calculate_zonal_stats(path_mask: str,
         raster = rasterio.open(path_raster)
 
         # Calculating for heated area
-        gdf['Heatet Area'] = gdf['count']*raster.res[0]*raster.res[1]
+        gdf['Heated Area'] = gdf['count']*raster.res[0]*raster.res[1]
 
         # Calculating share for heated area
-        gdf['Share of Heated Area [%]'] = gdf['Heatet Area']*100/gdf.area
+        gdf['Share of Heated Area [%]'] = gdf['Heated Area']*100/gdf.area
 
     # Adding CRS manually as it is not passed from rasterstats,
     # see also https://github.com/perrygeo/python-rasterstats/issues/295

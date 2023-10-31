@@ -54,7 +54,7 @@ build = [
     'twine',
     'build'
       ]
-      
+
 test = [
     'pytest',
     'pytest-cov',
@@ -67,8 +67,8 @@ test = [
     ]
 
 [project.urls]
-#Documentation = ''
-#Home = ''
+Documentation = 'https://pyhd.readthedocs.io/en/latest/index.html'
+Home = 'https://pyhd.readthedocs.io/en/latest/index.html'
 "Bug Tracker" = 'https://github.com/AlexanderJuestel/pyhd/issues'
 Repository = 'https://github.com/AlexanderJuestel/pyhd'
 "Source Code" = 'https://github.com/AlexanderJuestel/pyhd'
