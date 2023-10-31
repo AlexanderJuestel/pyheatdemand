@@ -87,20 +87,20 @@ and their underlying dependencies such as Shapely [@shapely], Pandas [@pandas], 
 The creation of a heat demand map follows a general workflow (Fig. \ref{fig1}) followed by a data-category-specific workflow for five defined 
 input data categories (Fig. \ref{fig2} \& \ref{fig3}). The different input data categories are listed in the table below. 
 
-| Data category |      Description                                                                                                            |
-|---------------|-----------------------------------------------------------------------------------------------------------------------------|
-| 1             | HD data provided as $100\ast100\:m^2$ raster or polygon grid with the same or in a different coordinate reference system    |
-|---------------|-----------------------------------------------------------------------------------------------------------------------------|
-| 2             | HD data provided as building footprints or street segments                                                                  |
-|---------------|-----------------------------------------------------------------------------------------------------------------------------|
-| 3             | HD data provided as a point or polygon layer, which contains the sum of the HD for regions of official administrative units |                                                                                  
-|---------------|-----------------------------------------------------------------------------------------------------------------------------|
-| 4             | HD data provided in other data formats such as HD data associated with addresses                                            |
-|---------------|-----------------------------------------------------------------------------------------------------------------------------|
-| 5             | No HD data available for the region                                                                                         |
-|---------------|-----------------------------------------------------------------------------------------------------------------------------|
+| Data category |      Description                                                                                                                 |
+|---------------|----------------------------------------------------------------------------------------------------------------------------------|
+| 1             | HD data provided as (e.g. $100\ast100\:m^2$) raster or polygon grid with the same or in a different coordinate reference system  |
+|---------------|----------------------------------------------------------------------------------------------------------------------------------|
+| 2             | HD data provided as building footprints or street segments                                                                       |
+|---------------|----------------------------------------------------------------------------------------------------------------------------------|
+| 3             | HD data provided as a point or polygon layer, which contains the sum of the HD for regions of official administrative units      |                                                                                  
+|---------------|----------------------------------------------------------------------------------------------------------------------------------|
+| 4             | HD data provided in other data formats such as HD data associated with addresses                                                 |
+|---------------|----------------------------------------------------------------------------------------------------------------------------------|
+| 5             | No HD data available for the region                                                                                              |
+|---------------|----------------------------------------------------------------------------------------------------------------------------------|
 
-Depending on the scale of the heat demand map (regional or national), a global polygon mask is created from provided administrative boundaries with a cell size of 
+Depending on the scale of the heat demand map (local, regional, national, or even transnational), a global polygon mask is created from provided administrative boundaries with a cell size of 
 10 km by 10 km, for instance, and the target coordinate reference system. This mask is used to divide the study area into smaller chunks for a more reliable processing 
 as only data within each mask will be processed separately. If necessary, the global mask will be cropped to the extent of the
 available heat demand input data and populated with polygons having already the final cell size such as 100 m x 100 m. For each cell,
@@ -128,7 +128,6 @@ The provided heat demand is now distributed across the cells and will treated fr
 
 The data processing for data category 4 corresponds to a bottom-up approach. Here, the addresses will be converted using the GeoPy geolocator to coordinates. 
 Based on these, the building footprints are extracted from OpenStreet Maps using OSMnx. From there on, the data will be treated as data category 2.
-
 
 If no heat demand input data is available, the heat demand can be estimated using cultural data such as population density, landuse, and building-specific heat usage [@novosel; @meha] which will be implemented in a later development stage.
 

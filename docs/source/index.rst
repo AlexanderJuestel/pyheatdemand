@@ -16,7 +16,6 @@ This documentation contains information about the open-source package PyHD - PyH
 
 .. container:: button
 
-
     :doc:`About PyHD <about>` | :doc:`Installation <installation>` | :doc:`API Reference <pyhd>` | :doc:`Calculating Heat Demand <heatdemand>` | `GitHub Repository <https://github.com/AlexanderJuestel/pyhd>`_ |
 
 
