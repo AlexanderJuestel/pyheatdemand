@@ -1,5 +1,7 @@
 # PyHeatDemand - Processing Tool for Heat Demand Data
 
+![Fig1](docs/images/PyHD_Logo_long.png)
+
 <a name="overview"></a>
 # Overview 
 Knowledge about the heat demand (MWh/area/year) of a respective building, district, city, state, country or even on a 
