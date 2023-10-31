@@ -9,12 +9,12 @@ Here is how to get started.
 ### Questions
 
 For questions about PyHD (e.g. its applications, functionality, and usage), 
-please [search the existing issues for related questions](https://github.com/AlexanderJuestel/pyhd/issues).
-If your question has not already been asked, then [make a new issue](https://github.com/AlexanderJuestel/pyhd/issues/new/choose).
+please [search the existing issues for related questions](https://github.com/AlexanderJuestel/pyhheatdemand/issues).
+If your question has not already been asked, then [make a new issue](https://github.com/AlexanderJuestel/pyhheatdemand/issues/new/choose).
 
 ### Reporting Bugs
 
-Please report bugs on the [issue page using the bug report template](https://github.com/AlexanderJuestel/pyhd/issues/new?assignees=&labels=&template=bug_report.md&title=) and label the issue as a bug.
+Please report bugs on the [issue page using the bug report template](https://github.com/AlexanderJuestel/pyhheatdemand/issues/new?assignees=&labels=&template=bug_report.md&title=) and label the issue as a bug.
 The template asks essential questions for you to answer so that we can to understand, reproduce, and fix the bug. 
 Be verbose!
 Whenever possible, provide tracebacks and/or error messages, screenshots, and sample code or other files.
@@ -23,7 +23,7 @@ Whenever possible, provide tracebacks and/or error messages, screenshots, and sa
 
 We encourage users to submit ideas for improvements to the PyHD project. For
 this please create an issue on the
- [issue page](https://github.com/AlexanderJuestel/pyhd/issues) with the *Feature 
+ [issue page](https://github.com/AlexanderJuestel/pyhheatdemand/issues) with the *Feature 
  Request* template and label. Please make sure to use a descriptive title and to
  provide ample background information to help us implement that functionality
  in the future.
@@ -39,7 +39,7 @@ or anything that you think should be in the repository.
 Contributions should address an open issue (either a bug or a feature request).
 If you have found a new bug 
 or have an idea or a new feature, 
-then please [open the issue](https://github.com/AlexanderJuestel/pyhd/issues/new/choose) 
+then please [open the issue](https://github.com/AlexanderJuestel/pyhheatdemand/issues/new/choose) 
 for discussion and link to that issue in your pull request.
 
 ### Python code guidelines
@@ -78,7 +78,7 @@ For all comments, follow [PEP 8](https://www.python.org/dev/peps/pep-0008/).
 ### Licensing
 
 All contributed code will be licensed under 
-[a LGPL-3 license](https://github.com/AlexanderJuestel/pyhd/blob/main/LICENSE).
+[a LGPL-3 license](https://github.com/AlexanderJuestel/pyhheatdemand/blob/main/LICENSE).
 If you did not write the code yourself, 
 it is your responsibility to ensure that the existing license is compatible 
 and included in the contributed files. 
@@ -91,7 +91,7 @@ You should be familiar with `pytest` before contributing.
 Please run all tests locally before creating a pull request. 
 You can do this by running `pytest` via your terminal in your PyHD folder:
 ```bash
-cd ./path/to/pyhd
+cd ./path/to/pyhheatdemand
 pytest
 ```
 All tests are located in the `test` folder and its subfolders.  
@@ -100,4 +100,4 @@ All contributed code must include test code in the pull request.
 ### Pull Requests
 
 All contributions are made via pull requests (PR's) to the main branch. 
-You must complete the checklist in the [PR template](https://github.com/AlexanderJuestel/pyhd/blob/main/PULL_REQUEST_TEMPLATE.md) before we will review the PR and consider merging your contribution.
+You must complete the checklist in the [PR template](https://github.com/AlexanderJuestel/pyhheatdemand/blob/main/PULL_REQUEST_TEMPLATE.md) before we will review the PR and consider merging your contribution.

@@ -1,4 +1,4 @@
-# This workflow automatically creates a JOSS Paper Draft of the PyHD Paper
+# This workflow automatically creates a JOSS Paper Draft of the PyHeatDemand Paper
 
 name: joss_draft
 

@@ -1,4 +1,4 @@
-# PyHD - PyHeatDemand - Processing Tool for Heat Demand Data
+# PyHeatDemand - Processing Tool for Heat Demand Data
 
 <a name="overview"></a>
 # Overview 
@@ -18,7 +18,7 @@ demand map is also accessible within the [DGE Rollout Webviewer](https://data.ge
 
 <a name="installation"></a>
 ## Installation
-**PyHD** can be installed via PyPi using `pip install pyhd` or via Anaconda using `conda install -c conda-forge pyhd`. 
+**PyHD** can be installed via PyPi using `pip install pyheatdemand` or via Anaconda using `conda install -c conda-forge pyheatdemand`. 
 It is recommended to use the provided 
 environment.yml and use `conda env create -f environment.yml` to ensure that all dependencies are installed correctly. 
 Make sure that you have downloaded the environment file in that case. Alternatively, you can fork and clone the 

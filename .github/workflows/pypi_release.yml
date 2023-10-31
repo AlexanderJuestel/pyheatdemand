@@ -29,7 +29,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install setuptools wheel twine build
         pip install -r requirements.txt
-        #pip install pyhd[build]
+        #pip install pyheatdemand[build]
     - name: Build and publish
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERS }}

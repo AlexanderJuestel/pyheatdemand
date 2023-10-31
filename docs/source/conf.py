@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'PyHD'
+project = 'PyHeatDemand'
 copyright = '2023, Alexander Jüstel'
 author = 'Alexander Jüstel'
 

@@ -19,20 +19,20 @@ raster) cumulated for one year (lower temporal resolution) for different sectors
 sectors. Maps for the industrial heat demand are not available as the input data is not publicly available or can be deduced from cultural data. Customized
 solutions are therefore necessary for this branch to reduce greenhouse gas emissions. Heat demand input values for the
 residential and commercial sectors are easily accessible and assessable. With the new directives regarding energy
-efficiency, it becomes necessary for every city or commune to evaluate their heat demand. And this is where **PyHD**
-comes into place. Combining the functionality of well-known geospatial Python libraries, the open-source package **PyHD** provides tools for public entities, researchers, or students for processing heat demand input data associated with an
+efficiency, it becomes necessary for every city or commune to evaluate their heat demand. And this is where **PyHeatDemand**
+comes into place. Combining the functionality of well-known geospatial Python libraries, the open-source package **PyHeatDemand** provides tools for public entities, researchers, or students for processing heat demand input data associated with an
 
 administrative area (`point <https://shapely.readthedocs.io/en/stable/reference/shapely.Point.html>`_ or `polygon <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_), with a building footprint (`polygon <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_), with a street segment (`line <https://shapely.readthedocs.io/en/stable/reference/shapely.LineString.html>`_), or with an
 address directly provided in MWh but also as gas usage, district heating usage, or other sources of heat. The resulting
 heat demand map data can be analyzed using zonal statistics and can be compared to other administrative areas when working
-on regional or national scales. If heat demand maps already exist for a specific region, they can be analyzed using tools within **PyHD**.
-With **PyHD**, it has never been easier to create and analyze heat demand maps.
+on regional or national scales. If heat demand maps already exist for a specific region, they can be analyzed using tools within **PyHeatDemand**.
+With **PyHeatDemand**, it has never been easier to create and analyze heat demand maps.
 
 
 Demonstration Notebooks for Heat Demand Calculations
 ----------------------------------------------------
 
-Several Jupyter Notebooks are available that demonstrate the functionality of **PyHD**.
+Several Jupyter Notebooks are available that demonstrate the functionality of **PyHeatDemand**.
 
 .. toctree::
    :maxdepth: 1
@@ -61,7 +61,7 @@ In contrast to that, the bottom-up approach allows aggregating heat demand of hi
 
 .. image:: ../images/fig0.png
 
-**PyHD** processes geospatial data such as vector data (`points <https://shapely.readthedocs.io/en/stable/reference/shapely.Point.html>`_, `lines <https://shapely.readthedocs.io/en/stable/reference/shapely.LineString.html>`_, `polygons <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_), raster data or address data. Therefore,
+**PyHeatDemand** processes geospatial data such as vector data (`points <https://shapely.readthedocs.io/en/stable/reference/shapely.Point.html>`_, `lines <https://shapely.readthedocs.io/en/stable/reference/shapely.LineString.html>`_, `polygons <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_), raster data or address data. Therefore,
 we make use of the functionality implemented in well-known geospatial packages such as `GeoPandas <https://geopandas.org/en/stable/>`_,
 `Rasterio <https://rasterio.readthedocs.io/en/stable/>`_, `GeoPy <https://geopy.readthedocs.io/en/stable/>`_, or `OSMnx <https://osmnx.readthedocs.io/en/stable/>`_
 and their underlying dependencies such as `Pandas <https://pandas.pydata.org/>`_, `NumPy <https://numpy.org/>`_, `Shapely <https://shapely.readthedocs.io/en/stable/manual.html>`_, etc.
@@ -98,7 +98,7 @@ available heat demand input data.
 
     # Creating global 10 km x 10 km mask and cropping it to the borders of the provided administrative areas.
     # NB: The image below shows cells with a size of 50 km x 50 km for better visualization.
-    from pyhd import processing
+    from pyheatdemand import processing
     import geopandas as gpd
 
     borders = gpd.read_file('path/to/borders.shp')
@@ -190,7 +190,7 @@ If no heat demand input data is available, the heat demand can be estimated usin
 Processing Heat Demand Map Data
 -------------------------------
 
-Heat demand maps may contain millions of cells. Evaluating each cell would not be feasible. Therefore, **PyHD** utilizes the `rasterstats <https://github.com/perrygeo/python-rasterstats/>`_ package returning statistical values of the heat demand map for further analysis and results reporting.
+Heat demand maps may contain millions of cells. Evaluating each cell would not be feasible. Therefore, **PyHeatDemand** utilizes the `rasterstats <https://github.com/perrygeo/python-rasterstats/>`_ package returning statistical values of the heat demand map for further analysis and results reporting.
 
 .. code-block:: python
 
