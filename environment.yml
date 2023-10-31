@@ -7,7 +7,7 @@ dependencies:
   - rasterstats # also installing rasterio
   - pip
   - pip:
-      pyhd
+      pyheatdemand
       matplotlib
       tqdm
       geopy

@@ -10,7 +10,7 @@ sys.path.insert(0, '../')
 
 
 def test_create_polygon_mask():
-    from pyhd.processing import create_polygon_mask
+    from pyheatdemand.processing import create_polygon_mask
 
     gdf = gpd.GeoDataFrame(geometry=[Polygon([(0, 0),  # Bottom-left corner
                                               (0, 100),  # Top-left corner
@@ -41,7 +41,7 @@ def test_create_polygon_mask():
 
 
 def test_create_polygon_mask_error():
-    from pyhd.processing import create_polygon_mask
+    from pyheatdemand.processing import create_polygon_mask
 
     gdf = gpd.GeoDataFrame(geometry=[Polygon([(0, 0),  # Bottom-left corner
                                               (0, 100),  # Top-left corner
@@ -69,7 +69,7 @@ def test_create_polygon_mask_error():
 @pytest.mark.parametrize('path',
                          ['data/Data_Type_I_Raster.tif'])
 def test_vectorize_raster(path):
-    from pyhd.processing import vectorize_raster
+    from pyheatdemand.processing import vectorize_raster
 
     data = rasterio.open(path)
 
@@ -82,14 +82,14 @@ def test_vectorize_raster(path):
 @pytest.mark.parametrize('path',
                          ['data/Data_Type_I_Raster.tif'])
 def test_vectorize_raster_error(path):
-    from pyhd.processing import vectorize_raster
+    from pyheatdemand.processing import vectorize_raster
 
     with pytest.raises(TypeError):
         vectorize_raster(path=[path])
 
 
 def test_create_outline():
-    from pyhd.processing import create_outline
+    from pyheatdemand.processing import create_outline
 
     gdf = gpd.GeoDataFrame(geometry=[Polygon([(0, 0),  # Bottom-left corner
                                               (0, 100),  # Top-left corner
@@ -107,7 +107,7 @@ def test_create_outline():
 
 
 def test_create_outline_error():
-    from pyhd.processing import create_outline
+    from pyheatdemand.processing import create_outline
 
     gdf = gpd.GeoDataFrame(geometry=[Polygon([(0, 0),  # Bottom-left corner
                                               (0, 100),  # Top-left corner
@@ -127,7 +127,7 @@ def test_create_outline_error():
 @pytest.mark.parametrize('hd_gdf',
                          [gpd.read_file('data/Data_Type_I_Vector_HD_Data.shp')])
 def test_calculate_hd(mask_gdf, hd_gdf):
-    from pyhd.processing import calculate_hd
+    from pyheatdemand.processing import calculate_hd
 
     gdf_hd = calculate_hd(hd_gdf=hd_gdf,
                           mask_gdf=mask_gdf,
@@ -160,7 +160,7 @@ def test_calculate_hd(mask_gdf, hd_gdf):
 @pytest.mark.parametrize('hd_gdf',
                          [gpd.read_file('data/Data_Type_I_Vector_HD_Data.shp')])
 def test_calculate_hd_points(mask_gdf, hd_gdf):
-    from pyhd.processing import calculate_hd
+    from pyheatdemand.processing import calculate_hd
 
     hd_gdf['geometry'] = hd_gdf['geometry'].centroid
     gdf_hd = calculate_hd(hd_gdf=hd_gdf,
@@ -183,7 +183,7 @@ def test_calculate_hd_points(mask_gdf, hd_gdf):
 @pytest.mark.parametrize('hd_gdf',
                          [gpd.read_file('data/Data_Type_II_Vector_Lines.shp')])
 def test_calculate_hd_lines(mask_gdf, hd_gdf):
-    from pyhd.processing import calculate_hd
+    from pyheatdemand.processing import calculate_hd
 
     gdf_hd = calculate_hd(hd_gdf=hd_gdf,
                           mask_gdf=mask_gdf,
@@ -205,7 +205,7 @@ def test_calculate_hd_lines(mask_gdf, hd_gdf):
 @pytest.mark.parametrize('hd_gdf',
                          [gpd.read_file('data/Data_Type_I_Vector_HD_Data.shp')])
 def test_calculate_hd_error(mask_gdf, hd_gdf):
-    from pyhd.processing import calculate_hd
+    from pyheatdemand.processing import calculate_hd
 
     with pytest.raises(TypeError):
         gdf_hd = calculate_hd(hd_gdf=[hd_gdf],
@@ -231,7 +231,7 @@ def test_calculate_hd_error(mask_gdf, hd_gdf):
 @pytest.mark.parametrize('hd_gdf',
                          [gpd.read_file('data/Data_Type_I_Vector_HD_Data.shp')])
 def test_rasterize_gdf_hd(mask_gdf, hd_gdf):
-    from pyhd.processing import rasterize_gdf_hd, calculate_hd
+    from pyheatdemand.processing import rasterize_gdf_hd, calculate_hd
 
     gdf_hd = calculate_hd(hd_gdf=hd_gdf,
                           mask_gdf=mask_gdf,
@@ -259,7 +259,7 @@ def test_rasterize_gdf_hd(mask_gdf, hd_gdf):
 @pytest.mark.parametrize('hd_gdf',
                          [gpd.read_file('data/Data_Type_I_Vector_HD_Data.shp')])
 def test_rasterize_gdf_hd_error(mask_gdf, hd_gdf):
-    from pyhd.processing import rasterize_gdf_hd, calculate_hd
+    from pyheatdemand.processing import rasterize_gdf_hd, calculate_hd
 
     gdf_hd = calculate_hd(hd_gdf=hd_gdf,
                           mask_gdf=mask_gdf,
@@ -303,7 +303,7 @@ def test_rasterize_gdf_hd_error(mask_gdf, hd_gdf):
 @pytest.mark.parametrize('df',
                          [pd.read_csv('data/Data_Type_III_Point_Addresses.csv')])
 def test_obtain_coordinates_from_addresses(df):
-    from pyhd.processing import obtain_coordinates_from_addresses
+    from pyheatdemand.processing import obtain_coordinates_from_addresses
     df['PLZ'] = df['PLZ'].astype(int)
     df['Strasse'] = df['Strasse'].apply(
         lambda x: ''.join(' ' + char if char.isupper() else char for char in x).strip())
@@ -322,7 +322,7 @@ def test_obtain_coordinates_from_addresses(df):
 @pytest.mark.parametrize('df',
                          [pd.read_csv('data/Data_Type_III_Point_Addresses.csv')])
 def test_obtain_coordinates_from_addresses_error(df):
-    from pyhd.processing import obtain_coordinates_from_addresses
+    from pyheatdemand.processing import obtain_coordinates_from_addresses
     df['PLZ'] = df['PLZ'].astype(int)
     df['Strasse'] = df['Strasse'].apply(
         lambda x: ''.join(' ' + char if char.isupper() else char for char in x).strip())
@@ -372,7 +372,7 @@ def test_obtain_coordinates_from_addresses_error(df):
 
 
 def test_get_building_footprint():
-    from pyhd.processing import get_building_footprint
+    from pyheatdemand.processing import get_building_footprint
 
     gdf = get_building_footprint(point=Point(6.07868, 50.77918),
                                  dist=25)
@@ -386,7 +386,7 @@ def test_get_building_footprint():
 
 
 def test_get_building_footprint_error():
-    from pyhd.processing import get_building_footprint
+    from pyheatdemand.processing import get_building_footprint
 
     with pytest.raises(TypeError):
         get_building_footprint(point=[Point(6.07868, 50.77918)],
@@ -398,7 +398,7 @@ def test_get_building_footprint_error():
 
 
 def test_get_building_footprints():
-    from pyhd.processing import get_building_footprints
+    from pyheatdemand.processing import get_building_footprints
 
     points = gpd.GeoDataFrame(geometry=[Point(6.07868, 50.77918)],
                               crs='EPSG:4326')
@@ -426,7 +426,7 @@ def test_get_building_footprints():
 
 
 def test_get_building_footprints_error():
-    from pyhd.processing import get_building_footprints
+    from pyheatdemand.processing import get_building_footprints
     points = gpd.GeoDataFrame(geometry=[Point(6.07868, 50.77918)],
                               crs='EPSG:4326')
 
@@ -447,7 +447,7 @@ def test_get_building_footprints_error():
 
 
 def test_merge_rasters():
-    from pyhd.processing import merge_rasters
+    from pyheatdemand.processing import merge_rasters
 
     raster_list = os.listdir('data/rasters/')
     raster_list = [os.path.join(os.path.abspath('data/rasters/'), path) for path in raster_list]
@@ -456,7 +456,7 @@ def test_merge_rasters():
 
 
 def test_merge_rasters_error():
-    from pyhd.processing import merge_rasters
+    from pyheatdemand.processing import merge_rasters
 
     raster_list = os.listdir('data/rasters/')
     raster_list = [os.path.join(os.path.abspath('data/rasters/'), path) for path in raster_list]
@@ -469,7 +469,7 @@ def test_merge_rasters_error():
 
 
 def test_calculate_zonal_stats():
-    from pyhd.processing import calculate_zonal_stats
+    from pyheatdemand.processing import calculate_zonal_stats
 
     gdf_stats = calculate_zonal_stats("data/nw_dvg_krs.shp",
                                       "data/HD_RBZ_Köln.tif",
@@ -487,7 +487,7 @@ def test_calculate_zonal_stats():
 
 
 def test_calculate_zonal_stats_error():
-    from pyhd.processing import calculate_zonal_stats
+    from pyheatdemand.processing import calculate_zonal_stats
 
     with pytest.raises(TypeError):
         calculate_zonal_stats(["data/nw_dvg_krs.shp"],

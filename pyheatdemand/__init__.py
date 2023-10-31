@@ -3,4 +3,4 @@ try:
 except ImportError:
     __version__ = "unreleased"
 
-import pyhd.processing as processing
+import pyheatdemand.processing as processing
