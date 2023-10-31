@@ -16,7 +16,7 @@ This documentation contains information about the open-source package PyHeatDema
 
 .. container:: button
 
-    :doc:`About PyHeatDemand <about>` | :doc:`Installation <installation>` | :doc:`API Reference <pyheatdemand>` | :doc:`Calculating Heat Demand <heatdemand>` | `GitHub Repository <https://github.com/AlexanderJuestel/pyhd>`_ |
+    :doc:`About PyHeatDemand <about>` | :doc:`Installation <installation>` | :doc:`API Reference <pyheatdemand>` | :doc:`Calculating Heat Demand <heatdemand>` | `GitHub Repository <https://github.com/AlexanderJuestel/pyheatdemand>`_ |
 
 
 .. toctree::

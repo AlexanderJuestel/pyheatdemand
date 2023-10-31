@@ -5,7 +5,7 @@ Contributing
 
 Thank you for considering to contribute to PyHeatDemand!
 
-As PyHD is an open-source and a community-driven project, we need people like you to make the package even better, simpler to use for beginners, and to extend its functionality for more advanced users. There are several ways to contribute to PyHD:
+As PyHeatDemand is an open-source and a community-driven project, we need people like you to make the package even better, simpler to use for beginners, and to extend its functionality for more advanced users. There are several ways to contribute to PyHeatDemand:
 
 - Submitting bug report or requests for new features
 - Adding new or expanding existing tutorials and examples
@@ -15,16 +15,16 @@ As PyHD is an open-source and a community-driven project, we need people like yo
 How to get started with PyHeatDemand?
 -------------------------------------
 - Work through the examples and tutorials or work with your own data.
-- If you run into a problem and you think it is not related to PyHD directly but rather to the installation or your data or something just does not work, have a look at our `Github Discussion <https://github.com/AlexanderJuestel/pyheatdemand/discussions>`_ to ask your question. Maybe someone already had the same issue before and the answer is already available.
-- If you run into a problem and you think it is related to PyHD directly please `open a new issue on Github <https://github.com/AlexanderJuestel/pyheatdemand/issues/new?assignees=&labels=&template=bug_report.md&title=>`_. Our template will guide you through the necessary information.
-- If you work with a dataset and you think something is missing in PyHD please `open a new feature request on Github <https://github.com/AlexanderJuestel/pyheatdemand/issues/new?assignees=&labels=&template=feature_request.md&title=>`_. Our template will guide you through the necessary information. We will then try to implement the requested feature or support you in contributing yourself to the package.
+- If you run into a problem and you think it is not related to PyHeatDemand directly but rather to the installation or your data or something just does not work, have a look at our `Github Discussion <https://github.com/AlexanderJuestel/pyheatdemand/discussions>`_ to ask your question. Maybe someone already had the same issue before and the answer is already available.
+- If you run into a problem and you think it is related to PyHeatDemand directly please `open a new issue on Github <https://github.com/AlexanderJuestel/pyheatdemand/issues/new?assignees=&labels=&template=bug_report.md&title=>`_. Our template will guide you through the necessary information.
+- If you work with a dataset and you think something is missing in PyHeatDemand please `open a new feature request on Github <https://github.com/AlexanderJuestel/pyheatdemand/issues/new?assignees=&labels=&template=feature_request.md&title=>`_. Our template will guide you through the necessary information. We will then try to implement the requested feature or support you in contributing yourself to the package.
 - If you already have code for a new feature/tutorial/example, we would appreciate it if you open a pull request and contribute this way. Our team will then support you in terms of testing your code, suggesting improvements and adding tutorials or examples for your implemented feature.
 - If you find typos or other error in our README or the documentation open a new issue or fix the error right away by opening a pull request.
 
-How to get in touch with the PyHD developers?
----------------------------------------------
+How to get in touch with the PyHeatDemand developers?
+-----------------------------------------------------
 
-You can reach the developers of PyHD either by opening a new issue on Github (feature request or bug report), open a pull request to contribute directly to the package, ask a question in the Github Discussions forum or via the `Slack workspace of the Software Underground <https://softwareunderground.org/slack>`_.
+You can reach the developers of PyHeatDemand either by opening a new issue on Github (feature request or bug report), open a pull request to contribute directly to the package, ask a question in the Github Discussions forum or via the `Slack workspace of the Software Underground <https://softwareunderground.org/slack>`_.
 
 How to contribute code?
 ------------------------
