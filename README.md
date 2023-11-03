@@ -55,6 +55,9 @@ A CI is present to test the current code. It can be initiated using `pytest --co
 running the tests, `coverage report -m` can be executed to get an report on the coverage and which lines are not covered
 by the tests.
 
+## API Reference
+For creating the API reference, navigate to the `docs` folder and execute `sphinx-apidoc -o source/ ../pyheatdemand`.
+
 <a name="ref"></a>
 ## References
 
