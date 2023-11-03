@@ -188,7 +188,7 @@ def create_outline(gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
 
 
 def calculate_hd(hd_gdf: gpd.GeoDataFrame,
-                 mask_gdf: gpd.GeoDataFrame,
+                 mask_gdf: Union[gpd.GeoDataFrame, Polygon],
                  hd_data_column: str = ''):
     """Calculate Heat Demand.
 
@@ -196,7 +196,7 @@ def calculate_hd(hd_gdf: gpd.GeoDataFrame,
     __________
         hd_gdf : gpd.GeoDataFrame
             Heat demand data as GeoDataFrame.
-        mask_gdf : gpd.GeoDataFrame
+        mask_gdf : Union[gpd.GeoDataFrame, shapely.geometry.Polygon]
             Mask for the output Heat Demand Data.
         hd_data_column : str
             Name of the column that contains the Heat Demand Data, e.g. ``hd_data_column='HD'``.
@@ -224,6 +224,11 @@ def calculate_hd(hd_gdf: gpd.GeoDataFrame,
 
     """
 
+    # Converting Shapely Polygon to GeoDataFrame
+    if isinstance(mask_gdf, Polygon):
+        mask_gdf = gpd.GeoDataFrame(geometry=[mask_gdf],
+                                    crs=hd_gdf.crs)
+
     # Checking that the hd_gdf is of type GeoDataFrame
     if not isinstance(hd_gdf, gpd.GeoDataFrame):
         raise TypeError('The heat demand gdf must be provided as GeoDataFrame')
@@ -244,13 +249,16 @@ def calculate_hd(hd_gdf: gpd.GeoDataFrame,
     if mask_gdf.crs != hd_gdf.crs:
         hd_gdf = hd_gdf.to_crs(mask_gdf.crs)
 
+    # Exploding MultiPolygons
     if any(shapely.get_type_id(hd_gdf.geometry) == 6):
         hd_gdf = hd_gdf.explode(index_parts=True).reset_index(drop=True)
 
+    # Assigning area to Polygons
     if all(shapely.get_type_id(hd_gdf.geometry) == 3):
         # Assigning area of original geometries to GeoDataFrame
         hd_gdf['area'] = hd_gdf.area
 
+    # Assigning lengths to LineStrings
     elif all(shapely.get_type_id(hd_gdf.geometry) == 1):
         # Assigning length of original geometries to GeoDataFrame
         hd_gdf['length'] = hd_gdf.length
@@ -258,6 +266,8 @@ def calculate_hd(hd_gdf: gpd.GeoDataFrame,
     # Overlaying Heat Demand Data with Mask
     overlay = gpd.overlay(df1=hd_gdf,
                           df2=mask_gdf)
+
+    # Calculate HD for Polygons
     if all(shapely.get_type_id(hd_gdf.geometry) == 3):
         # Assigning area of splitted geometries to GeoDataFrame
         overlay['area_new'] = overlay.area
@@ -265,6 +275,7 @@ def calculate_hd(hd_gdf: gpd.GeoDataFrame,
         # Calculating the share of the original Heat Demand for each splitted geometry
         overlay['HD'] = overlay[hd_data_column] * overlay['area_new'] / overlay['area']
 
+    #  Calculate HD for LineStrings
     elif all(shapely.get_type_id(hd_gdf.geometry) == 1):
         # Assigning length of splitted geometries to GeoDataFrame
         overlay['length_new'] = overlay.length
@@ -272,6 +283,7 @@ def calculate_hd(hd_gdf: gpd.GeoDataFrame,
         # Calculating the share of the original Heat Demand for each splitted geometry
         overlay['HD'] = overlay[hd_data_column] * overlay['length_new'] / overlay['length']
 
+    # Calculate HD for Points
     elif all(shapely.get_type_id(hd_gdf.geometry) == 0):
         overlay['HD'] = overlay[hd_data_column]
 
