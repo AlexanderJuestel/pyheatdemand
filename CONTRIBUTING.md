@@ -9,8 +9,10 @@ Here is how to get started.
 ### Questions
 
 For questions about PyHeatDemand (e.g. its applications, functionality, and usage), 
+
 please [search the existing issues for related questions](https://github.com/AlexanderJuestel/pyheatdemand/issues).
 If your question has not already been asked, then [make a new issue](https://github.com/AlexanderJuestel/pyheatdemand/issues/new/choose).
+
 
 ### Reporting Bugs
 
