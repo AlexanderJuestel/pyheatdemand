@@ -51,7 +51,7 @@ Resources
 * `DGE Rollout Webviewer <https://data.geus.dk/egdi/?mapname=dgerolloutwebtool#baslay=baseMapGEUS&extent=39620,-1581250,8465360,8046630&layers=dge_heat_final>`_
 
 Citing PyHeatDemand
------------
+-------------------
 If you are using **PyHeatDemand** for your scientific research, please remember to cite our work.
 
 .. code::

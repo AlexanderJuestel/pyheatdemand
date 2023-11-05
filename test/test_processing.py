@@ -154,6 +154,13 @@ def test_calculate_hd(mask_gdf, hd_gdf):
     assert isinstance(gdf_hd, gpd.GeoDataFrame)
     assert gdf_hd.crs == hd_gdf.crs
 
+    gdf_hd = calculate_hd(hd_gdf=hd_gdf,
+                          mask_gdf=mask_gdf.iloc[0].geometry,
+                          hd_data_column='WOHNGEB_WB')
+
+    assert isinstance(gdf_hd, gpd.GeoDataFrame)
+    assert gdf_hd.crs == hd_gdf.crs
+
 
 @pytest.mark.parametrize('mask_gdf',
                          [gpd.read_file('data/Interreg_NWE_mask_500m_EPSG3034.shp')])
