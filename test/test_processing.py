@@ -519,3 +519,114 @@ def test_calculate_zonal_stats_error():
                               "data/HD_RBZ_Köln.tif",
                               'EPSG:3034',
                               calculate_heated_area='False')
+
+
+@pytest.mark.parametrize('mask_gdf',
+                         [gpd.read_file('data/Interreg_NWE_mask_500m_EPSG3034.shp')])
+@pytest.mark.parametrize('hd_gdf',
+                         [gpd.read_file('data/Data_Type_I_Vector_HD_Data.shp')])
+def test_calculate_hd_sindex(mask_gdf, hd_gdf):
+    from pyheatdemand.processing import calculate_hd_sindex
+
+    gdf_hd = calculate_hd_sindex(hd_gdf=hd_gdf,
+                                 mask_gdf=mask_gdf,
+                                 hd_data_column='WOHNGEB_WB')
+
+    assert isinstance(gdf_hd, gpd.GeoDataFrame)
+    assert gdf_hd.crs == hd_gdf.crs
+
+    hd_gdf_multi = gpd.GeoDataFrame(geometry=[MultiPolygon([hd_gdf.geometry.values])],
+                                    crs='EPSG:3034')
+    hd_gdf_multi['WOHNGEB_WB'] = 100
+
+    gdf_hd = calculate_hd_sindex(hd_gdf=hd_gdf_multi,
+                                 mask_gdf=mask_gdf,
+                                 hd_data_column='WOHNGEB_WB')
+
+    assert isinstance(gdf_hd, gpd.GeoDataFrame)
+    assert gdf_hd.crs == hd_gdf.crs
+
+    gdf_hd = calculate_hd_sindex(hd_gdf=hd_gdf.to_crs('EPSG:25832'),
+                                 mask_gdf=mask_gdf,
+                                 hd_data_column='WOHNGEB_WB')
+
+    assert isinstance(gdf_hd, gpd.GeoDataFrame)
+    assert gdf_hd.crs == hd_gdf.crs
+
+    gdf_hd = calculate_hd_sindex(hd_gdf=hd_gdf,
+                                 mask_gdf=mask_gdf.iloc[0].geometry,
+                                 hd_data_column='WOHNGEB_WB')
+
+    assert isinstance(gdf_hd, gpd.GeoDataFrame)
+    assert gdf_hd.crs == hd_gdf.crs
+
+
+@pytest.mark.parametrize('mask_gdf',
+                         [gpd.read_file('data/Interreg_NWE_mask_500m_EPSG3034.shp')])
+@pytest.mark.parametrize('hd_gdf',
+                         [gpd.read_file('data/Data_Type_I_Vector_HD_Data.shp')])
+def test_calculate_hd_sindex_points(mask_gdf, hd_gdf):
+    from pyheatdemand.processing import calculate_hd_sindex
+
+    hd_gdf['geometry'] = hd_gdf['geometry'].centroid
+    gdf_hd = calculate_hd_sindex(hd_gdf=hd_gdf,
+                                 mask_gdf=mask_gdf,
+                                 hd_data_column='WOHNGEB_WB')
+
+    assert isinstance(gdf_hd, gpd.GeoDataFrame)
+    assert gdf_hd.crs == hd_gdf.crs
+
+    gdf_hd = calculate_hd_sindex(hd_gdf=hd_gdf.to_crs('EPSG:25832'),
+                                 mask_gdf=mask_gdf,
+                                 hd_data_column='WOHNGEB_WB')
+
+    assert isinstance(gdf_hd, gpd.GeoDataFrame)
+    assert gdf_hd.crs == hd_gdf.crs
+
+
+@pytest.mark.parametrize('mask_gdf',
+                         [gpd.read_file('data/Interreg_NWE_mask_500m_EPSG3034.shp')])
+@pytest.mark.parametrize('hd_gdf',
+                         [gpd.read_file('data/Data_Type_II_Vector_Lines.shp')])
+def test_calculate_hd_sindex_lines(mask_gdf, hd_gdf):
+    from pyheatdemand.processing import calculate_hd_sindex
+
+    gdf_hd = calculate_hd_sindex(hd_gdf=hd_gdf,
+                                 mask_gdf=mask_gdf,
+                                 hd_data_column='RW_WW_WBED')
+
+    assert isinstance(gdf_hd, gpd.GeoDataFrame)
+    assert gdf_hd.crs == hd_gdf.to_crs('EPSG:3034').crs
+
+    gdf_hd = calculate_hd_sindex(hd_gdf=hd_gdf,
+                                 mask_gdf=mask_gdf,
+                                 hd_data_column='RW_WW_WBED')
+
+    assert isinstance(gdf_hd, gpd.GeoDataFrame)
+    assert gdf_hd.crs == hd_gdf.to_crs('EPSG:3034').crs
+
+
+@pytest.mark.parametrize('mask_gdf',
+                         [gpd.read_file('data/Interreg_NWE_mask_500m_EPSG3034.shp')])
+@pytest.mark.parametrize('hd_gdf',
+                         [gpd.read_file('data/Data_Type_I_Vector_HD_Data.shp')])
+def test_calculate_hd_sindex_error(mask_gdf, hd_gdf):
+    from pyheatdemand.processing import calculate_hd_sindex
+
+    with pytest.raises(TypeError):
+        gdf_hd = calculate_hd_sindex(hd_gdf=[hd_gdf],
+                                     mask_gdf=mask_gdf,
+                                     hd_data_column='WOHNGEB_WB')
+    with pytest.raises(TypeError):
+        gdf_hd = calculate_hd_sindex(hd_gdf=hd_gdf,
+                                     mask_gdf=[mask_gdf],
+                                     hd_data_column='WOHNGEB_WB')
+    with pytest.raises(TypeError):
+        gdf_hd = calculate_hd_sindex(hd_gdf=hd_gdf,
+                                     mask_gdf=mask_gdf,
+                                     hd_data_column=['WOHNGEB_WB'])
+
+    with pytest.raises(ValueError):
+        gdf_hd = calculate_hd_sindex(hd_gdf=hd_gdf,
+                                     mask_gdf=mask_gdf,
+                                     hd_data_column='WOHNGEB_W')

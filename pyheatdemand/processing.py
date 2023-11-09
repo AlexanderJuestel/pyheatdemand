@@ -321,6 +321,101 @@ def calculate_hd(hd_gdf: gpd.GeoDataFrame,
     return gdf_hd
 
 
+def calculate_hd_sindex(hd_gdf: gpd.GeoDataFrame,
+                        mask_gdf: Union[gpd.GeoDataFrame, Polygon],
+                        hd_data_column: str = ''):
+    """Calculate Heat Demand und Spatial Indices.
+
+    Parameters
+    __________
+        hd_gdf : gpd.GeoDataFrame
+            Heat demand data as GeoDataFrame.
+        mask_gdf : Union[gpd.GeoDataFrame, shapely.geometry.Polygon]
+            Mask for the output Heat Demand Data.
+        hd_data_column : str
+            Name of the column that contains the Heat Demand Data, e.g. ``hd_data_column='HD'``.
+
+    Returns
+    _______
+
+        gdf_hd : gpd.GeoDataFrame
+            Output GeoDataFrame with Heat Demand Data.
+
+    Raises
+    ______
+        TypeError
+            If the wrong input data types are provided.
+
+    Examples
+    ________
+
+        >>> gdf_hd = processing.calculate_hd_sindex(hd_gdf=hd_gdf, mask_gdf=mask_gdf, hd_data_column='HD')
+        >>> gdf_hd
+            HD           geometry
+        0   111.620963   POLYGON ((3726770.877 2671399.353, 3726870.877...
+        1   142.831789   POLYGON ((3726770.877 2671499.353, 3726870.877...
+        2   20.780601    POLYGON ((3726770.877 2671699.353, 3726870.877...
+
+    """
+
+    # Converting Shapely Polygon to GeoDataFrame
+    if isinstance(mask_gdf, Polygon):
+        mask_gdf = gpd.GeoDataFrame(geometry=[mask_gdf],
+                                    crs=hd_gdf.crs)
+
+    # Checking that the hd_gdf is of type GeoDataFrame
+    if not isinstance(hd_gdf, gpd.GeoDataFrame):
+        raise TypeError('The heat demand gdf must be provided as GeoDataFrame')
+
+    # Checking that the HD Data Column is in the HD GeoDataFrame
+    if not hd_data_column in hd_gdf:
+        raise ValueError('%s is not a column in the GeoDataFrame' % hd_data_column)
+
+    # Checking that the mask_gdf is of type GeoDataFrame
+    if not isinstance(mask_gdf, gpd.GeoDataFrame):
+        raise TypeError('The mask gdf must be provided as GeoDataFrame')
+
+    # Checking that the Heat Demand Data Column is provided as string
+    if not isinstance(hd_data_column, str):
+        raise TypeError('The heat demand data column must be provided as string')
+
+    # Reprojecting Data if necessary
+    if mask_gdf.crs != hd_gdf.crs:
+        hd_gdf = hd_gdf.to_crs(mask_gdf.crs)
+
+    # Exploding MultiPolygons
+    if any(shapely.get_type_id(hd_gdf.geometry) == 6):
+        hd_gdf = hd_gdf.explode(index_parts=True).reset_index(drop=True)
+
+    # Assigning area to Polygons
+    if all(shapely.get_type_id(hd_gdf.geometry) == 3):
+        # Assigning area of original geometries to GeoDataFrame
+        hd_gdf['area'] = hd_gdf.area
+
+    # Assigning lengths to LineStrings
+    elif all(shapely.get_type_id(hd_gdf.geometry) == 1):
+        # Assigning length of original geometries to GeoDataFrame
+        hd_gdf['length'] = hd_gdf.length
+
+    # Querying spatial index
+    grid_ix, buildings_ix = hd_gdf.sindex.query(mask_gdf.geometry, predicate=None)
+
+    # Getting heat demand per mask cell
+    heat_per_grid_cell = hd_gdf[hd_data_column].iloc[buildings_ix].groupby(grid_ix).sum()
+
+    # Creating GeoDataFrame
+    gdf_hd = mask_gdf.iloc[pd.DataFrame(heat_per_grid_cell).index]
+
+    # Assigning Heat Demand Values
+    gdf_hd['HD'] = heat_per_grid_cell.values
+
+    # Resetting index
+    gdf_hd = gdf_hd.reset_index().drop('index',
+                                       axis=1)
+
+    return gdf_hd
+
+
 def rasterize_gdf_hd(gdf_hd: gpd.GeoDataFrame,
                      path_out: str,
                      crs: Union[str, pyproj.crs.crs.CRS] = 'EPSG:3034',
@@ -780,20 +875,20 @@ def calculate_zonal_stats(path_mask: str,
     gdf['Average Heat demand per unit area'] = gdf['mean']
 
     # Calculating share of total heat demand for every geometry
-    gdf['Share of Total HD [%]'] = gdf['sum']*100/total_hd
+    gdf['Share of Total HD [%]'] = gdf['sum'] * 100 / total_hd
 
     # Calculating share of total area for every geometry
-    gdf['Share of Total Area [%]'] = gdf.area*100/total_area
+    gdf['Share of Total Area [%]'] = gdf.area * 100 / total_area
 
     if calculate_heated_area:
         # Opening raster to get resolution
         raster = rasterio.open(path_raster)
 
         # Calculating for heated area
-        gdf['Heated Area'] = gdf['count']*raster.res[0]*raster.res[1]
+        gdf['Heated Area'] = gdf['count'] * raster.res[0] * raster.res[1]
 
         # Calculating share for heated area
-        gdf['Share of Heated Area [%]'] = gdf['Heated Area']*100/gdf.area
+        gdf['Share of Heated Area [%]'] = gdf['Heated Area'] * 100 / gdf.area
 
     # Adding CRS manually as it is not passed from rasterstats,
     # see also https://github.com/perrygeo/python-rasterstats/issues/295

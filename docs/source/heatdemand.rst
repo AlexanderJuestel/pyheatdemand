@@ -64,7 +64,8 @@ In contrast to that, the bottom-up approach allows aggregating heat demand of hi
 **PyHeatDemand** processes geospatial data such as vector data (`points <https://shapely.readthedocs.io/en/stable/reference/shapely.Point.html>`_, `lines <https://shapely.readthedocs.io/en/stable/reference/shapely.LineString.html>`_, `polygons <https://shapely.readthedocs.io/en/stable/reference/shapely.Polygon.html>`_), raster data or address data. Therefore,
 we make use of the functionality implemented in well-known geospatial packages such as `GeoPandas <https://geopandas.org/en/stable/>`_,
 `Rasterio <https://rasterio.readthedocs.io/en/stable/>`_, `GeoPy <https://geopy.readthedocs.io/en/stable/>`_, or `OSMnx <https://osmnx.readthedocs.io/en/stable/>`_
-and their underlying dependencies such as `Pandas <https://pandas.pydata.org/>`_, `NumPy <https://numpy.org/>`_, `Shapely <https://shapely.readthedocs.io/en/stable/manual.html>`_, etc.
+and their underlying dependencies such as `Pandas <https://pandas.pydata.org/>`_, `NumPy <https://numpy.org/>`_, `Shapely <https://shapely.readthedocs.io/en/stable/manual.html>`_, etc. In particular, we are utilizing the powerful implementation of `Spatial Indices <https://geopandas.org/en/stable/docs/reference/sindex.html>`_ in GeoPandas allowing for processing speed-ups by orders of magnitudes compared to performing regular overlays and spatial joins for the processing of heat demand input data.
+
 
 The creation of a heat demand map follows a general workflow (Fig. 2) followed by a data-category-specific workflow for five defined
 input data categories (Fig. 3 & 4). The different input data categories are listed in the table below.
