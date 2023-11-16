@@ -1,5 +1,12 @@
 # PyHeatDemand - Processing Tool for Heat Demand Data
 
+![PyPI - Version](https://img.shields.io/pypi/v/pyheatdemand)
+![Conda](https://img.shields.io/conda/v/conda-forge/pyheatdemand)
+![GitHub License](https://img.shields.io/github/license/AlexanderJuestel/pyheatdemand)
+![Read the Docs](https://img.shields.io/readthedocs/pyhd)
+[![status](https://joss.theoj.org/papers/05971e44bad3a2bc8f0bdbebc4013515/status.svg)](https://joss.theoj.org/papers/05971e44bad3a2bc8f0bdbebc4013515)
+
+
 ![Fig1](docs/images/PyHD_Logo_long.png)
 
 <a name="overview"></a>
