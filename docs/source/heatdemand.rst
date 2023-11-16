@@ -51,6 +51,7 @@ Several Jupyter Notebooks are available that demonstrate the functionality of **
    notebooks/11_Processing_Data_Merging_and_Stitching_Resulting_Rasters
    notebooks/12_Processing_Results
    notebooks/13_Processing_and_merging_heat_demand_data_for_NRW
+   notebooks/14_Refining_Polygon_Mask
 
 Processing Heat Demand Input Data
 ---------------------------------

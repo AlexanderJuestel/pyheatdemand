@@ -21,19 +21,22 @@ import geopy
 import osmnx
 
 
-def create_polygon_mask(gdf: gpd.GeoDataFrame,
+def create_polygon_mask(gdf: Union[gpd.GeoDataFrame, Polygon],
                         step_size: int,
-                        crop_gdf: bool = False) -> gpd.GeoDataFrame:
+                        crop_gdf: bool = False,
+                        crs: Union[str, pyproj.crs.crs.CRS] = None) -> gpd.GeoDataFrame:
     """Create a mask GeoDataFrame consisting of squares with a defined step_size.
 
     Parameters
     ----------
-        gdf : gpd.GeoDataFrame
-            GeoDataFrame over which a mask is created.
+        gdf : Union[gpd.GeoDataFrame, shapely.geometry.Polygon]
+            GeoDataFrame/Polygon over which a mask is created.
         step_size : int
             Size of the rasterized squares in meters, e.g. ``step_size=100``.
         crop_gdf : bool, default: ``False``
             Boolean to either crop the GeoDataFrame to the outline or return it as is, e.g. ``crop_gdf=False``.
+        crs : Union[str, pyproj.crs.crs.CRS]
+            Coordinate Reference System when providing Shapely Polygons as input.
 
     Returns
     --------
@@ -57,6 +60,12 @@ def create_polygon_mask(gdf: gpd.GeoDataFrame,
 
 
     """
+    # Converting Polygon to GeoDataFrame
+    if isinstance(gdf, Polygon):
+        if not isinstance(crs, (str, pyproj.crs.crs.CRS)):
+            raise TypeError('CRS must be provided as string or pyproj CRS object')
+        gdf = gpd.GeoDataFrame(geometry=[gdf],
+                               crs=crs)
 
     # Checking that the gdf is of type GeoDataFrame
     if not isinstance(gdf, gpd.GeoDataFrame):
@@ -97,6 +106,105 @@ def create_polygon_mask(gdf: gpd.GeoDataFrame,
         gdf_mask = gdf_mask.sjoin(gdf).reset_index()[['geometry']]
 
     return gdf_mask
+
+
+def refine_mask(mask: gpd.GeoDataFrame,
+                data: gpd.GeoDataFrame,
+                num_of_points: int,
+                cell_size: int,
+                area_limit: Union[float, int] = None) -> gpd.GeoDataFrame:
+    """Refine polygon mask.
+
+    Parameters
+    __________
+        mask : gpd.GeoDataFrame
+            Original mask.
+        data : gpd.GeoDataFrame
+            Heat demand data, usually polygons.
+        num_of_points : int
+            Number of points that need to be in one cell for refinement, e.g. ``num_of_points=100``.
+        cell_size : int
+            Cell size of the new cells, cell size should be a divisor of of the original cell size, e.g. ``cell_size=1000``.
+        area_limit : Union[float, int]
+            For multiple refinements, the area limit can be defined to only further refine already refined cells, e.g. ``area_limit=10000``.
+
+    Returns
+    _______
+        grid_refs : gpd.GeoDataFrame
+            GeoDataFrame containing the refined mask polygons.
+
+    Raises
+    ______
+        TypeError
+            If the wrong input data types are provided.
+
+    Examples
+    ________
+
+        >>> mask = refine_mask(mask=mask, data=data, num_of_points=100, cell_size=1000)
+        >>> mask
+            geometry
+        0   POLYGON ((2651470.877 2135999.353, 2661470.877...
+        1   POLYGON ((2651470.877 2145999.353, 2661470.877...
+        2   POLYGON ((2651470.877 2155999.353, 2661470.877...
+
+
+    """
+    # Checking that the mask is of type GeoDataFrame
+    if not isinstance(mask, gpd.GeoDataFrame):
+        raise TypeError('Mask must be provided as GeoPandas GeoDataFrame.')
+
+    # Checking that the data is of type GeoDataFrame
+    if not isinstance(data, gpd.GeoDataFrame):
+        raise TypeError('Input data must be provided as GeoPandas GeoDataFrame.')
+
+    # Checking that the number of points is of type int
+    if not isinstance(num_of_points, int):
+        raise TypeError('Number of points must be provided as int.')
+
+    # Checking that the cell size is of type int
+    if not isinstance(cell_size, int):
+        raise TypeError('Cell size must be provided as int.')
+
+    # Checking that the area limit is of type float
+    if area_limit:
+        if not isinstance(area_limit, (float, int)):
+            raise TypeError('Area limit must be provided as type float.')
+
+    # Only select already redefined polygons for further refinement
+    mask_above_limit = pd.DataFrame()
+    if area_limit is not None:
+        mask_above_limit = mask[mask.area > area_limit].reset_index(drop=True)
+        mask = mask[mask.area <= area_limit].reset_index(drop=True)
+
+    # Create centroids of geometries
+    data['geometry'] = data.centroid
+
+    # Join data with grid
+    grid_joined = gpd.sjoin(left_df=data,
+                            right_df=mask)
+
+    # Count number of points per polygon
+    df_value_counts = pd.DataFrame(data=grid_joined['index_right'].value_counts())
+
+    # Filter df_value_counts by threshold number of data points within one Polygon
+    df_sel = df_value_counts[df_value_counts['count'] >= num_of_points]
+
+    # Select Polygons from mask
+    grid_sel = mask.iloc[df_sel.index].sort_index().reset_index(drop=True)
+
+    # Create masks within selected polygons
+    grid_ref = pd.concat([create_polygon_mask(gdf=grid_sel.iloc[i]['geometry'],
+                                              step_size=cell_size,
+                                              crs=mask.crs) for i in range(len(grid_sel))]).reset_index(drop=True)
+
+    # Drop old polygons
+    grid_dropped = mask.drop(index=df_sel.index).reset_index(drop=True)
+
+    # Merge GeoDataFrames
+    grid_refs = pd.concat([mask_above_limit, grid_dropped, grid_ref]).reset_index(drop=True)
+
+    return grid_refs
 
 
 def vectorize_raster(path: str) -> gpd.GeoDataFrame:
