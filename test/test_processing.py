@@ -2,6 +2,7 @@ import pytest
 import rasterio
 import pandas as pd
 import geopandas as gpd
+import numpy as np
 from shapely.geometry import Polygon, Point, MultiPolygon
 import sys
 import os
@@ -39,6 +40,16 @@ def test_create_polygon_mask():
     assert all(mask.area == 100) == True
     assert mask.crs == 'EPSG:3034'
 
+    mask = create_polygon_mask(gdf=gdf.iloc[0].geometry,
+                               step_size=10,
+                               crop_gdf=True,
+                               crs='EPSG:3034')
+
+    assert isinstance(mask, gpd.GeoDataFrame)
+    assert len(mask) == 100
+    assert all(mask.area == 100) == True
+    assert mask.crs == 'EPSG:3034'
+
 
 def test_create_polygon_mask_error():
     from pyheatdemand.processing import create_polygon_mask
@@ -64,6 +75,12 @@ def test_create_polygon_mask_error():
         create_polygon_mask(gdf=gdf,
                             step_size=10,
                             crop_gdf='False')
+
+    with pytest.raises(TypeError):
+        create_polygon_mask(gdf=gdf.iloc[0].geometry,
+                            step_size=10,
+                            crop_gdf=True,
+                            crs=['EPSG:3034'])
 
 
 @pytest.mark.parametrize('path',
@@ -630,3 +647,94 @@ def test_calculate_hd_sindex_error(mask_gdf, hd_gdf):
         gdf_hd = calculate_hd_sindex(hd_gdf=hd_gdf,
                                      mask_gdf=mask_gdf,
                                      hd_data_column='WOHNGEB_W')
+
+
+def test_refine_mask():
+    from pyheatdemand.processing import refine_mask
+
+    mask = gpd.GeoDataFrame(geometry=[Polygon([(0, 0),  # Bottom-left corner
+                                               (0, 100),  # Top-left corner
+                                               (100, 100),  # Top-right corner
+                                               (100, 0),  # Bottom-right corner
+                                               (0, 0)  # Close the polygon by repeating the first point
+                                               ])],
+                            crs='EPSG:3034'
+                            )
+    np.random.seed(1)
+    x = np.random.randint(low=0,
+                          high=100,
+                          size=1000)
+
+    y = np.random.randint(low=0,
+                          high=100,
+                          size=1000)
+    data = gpd.GeoDataFrame(geometry=gpd.points_from_xy(x=x, y=y, crs='EPSG:3034'))
+
+    gdf_refined = refine_mask(mask=mask,
+                              data=data,
+                              num_of_points=10,
+                              cell_size=50,
+                              )
+
+    gdf_refined = refine_mask(mask=gdf_refined,
+                              data=data,
+                              num_of_points=10,
+                              cell_size=50,
+                              area_limit=50*50
+                              )
+
+    assert isinstance(gdf_refined, gpd.GeoDataFrame)
+
+
+def test_refine_mask_error():
+    from pyheatdemand.processing import refine_mask
+
+    mask = gpd.GeoDataFrame(geometry=[Polygon([(0, 0),  # Bottom-left corner
+                                               (0, 100),  # Top-left corner
+                                               (100, 100),  # Top-right corner
+                                               (100, 0),  # Bottom-right corner
+                                               (0, 0)  # Close the polygon by repeating the first point
+                                               ])],
+                            crs='EPSG:3034'
+                            )
+    np.random.seed(1)
+    x = np.random.randint(low=0,
+                          high=100,
+                          size=1000)
+
+    y = np.random.randint(low=0,
+                          high=100,
+                          size=1000)
+    data = gpd.GeoDataFrame(geometry=gpd.points_from_xy(x=x, y=y, crs='EPSG:3034'))
+
+    with pytest.raises(TypeError):
+        refine_mask(mask=[mask],
+                    data=data,
+                    num_of_points=10,
+                    cell_size=50,
+                    )
+    with pytest.raises(TypeError):
+        refine_mask(mask=mask,
+                    data=[data],
+                    num_of_points=10,
+                    cell_size=50,
+                    )
+    with pytest.raises(TypeError):
+        refine_mask(mask=mask,
+                    data=data,
+                    num_of_points=[10],
+                    cell_size=50,
+                    )
+    with pytest.raises(TypeError):
+        refine_mask(mask=mask,
+                    data=data,
+                    num_of_points=10,
+                    cell_size=[50],
+                    )
+    with pytest.raises(TypeError):
+        refine_mask(mask=mask,
+                    data=data,
+                    num_of_points=10,
+                    cell_size=50,
+                    area_limit=[100]
+                    )
