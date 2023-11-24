@@ -138,6 +138,8 @@ def refine_mask(mask: gpd.GeoDataFrame,
         TypeError
             If the wrong input data types are provided.
 
+    .. versionadded:: 0.0.9
+
     Examples
     ________
 
@@ -233,6 +235,8 @@ def quad_tree_mask_refinement(mask: gpd.GeoDataFrame,
     ______
         TypeError
             If the wrong input data types are provided.
+
+    .. versionadded:: 0.0.9
 
     Examples
     ________
