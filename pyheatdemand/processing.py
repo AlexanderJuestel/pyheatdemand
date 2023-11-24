@@ -1126,6 +1126,8 @@ def create_connection(linestring: shapely.geometry.LineString,
         TypeError
             If the wrong input data types are provided.
 
+    .. versionadded:: 0.0.9
+
     Examples
     ________
 
@@ -1177,6 +1179,8 @@ def create_connections(gdf_buildings: gpd.GeoDataFrame,
     ______
         TypeError
             If the wrong input data types are provided.
+
+    .. versionadded:: 0.0.9
 
     Examples
     ________
@@ -1250,12 +1254,13 @@ def calculate_hd_street_segments(gdf_buildings: gpd.GeoDataFrame,
         TypeError
             If the wrong input data types are provided.
 
+    .. versionadded:: 0.0.9
+
     Examples
     ________
 
         >>>> gdf_hd = calculate_hd_street_segments(gdf_buildings=buildings, gdf_roads=roads, hd_data_column='HD')
         >>>> gdf_hd
-
 
     """
     # Checking that gdf_building is of type GeoDataFrame
