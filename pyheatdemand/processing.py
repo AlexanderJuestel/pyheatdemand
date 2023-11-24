@@ -442,10 +442,6 @@ def calculate_hd(hd_gdf: gpd.GeoDataFrame,
     if not isinstance(hd_gdf, gpd.GeoDataFrame):
         raise TypeError('The heat demand gdf must be provided as GeoDataFrame')
 
-    # Checking that the HD Data Column is in the HD GeoDataFrame
-    if not hd_data_column in hd_gdf:
-        raise ValueError('%s is not a column in the GeoDataFrame' % hd_data_column)
-
     # Checking that the mask_gdf is of type GeoDataFrame
     if not isinstance(mask_gdf, gpd.GeoDataFrame):
         raise TypeError('The mask gdf must be provided as GeoDataFrame')
@@ -453,6 +449,10 @@ def calculate_hd(hd_gdf: gpd.GeoDataFrame,
     # Checking that the Heat Demand Data Column is provided as string
     if not isinstance(hd_data_column, str):
         raise TypeError('The heat demand data column must be provided as string')
+
+    # Checking that the HD Data Column is in the HD GeoDataFrame
+    if not hd_data_column in hd_gdf:
+        raise ValueError('%s is not a column in the GeoDataFrame' % hd_data_column)
 
     # Reprojecting Data if necessary
     if mask_gdf.crs != hd_gdf.crs:
@@ -576,10 +576,6 @@ def calculate_hd_sindex(hd_gdf: gpd.GeoDataFrame,
     if not isinstance(hd_gdf, gpd.GeoDataFrame):
         raise TypeError('The heat demand gdf must be provided as GeoDataFrame')
 
-    # Checking that the HD Data Column is in the HD GeoDataFrame
-    if not hd_data_column in hd_gdf:
-        raise ValueError('%s is not a column in the GeoDataFrame' % hd_data_column)
-
     # Checking that the mask_gdf is of type GeoDataFrame
     if not isinstance(mask_gdf, gpd.GeoDataFrame):
         raise TypeError('The mask gdf must be provided as GeoDataFrame')
@@ -587,6 +583,10 @@ def calculate_hd_sindex(hd_gdf: gpd.GeoDataFrame,
     # Checking that the Heat Demand Data Column is provided as string
     if not isinstance(hd_data_column, str):
         raise TypeError('The heat demand data column must be provided as string')
+
+    # Checking that the HD Data Column is in the HD GeoDataFrame
+    if not hd_data_column in hd_gdf:
+        raise ValueError('%s is not a column in the GeoDataFrame' % hd_data_column)
 
     # Reprojecting Data if necessary
     if mask_gdf.crs != hd_gdf.crs:
