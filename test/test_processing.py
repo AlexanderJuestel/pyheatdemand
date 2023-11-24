@@ -970,7 +970,7 @@ def test_convert_dtype_error(path):
                       path_out='data/Data_Type_I_Raster_out.tif')
 
 @pytest.mark.parametrize('gdf_buildings',
-                         [gpd.read_file('data/Aachen_buildings.shp')])
+                         [gpd.read_file('data/Aachen_Buildings.shp')])
 @pytest.mark.parametrize('gdf_roads',
                          [gpd.read_file('data/Aachen_Streets.shp')])
 def test_calculate_hd_street_segments(gdf_buildings, gdf_roads):
@@ -984,7 +984,7 @@ def test_calculate_hd_street_segments(gdf_buildings, gdf_roads):
 
 
 @pytest.mark.parametrize('gdf_buildings',
-                         [gpd.read_file('data/Aachen_buildings.shp')])
+                         [gpd.read_file('data/Aachen_Buildings.shp')])
 @pytest.mark.parametrize('gdf_roads',
                          [gpd.read_file('data/Aachen_Streets.shp')])
 def test_calculate_hd_street_segments_error(gdf_buildings, gdf_roads):
