@@ -1221,13 +1221,14 @@ def create_connections(gdf_buildings: gpd.GeoDataFrame,
                                        crs=gdf_roads.crs)
 
     if hd_data_column:
-        # Checking that the HD Data Column is in the HD GeoDataFrame
-        if not hd_data_column in gdf_buildings:
-            raise ValueError('%s is not a column in the GeoDataFrame' % hd_data_column)
 
         # Checking that the Heat Demand Data Column is provided as string
         if not isinstance(hd_data_column, str):
             raise TypeError('The heat demand data column must be provided as string')
+
+        # Checking that the HD Data Column is in the HD GeoDataFrame
+        if not hd_data_column in gdf_buildings:
+            raise ValueError('%s is not a column in the GeoDataFrame' % hd_data_column)
 
         gdf_connections[hd_data_column] = gdf_joined.reset_index()[hd_data_column]
 
@@ -1275,13 +1276,13 @@ def calculate_hd_street_segments(gdf_buildings: gpd.GeoDataFrame,
     if not isinstance(gdf_roads, gpd.GeoDataFrame):
         raise TypeError('Road segments must be provided as GeoDataFrame')
 
-    # Checking that the HD Data Column is in the HD GeoDataFrame
-    if not hd_data_column in gdf_buildings:
-        raise ValueError('%s is not a column in the GeoDataFrame' % hd_data_column)
-
     # Checking that the Heat Demand Data Column is provided as string
     if not isinstance(hd_data_column, str):
         raise TypeError('The heat demand data column must be provided as string')
+
+    # Checking that the HD Data Column is in the HD GeoDataFrame
+    if not hd_data_column in gdf_buildings:
+        raise ValueError('%s is not a column in the GeoDataFrame' % hd_data_column)
 
     # Getting centroids of the buildings
     gdf_buildings['geometry'] = gdf_buildings.centroid

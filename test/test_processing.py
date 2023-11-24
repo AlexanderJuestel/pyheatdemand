@@ -1000,7 +1000,7 @@ def test_calculate_hd_street_segments_error(gdf_buildings, gdf_roads):
                                               gdf_roads=[gdf_roads],
                                               hd_data_column='WB_HU')
 
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         gdf_hd = calculate_hd_street_segments(gdf_buildings=gdf_buildings,
                                               gdf_roads=gdf_roads,
                                               hd_data_column=5)
