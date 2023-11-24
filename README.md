@@ -4,6 +4,7 @@
 ![Conda](https://img.shields.io/conda/v/conda-forge/pyheatdemand)
 ![GitHub License](https://img.shields.io/github/license/AlexanderJuestel/pyheatdemand)
 ![Read the Docs](https://img.shields.io/readthedocs/pyhd)
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/AlexanderJuestel/pyheatdemand/workflow.yml)
 [![status](https://joss.theoj.org/papers/05971e44bad3a2bc8f0bdbebc4013515/status.svg)](https://joss.theoj.org/papers/05971e44bad3a2bc8f0bdbebc4013515)
 
 
