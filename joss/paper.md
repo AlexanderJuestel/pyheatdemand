@@ -106,9 +106,12 @@ as only data within each mask will be processed separately. If necessary, the gl
 available heat demand input data and populated with polygons having already the final cell size such as 100 m x 100 m. For each cell,
 the cumulated heat demand in each cell will be calculated. The final polygon grid will be rasterized and merged with adjacent global cells
 to form a mosaic, the final heat demand map. If several input datasets are available for a region, i.e. different sources of energy, they can either be included 
-in the calculation of the heat demand or the resulting rasters can be added to a final heat demand map. 
+in the calculation of the heat demand or the resulting rasters can be added to a final heat demand map. In addition to a uniform polygon mask with equal cell sizes, **PyHeatDemand** also offers the possibility to refine the polygon mask based on the centroid density of building footprints (Fig. \ref{fig10}) based on a simple QuadTree algorithm [@quadtree]. This allows to identify areas of high heat demand originating from a small number of buildings and areas of high heat demand from a large number of small buildings.
 
 ![The main steps from creating a coarse matrix to a fine matrix to calculating the final heat demand data to merging and rasterizing the data. \label{fig1}](../docs/images/fig1.png)
+
+![Grid refinement using heat demand data density. \label{fig10}](../docs/images/Grid_Refinement.png)
+
 
 The data processing for data categories 1 and 2 are very similar (Fig. \ref{fig2}) and correspond to a bottom-up approach. In the case of a raster for category 1, the raster is converted into gridded polygons. 
 Gridded polygons and building footprints are treated equally (Fig. \ref{fig3} top). The polygons containing the heat demand data are, if necessary, 

@@ -3,7 +3,7 @@ import rasterio
 import pandas as pd
 import geopandas as gpd
 import numpy as np
-from shapely.geometry import Polygon, Point, MultiPolygon
+from shapely.geometry import Polygon, Point, MultiPolygon, LineString
 import sys
 import os
 
@@ -95,6 +95,12 @@ def test_vectorize_raster(path):
     assert isinstance(gdf, gpd.GeoDataFrame)
     assert data.crs == gdf.crs
 
+    gdf = vectorize_raster(path=path,
+                           merge_polygons=False)
+
+    assert isinstance(gdf, gpd.GeoDataFrame)
+    assert data.crs == gdf.crs
+
 
 @pytest.mark.parametrize('path',
                          ['data/Data_Type_I_Raster.tif'])
@@ -103,6 +109,10 @@ def test_vectorize_raster_error(path):
 
     with pytest.raises(TypeError):
         vectorize_raster(path=[path])
+
+    with pytest.raises(TypeError):
+        vectorize_raster(path=path,
+                         merge_polygons='False')
 
 
 def test_create_outline():
@@ -680,7 +690,7 @@ def test_refine_mask():
                               data=data,
                               num_of_points=10,
                               cell_size=50,
-                              area_limit=50*50
+                              area_limit=50 * 50
                               )
 
     assert isinstance(gdf_refined, gpd.GeoDataFrame)
@@ -738,3 +748,265 @@ def test_refine_mask_error():
                     cell_size=50,
                     area_limit=[100]
                     )
+
+
+def test_quad_tree_mask_refinement():
+    from pyheatdemand.processing import quad_tree_mask_refinement, create_polygon_mask
+
+    gdf = gpd.GeoDataFrame(geometry=[Polygon([(0, 0),  # Bottom-left corner
+                                              (0, 100),  # Top-left corner
+                                              (100, 100),  # Top-right corner
+                                              (100, 0),  # Bottom-right corner
+                                              (0, 0)  # Close the polygon by repeating the first point
+                                              ])],
+                           crs='EPSG:3034'
+                           )
+
+    mask = create_polygon_mask(gdf=gdf,
+                               step_size=10,
+                               crop_gdf=False)
+
+    np.random.seed(1)
+    x = np.random.randint(low=0,
+                          high=100,
+                          size=1000)
+
+    y = np.random.randint(low=0,
+                          high=100,
+                          size=1000)
+    data = gpd.GeoDataFrame(geometry=gpd.points_from_xy(x=x, y=y, crs='EPSG:3034'))
+
+    gdf_refined = quad_tree_mask_refinement(mask=mask,
+                                            data=data,
+                                            max_depth=2,
+                                            num_of_points=10)
+
+    assert isinstance(gdf_refined, gpd.GeoDataFrame)
+
+
+def test_quad_tree_mask_refinement_error():
+    from pyheatdemand.processing import quad_tree_mask_refinement, create_polygon_mask
+
+    gdf = gpd.GeoDataFrame(geometry=[Polygon([(0, 0),  # Bottom-left corner
+                                              (0, 100),  # Top-left corner
+                                              (100, 100),  # Top-right corner
+                                              (100, 0),  # Bottom-right corner
+                                              (0, 0)  # Close the polygon by repeating the first point
+                                              ])],
+                           crs='EPSG:3034'
+                           )
+
+    mask = create_polygon_mask(gdf=gdf,
+                               step_size=10,
+                               crop_gdf=False)
+
+    np.random.seed(1)
+    x = np.random.randint(low=0,
+                          high=100,
+                          size=1000)
+
+    y = np.random.randint(low=0,
+                          high=100,
+                          size=1000)
+    data = gpd.GeoDataFrame(geometry=gpd.points_from_xy(x=x,
+                                                        y=y,
+                                                        crs='EPSG:3034'))
+
+    with pytest.raises(TypeError):
+        gdf_refined = quad_tree_mask_refinement(mask=[mask],
+                                                data=data,
+                                                max_depth=2,
+                                                num_of_points=10)
+    with pytest.raises(TypeError):
+        gdf_refined = quad_tree_mask_refinement(mask=mask,
+                                                data=[data],
+                                                max_depth=2,
+                                                num_of_points=10)
+    with pytest.raises(TypeError):
+        gdf_refined = quad_tree_mask_refinement(mask=mask,
+                                                data=data,
+                                                max_depth=[2],
+                                                num_of_points=10)
+    with pytest.raises(TypeError):
+        gdf_refined = quad_tree_mask_refinement(mask=mask,
+                                                data=data,
+                                                max_depth=2,
+                                                num_of_points='10')
+
+
+def test_create_connection():
+    from pyheatdemand.processing import create_connection
+
+    point = Point(5,
+                  5)
+
+    linestring = LineString([(0, 0),
+                             (10, 0)])
+
+    connection = create_connection(linestring=linestring,
+                                   point=point)
+
+    assert isinstance(connection, LineString)
+    assert connection.wkt == 'LINESTRING (5 0, 5 5)'
+
+
+def test_create_connection_error():
+    from pyheatdemand.processing import create_connection
+
+    point = Point(5,
+                  5)
+
+    linestring = LineString([(0, 0),
+                             (10, 0)])
+
+    with pytest.raises(TypeError):
+        connection = create_connection(linestring=[linestring],
+                                       point=point)
+
+    with pytest.raises(TypeError):
+        connection = create_connection(linestring=linestring,
+                                       point=[point])
+
+
+def test_create_connections():
+    from pyheatdemand.processing import create_connections
+
+    point1 = Point(5,
+                   5)
+    point2 = Point(5,
+                   5)
+
+    linestring1 = LineString([(10, 10),
+                              (10, 0)])
+
+    linestring2 = LineString([(0, 0),
+                              (10, 0)])
+
+    gdf_points = gpd.GeoDataFrame(geometry=[point1,
+                                            point2],
+                                  crs='EPSG:25832')
+
+    gdf_points['HD'] = [10, 10]
+
+    gdf_linestrings = gpd.GeoDataFrame(geometry=[linestring1,
+                                                 linestring2],
+                                       crs='EPSG:25832')
+
+    gdf_connections = create_connections(gdf_buildings=gdf_points,
+                                         gdf_roads=gdf_linestrings)
+
+    assert isinstance(gdf_connections, gpd.GeoDataFrame)
+
+    gdf_connections = create_connections(gdf_buildings=gdf_points,
+                                         gdf_roads=gdf_linestrings,
+                                         hd_data_column='HD')
+
+    assert isinstance(gdf_connections, gpd.GeoDataFrame)
+
+
+def test_create_connections_error():
+    from pyheatdemand.processing import create_connections
+
+    point1 = Point(5,
+                   5)
+    point2 = Point(5,
+                   5)
+
+    linestring1 = LineString([(10, 10),
+                              (10, 0)])
+
+    linestring2 = LineString([(0, 0),
+                              (10, 0)])
+
+    gdf_points = gpd.GeoDataFrame(geometry=[point1,
+                                            point2],
+                                  crs='EPSG:25832')
+    gdf_points['HD'] = [10, 10]
+
+    gdf_linestrings = gpd.GeoDataFrame(geometry=[linestring1,
+                                                 linestring2],
+                                       crs='EPSG:25832')
+    with pytest.raises(TypeError):
+        gdf_connections = create_connections(gdf_buildings=[gdf_points],
+                                             gdf_roads=gdf_linestrings,
+                                             hd_data_column='HD')
+
+    with pytest.raises(TypeError):
+        gdf_connections = create_connections(gdf_buildings=gdf_points,
+                                             gdf_roads=[gdf_linestrings],
+                                             hd_data_column='HD')
+
+    with pytest.raises(TypeError):
+        gdf_connections = create_connections(gdf_buildings=gdf_points,
+                                             gdf_roads=gdf_linestrings,
+                                             hd_data_column=['HD'])
+
+    with pytest.raises(ValueError):
+        gdf_connections = create_connections(gdf_buildings=gdf_points,
+                                             gdf_roads=gdf_linestrings,
+                                             hd_data_column='HD1')
+
+
+@pytest.mark.parametrize('path',
+                         ['data/Data_Type_I_Raster.tif'])
+def test_convert_dtype(path):
+    from pyheatdemand.processing import convert_dtype
+
+    convert_dtype(path_in=path,
+                  path_out='data/Data_Type_I_Raster_out.tif')
+
+
+@pytest.mark.parametrize('path',
+                         ['data/Data_Type_I_Raster.tif'])
+def test_convert_dtype_error(path):
+    from pyheatdemand.processing import convert_dtype
+
+    with pytest.raises(TypeError):
+        convert_dtype(path_in=path,
+                      path_out=['data/Data_Type_I_Raster_out.tif'])
+
+    with pytest.raises(TypeError):
+        convert_dtype(path_in=[path],
+                      path_out='data/Data_Type_I_Raster_out.tif')
+
+@pytest.mark.parametrize('gdf_buildings',
+                         [gpd.read_file('data/Aachen_Buildings.shp')])
+@pytest.mark.parametrize('gdf_roads',
+                         [gpd.read_file('data/Aachen_Streets.shp')])
+def test_calculate_hd_street_segments(gdf_buildings, gdf_roads):
+    from pyheatdemand.processing import calculate_hd_street_segments
+
+    gdf_hd = calculate_hd_street_segments(gdf_buildings=gdf_buildings,
+                                          gdf_roads=gdf_roads,
+                                          hd_data_column='WB_HU')
+
+    assert isinstance(gdf_hd, gpd.GeoDataFrame)
+
+
+@pytest.mark.parametrize('gdf_buildings',
+                         [gpd.read_file('data/Aachen_Buildings.shp')])
+@pytest.mark.parametrize('gdf_roads',
+                         [gpd.read_file('data/Aachen_Streets.shp')])
+def test_calculate_hd_street_segments_error(gdf_buildings, gdf_roads):
+    from pyheatdemand.processing import calculate_hd_street_segments
+
+    with pytest.raises(TypeError):
+        gdf_hd = calculate_hd_street_segments(gdf_buildings=[gdf_buildings],
+                                              gdf_roads=gdf_roads,
+                                              hd_data_column='WB_HU')
+
+    with pytest.raises(TypeError):
+        gdf_hd = calculate_hd_street_segments(gdf_buildings=gdf_buildings,
+                                              gdf_roads=[gdf_roads],
+                                              hd_data_column='WB_HU')
+
+    with pytest.raises(TypeError):
+        gdf_hd = calculate_hd_street_segments(gdf_buildings=gdf_buildings,
+                                              gdf_roads=gdf_roads,
+                                              hd_data_column=5)
+
+    with pytest.raises(ValueError):
+        gdf_hd = calculate_hd_street_segments(gdf_buildings=gdf_buildings,
+                                              gdf_roads=gdf_roads,
+                                              hd_data_column='WB_HU1')
+

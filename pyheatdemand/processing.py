@@ -7,7 +7,7 @@ import geopandas as gpd
 import pandas as pd
 import numpy as np
 import shapely
-from shapely.geometry import Polygon, shape, box, Point
+from shapely.geometry import Polygon, shape, box, Point, LineString
 from itertools import product
 import rasterio
 from rasterio.features import shapes
@@ -138,6 +138,8 @@ def refine_mask(mask: gpd.GeoDataFrame,
         TypeError
             If the wrong input data types are provided.
 
+    .. versionadded:: 0.0.9
+
     Examples
     ________
 
@@ -207,13 +209,100 @@ def refine_mask(mask: gpd.GeoDataFrame,
     return grid_refs
 
 
-def vectorize_raster(path: str) -> gpd.GeoDataFrame:
+def quad_tree_mask_refinement(mask: gpd.GeoDataFrame,
+                              data: gpd.GeoDataFrame,
+                              max_depth: int = 4,
+                              num_of_points: Union[int, list] = 100) -> gpd.GeoDataFrame:
+    """Quad Tree Mask Refinement.
+
+    Parameters
+    __________
+        mask : gpd.GeoDataFrame
+            Original mask.
+        data : gpd.GeoDataFrame
+            Heat demand data, usually polygons.
+        max_depth : int, default: ``4``
+            Number of refinements, e.g. ``max_depth=4``.
+        num_of_points : Union[int, list], default: ``100``
+            Number of points that need to be in one cell for refinement, e.g. ``num_of_points=100``.
+
+    Returns
+    _______
+        grid_refs : gpd.GeoDataFrame
+            GeoDataFrame containing the refined mask polygons.
+
+    Raises
+    ______
+        TypeError
+            If the wrong input data types are provided.
+
+    .. versionadded:: 0.0.9
+
+    Examples
+    ________
+
+        >>> mask = quad_tree_mask_refinement(mask=mask, data=data, max_depth=4, num_of_points=[150, 150, 100, 50])
+        >>> mask
+            geometry
+        0   POLYGON ((2651470.877 2135999.353, 2661470.877...
+        1   POLYGON ((2651470.877 2145999.353, 2661470.877...
+        2   POLYGON ((2651470.877 2155999.353, 2661470.877...
+
+    """
+    # Checking that the mask is of type GeoDataFrame
+    if not isinstance(mask, gpd.GeoDataFrame):
+        raise TypeError('The mask must be provided as GeoDataFrame.')
+
+    # Checking that the data is of type GeoDataFrame
+    if not isinstance(data, gpd.GeoDataFrame):
+        raise TypeError('The data must be provided as GeoDataFrame.')
+
+    # Checking that the max_depth is of type int
+    if not isinstance(max_depth, int):
+        raise TypeError('The max_depth must be provided as int.')
+
+    # Checking that the number of points is either an integer or a list
+    if not isinstance(num_of_points, (int, list)):
+        raise TypeError('The number of points must be provided as integer or list of integers.')
+
+    # Getting the original size of the cells
+    original_cell_size = np.sqrt(mask.iloc[0].geometry.area)
+
+    # Creating list of points if only a single point is provided
+    if isinstance(num_of_points, int):
+        num_of_points = [num_of_points] * max_depth
+
+    for i in range(max_depth):
+        # Setting the area limit
+        if i == 0:
+            area_limit = None
+        else:
+            area_limit = int(original_cell_size / 2 ** i) * int(original_cell_size / 2 ** i)
+
+        # Refining mask
+        mask = refine_mask(mask=mask,
+                           data=data,
+                           num_of_points=num_of_points[i],
+                           cell_size=int(original_cell_size / 2 ** (i + 1)),
+                           area_limit=area_limit)
+    return mask
+
+
+def vectorize_raster(path: str,
+                     merge_polygons: bool = True) -> gpd.GeoDataFrame:
     """Vectorize Raster.
 
     Parameters
     ___________
         path : str
-            Path to raster file, e.g. ``path='raster.tif'``
+            Path to raster file, e.g. ``path='raster.tif'``.
+        merge_polygons : bool, default: ``True``
+            Boolean to state if the polygons should be merged or if every single pixel should be return as polygon,
+            e.g. ``merge_polygons=True``.
+
+        .. versionchanged:: 0.0.9
+       Allow to specify if the vectorized polygons should be merged or if polygons should be returned for every single
+       pixel.
 
     Returns
     ________
@@ -240,11 +329,23 @@ def vectorize_raster(path: str) -> gpd.GeoDataFrame:
     if not isinstance(path, str):
         raise TypeError('The path must be provided as string')
 
+    # Checking that merge_polygon is provided as bool
+    if not isinstance(merge_polygons, bool):
+        raise TypeError('merge_polygons must be either True or False')
+
+    # Opening raster
     with rasterio.open(path) as src:
         data = src.read(1,
                         masked=True)
 
-        # Use a generator instead of a list
+        # Adding small random value to raster value to split pixels into separate polygons
+        if not merge_polygons:
+            val = np.random.uniform(0,
+                                    0.001,
+                                    size=data.shape).astype(np.float32)
+            data = data + val
+
+        # Using a generator instead of a list
         shape_gen = ((shape(s),
                       v) for s,
                              v in shapes(data,
@@ -341,10 +442,6 @@ def calculate_hd(hd_gdf: gpd.GeoDataFrame,
     if not isinstance(hd_gdf, gpd.GeoDataFrame):
         raise TypeError('The heat demand gdf must be provided as GeoDataFrame')
 
-    # Checking that the HD Data Column is in the HD GeoDataFrame
-    if not hd_data_column in hd_gdf:
-        raise ValueError('%s is not a column in the GeoDataFrame' % hd_data_column)
-
     # Checking that the mask_gdf is of type GeoDataFrame
     if not isinstance(mask_gdf, gpd.GeoDataFrame):
         raise TypeError('The mask gdf must be provided as GeoDataFrame')
@@ -352,6 +449,10 @@ def calculate_hd(hd_gdf: gpd.GeoDataFrame,
     # Checking that the Heat Demand Data Column is provided as string
     if not isinstance(hd_data_column, str):
         raise TypeError('The heat demand data column must be provided as string')
+
+    # Checking that the HD Data Column is in the HD GeoDataFrame
+    if not hd_data_column in hd_gdf:
+        raise ValueError('%s is not a column in the GeoDataFrame' % hd_data_column)
 
     # Reprojecting Data if necessary
     if mask_gdf.crs != hd_gdf.crs:
@@ -475,10 +576,6 @@ def calculate_hd_sindex(hd_gdf: gpd.GeoDataFrame,
     if not isinstance(hd_gdf, gpd.GeoDataFrame):
         raise TypeError('The heat demand gdf must be provided as GeoDataFrame')
 
-    # Checking that the HD Data Column is in the HD GeoDataFrame
-    if not hd_data_column in hd_gdf:
-        raise ValueError('%s is not a column in the GeoDataFrame' % hd_data_column)
-
     # Checking that the mask_gdf is of type GeoDataFrame
     if not isinstance(mask_gdf, gpd.GeoDataFrame):
         raise TypeError('The mask gdf must be provided as GeoDataFrame')
@@ -486,6 +583,10 @@ def calculate_hd_sindex(hd_gdf: gpd.GeoDataFrame,
     # Checking that the Heat Demand Data Column is provided as string
     if not isinstance(hd_data_column, str):
         raise TypeError('The heat demand data column must be provided as string')
+
+    # Checking that the HD Data Column is in the HD GeoDataFrame
+    if not hd_data_column in hd_gdf:
+        raise ValueError('%s is not a column in the GeoDataFrame' % hd_data_column)
 
     # Reprojecting Data if necessary
     if mask_gdf.crs != hd_gdf.crs:
@@ -1006,3 +1107,246 @@ def calculate_zonal_stats(path_mask: str,
     gdf = gdf.drop(['sum', 'mean', 'count'], axis=1)
 
     return gdf
+
+
+def create_connection(linestring: shapely.geometry.LineString,
+                      point: shapely.geometry.Point) -> shapely.geometry.LineString:
+    """Create LineString between Point and LineString.
+
+    Parameters
+    __________
+        linestring : shapely.geometry.LineString
+            LineString representing a street segment.
+        point : shapely.geometry.Point
+            Point representing the centroid of a building footprint.
+
+    Returns
+    _______
+        linestring_connection : shapely.geometry.LineString
+            Shortest connection between the centroid of a building footprint and a street segment.
+
+    Raises
+    ______
+        TypeError
+            If the wrong input data types are provided.
+
+    .. versionadded:: 0.0.9
+
+    Examples
+    ________
+
+        >>>> linestring_connection = processing.create_connection(linestring=linestring, point=point)
+        >>>> linestring_connection.wkt
+        'LINESTRING (292607.59635341103 5627766.391411121, 292597.58816236566 5627776.171055705)'
+
+    """
+    # Checking that the street segment is of type LineString
+    if not isinstance(linestring, shapely.geometry.LineString):
+        raise TypeError('Street segment must be provided as Shapely LineString')
+
+    # Checking that the building footprint is represented by a point
+    if not isinstance(point, shapely.geometry.Point):
+        raise TypeError('Building footprint must be provided as Shapely Point')
+
+    # Find distance on line that is closest to the point
+    projected_point = linestring.project(point)
+
+    # Find point at the distance on the line that is closest to the point
+    interpolated_point = linestring.interpolate(projected_point)
+
+    # Create LineString from interpolated point and original point
+    linestring_connection = LineString([interpolated_point, point])
+
+    return linestring_connection
+
+
+def create_connections(gdf_buildings: gpd.GeoDataFrame,
+                       gdf_roads: gpd.GeoDataFrame,
+                       hd_data_column: str = None) -> gpd.GeoDataFrame:
+    """Create LineString between Points and LineStrings.
+
+    Parameters
+    __________
+        gdf_buildings : gpd.GeoDataFrame
+            GeoDataFrame holding the building footprints.
+        gdf_roads : gpd.GeoDataFrame
+            GeoDataFrame holding the street segments.
+        hd_data_column : str, default: ``None``
+            Name of the column that contains the Heat Demand Data, e.g. ``hd_data_column='HD'``.
+
+    Returns
+    _______
+        gdf_connections : gpd.GeoDataFrame
+            GeoDataFrame holding the connections between the houses and the street segments.
+
+    Raises
+    ______
+        TypeError
+            If the wrong input data types are provided.
+
+    .. versionadded:: 0.0.9
+
+    Examples
+    ________
+
+        >>>> gdf_connections = create_connections(gdf_buildings=buildings, gdf_roads=roads)
+        >>>> gdf_connections
+            geometry
+        0	LINESTRING (292726.502 5627866.823, 292705.144...
+        1	LINESTRING (292725.657 5627862.826, 292705.613...
+        2	LINESTRING (292726.502 5627866.823, 292705.144...
+
+    """
+    # Checking that gdf_building is of type GeoDataFrame
+    if not isinstance(gdf_buildings, gpd.GeoDataFrame):
+        raise TypeError('Building footprints must be provided as GeoDataFrame')
+
+    # Checking that gdf_roads is of type GeoDataFrame
+    if not isinstance(gdf_roads, gpd.GeoDataFrame):
+        raise TypeError('Road segments must be provided as GeoDataFrame')
+
+    # Getting centroids of the buildings
+    gdf_buildings['geometry'] = gdf_buildings.centroid
+
+    # Performing spatial join
+    gdf_joined = gpd.sjoin_nearest(gdf_buildings,
+                                   gdf_roads)
+
+    # Creating connections between building footprints and road segments
+    linestrings_connections = [create_connection(linestring=gdf_roads.iloc[row['index_right']].geometry,
+                                                 point=row['geometry']) for index, row in gdf_joined.iterrows()]
+
+    # Creating GeoDataFrame from list of LineStrings
+    gdf_connections = gpd.GeoDataFrame(geometry=linestrings_connections,
+                                       crs=gdf_roads.crs)
+
+    if hd_data_column:
+
+        # Checking that the Heat Demand Data Column is provided as string
+        if not isinstance(hd_data_column, str):
+            raise TypeError('The heat demand data column must be provided as string')
+
+        # Checking that the HD Data Column is in the HD GeoDataFrame
+        if not hd_data_column in gdf_buildings:
+            raise ValueError('%s is not a column in the GeoDataFrame' % hd_data_column)
+
+        gdf_connections[hd_data_column] = gdf_joined.reset_index()[hd_data_column]
+
+    return gdf_connections
+
+
+def calculate_hd_street_segments(gdf_buildings: gpd.GeoDataFrame,
+                                 gdf_roads: gpd.GeoDataFrame,
+                                 hd_data_column: str):
+    """Calculate heat demand for street segments based on the heat demand of the nearest houses.
+
+    Parameters
+    ----------
+        gdf_buildings : gpd.GeoDataFrame
+            GeoDataFrame holding the building footprints.
+        gdf_roads : gpd.GeoDataFrame
+            GeoDataFrame holding the street segments.
+        hd_data_column : str
+            Name of the column that contains the Heat Demand Data, e.g. ``hd_data_column='HD'``.
+
+    Returns
+    -------
+        gdf_hd : gpd.GeoDataFrame
+            GeoDataFrame consisting of the street segments and the cumulated heat demand.
+
+    Raises
+    ______
+        TypeError
+            If the wrong input data types are provided.
+
+    .. versionadded:: 0.0.9
+
+    Examples
+    ________
+
+        >>>> gdf_hd = calculate_hd_street_segments(gdf_buildings=buildings, gdf_roads=roads, hd_data_column='HD')
+        >>>> gdf_hd
+
+    """
+    # Checking that gdf_building is of type GeoDataFrame
+    if not isinstance(gdf_buildings, gpd.GeoDataFrame):
+        raise TypeError('Building footprints must be provided as GeoDataFrame')
+
+    # Checking that gdf_roads is of type GeoDataFrame
+    if not isinstance(gdf_roads, gpd.GeoDataFrame):
+        raise TypeError('Road segments must be provided as GeoDataFrame')
+
+    # Checking that the Heat Demand Data Column is provided as string
+    if not isinstance(hd_data_column, str):
+        raise TypeError('The heat demand data column must be provided as string')
+
+    # Checking that the HD Data Column is in the HD GeoDataFrame
+    if not hd_data_column in gdf_buildings:
+        raise ValueError('%s is not a column in the GeoDataFrame' % hd_data_column)
+
+    # Getting centroids of the buildings
+    gdf_buildings['geometry'] = gdf_buildings.centroid
+
+    # Performing spatial join
+    gdf_joined = gpd.sjoin_nearest(gdf_buildings,
+                                   gdf_roads)
+    # Group Heat Demands
+    heat_demands = gdf_joined.groupby('index_right')[hd_data_column].sum()
+
+    # Concatenating data
+    gdf_hd = pd.concat([heat_demands,
+                        gdf_roads],
+                       axis=1)
+
+    # Creating GeoDataFrame
+    gdf_hd = gpd.GeoDataFrame(geometry=gdf_hd['geometry'],
+                              data=gdf_hd,
+                              crs=gdf_roads.crs)
+
+    # Assigning normalized heat demand
+    gdf_hd['HD_normalized'] = gdf_hd[hd_data_column] / gdf_hd.length
+
+    return gdf_hd
+
+def convert_dtype(path_in: str,
+                  path_out: str):
+    """Convert dtype of raster.
+
+    Parameters
+    ----------
+        path_in : str
+            Input path of the raster, e.g. ``path_in='input.tif'``.
+        path_out : str
+            Output path of the converted raster, e.g. ``path_out='output.tif'``
+
+    Examples
+    ________
+
+        >>>> processing.convert_dtype(path_in='input.tif', path_out='output.tif')
+
+    .. versionadded:: 0.0.9
+
+    """
+    # Checking that the input path is of type string
+    if not isinstance(path_in, str):
+        raise TypeError('Input path must be provided as string')
+
+    # Checking that the output path is of type string
+    if not isinstance(path_out, str):
+        raise TypeError('Output path must be provided as string')
+
+    # Opening dataset
+    with rasterio.open(path_in) as src:
+
+        # Converting data
+        band1 = src.read(1)
+        resband = np.uint16(band1)
+
+        # Editing meta data
+        m = src.meta
+        m['count'] = 1
+        m['dtype'] = 'uint16'
+
+        # Saving converted dataset to file
+        with rasterio.open(path_out, 'w', **m) as dst:
+            dst.write(resband, 1)

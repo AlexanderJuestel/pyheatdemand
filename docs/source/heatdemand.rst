@@ -52,6 +52,7 @@ Several Jupyter Notebooks are available that demonstrate the functionality of **
    notebooks/12_Processing_Results
    notebooks/13_Processing_and_merging_heat_demand_data_for_NRW
    notebooks/14_Refining_Polygon_Mask
+   notebooks/15_Calculating_Heat_Demand_Density_Line_Segments
 
 Processing Heat Demand Input Data
 ---------------------------------
