@@ -149,7 +149,7 @@ The development and maintenance of **PyHeatDemand** will continue in the future.
 
 # PyHeatDemand Resources 
 
-The following resources are available for **PyHeatDemand**
+The following resources are available for **PyHeatDemand**:
 
 * [PyHeatDemand Github Repository](https://github.com/AlexanderJuestel/pyheatdemand)
 * [PyHeatDemand Documentation](https://pyhd.readthedocs.io/en/latest/index.html)
