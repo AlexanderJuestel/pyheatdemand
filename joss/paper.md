@@ -153,6 +153,7 @@ The following resources are available for **PyHeatDemand**:
 
 * [PyHeatDemand Github Repository](https://github.com/AlexanderJuestel/pyheatdemand)
 * [PyHeatDemand Documentation](https://pyhd.readthedocs.io/en/latest/index.html)
+* Application of **PyHeatDemand** for transnational heat demand mapping [@Juestel2024_HeatDemand]
 * [DGE Rollout Webviewer](https://data.geus.dk/egdi/?mapname=dgerolloutwebtool#baslay=baseMapGEUS&extent=39620,-1581250,8465360,8046630&layers=dge_heat_final) 
 
 # Acknowledgements

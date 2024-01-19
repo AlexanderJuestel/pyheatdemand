@@ -6,6 +6,8 @@
 ![Read the Docs](https://img.shields.io/readthedocs/pyhd)
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/AlexanderJuestel/pyheatdemand/workflow.yml)
 [![status](https://joss.theoj.org/papers/05971e44bad3a2bc8f0bdbebc4013515/status.svg)](https://joss.theoj.org/papers/05971e44bad3a2bc8f0bdbebc4013515)
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+
 
 
 ![Fig1](docs/images/PyHD_Logo_long.png)
@@ -68,6 +70,10 @@ For creating the API reference, navigate to the `docs` folder and execute `sphin
 
 <a name="ref"></a>
 ## References
+
+Jüstel, A., Humm, E., Herbst, E., Strozyk, F., Kukla, P., Bracke, R., 2024. Unveiling the Spatial Distribution of Heat 
+Demand in North-West-Europe Compiled with National Heat Consumption Data. Energies, 17 (2), 481, 
+https://doi.org/10.3390/en17020481. 
 
 Herbst, E., Khashfe, E., Jüstel, A., Strozyk, F. & Kukla, P., 2021. A Heat Demand Map of North-West Europe – its impact 
 on supply areas and identification of potential production areas for deep geothermal energy. GeoKarlsruhe 2021, 
