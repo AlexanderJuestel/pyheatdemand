@@ -59,7 +59,8 @@ If you are using **PyHeatDemand** for your scientific research, please remember 
    @article{Jüstel2024,
     doi = {10.21105/joss.xxxxx},
     url = {https://doi.org/10.21105/joss.xxxxx},
-    year = {2024}, publisher = {The Open Journal},
+    year = {2024},
+    publisher = {The Open Journal},
     volume = {x},
     number = {xx},
     pages = {xxxx},
@@ -264,7 +265,13 @@ Library.
 References
 ----------
 
+Jüstel, A., Humm, E., Herbst, E., Strozyk, F., Kukla, P. & Bracke, R., 2024. Unveiling the Spatial Distribution of Heat
+Demand in North-West-Europe Compiled with National Heat Consumption Data. Energies, 17 (2), 481,
+https://doi.org/10.3390/en17020481
+
 Herbst, E., Khashfe, E., Jüstel, A., Strozyk, F. & Kukla, P., 2021. A Heat Demand Map of North-West Europe – its impact
 on supply areas and identification of potential production areas for deep geothermal energy. GeoKarlsruhe 2021,
 http://dx.doi.org/10.48380/dggv-j2wj-nk88.
+
+
 
