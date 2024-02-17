@@ -4,3 +4,4 @@ matplotlib
 tqdm
 geopy
 osmnx
+pytest-cov

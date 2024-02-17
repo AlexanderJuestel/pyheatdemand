@@ -3,12 +3,4 @@ channels:
   - conda-forge
 dependencies:
   - python>=3.10
-  - geopandas
-  - rasterstats # also installing rasterio
-  - pip
-  - pip:
-      pyheatdemand
-      matplotlib
-      tqdm
-      geopy
-      osmnx
+  - pyheatdemand

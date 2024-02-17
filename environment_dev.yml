@@ -5,12 +5,11 @@ dependencies:
   - python>=3.10
   - geopandas
   - rasterstats # also installing rasterio
-  - pip
-  - pip:
-    - matplotlib
-    - tqdm
-    - geopy
-    - osmnx
-    - sphinx_book_theme==0.3.3
-    - sphinx_copybutton
-    - nbsphinx
+  - matplotlib
+  - tqdm
+  - geopy
+  - osmnx
+  - sphinx-book-theme==0.3.3
+  - sphinx-copybutton
+  - nbsphinx
+  - pytest-cov
