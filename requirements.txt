@@ -4,4 +4,7 @@ matplotlib
 tqdm
 geopy
 osmnx
+sphinx-book-theme==0.3.3
+sphinx-copybutton
+nbsphinx
 pytest-cov
