@@ -39,3 +39,11 @@ The PyHeatDemand repository can be forked or cloned from https://github.com/Alex
     git clone https://github.com/AlexanderJuestel/pyheatdemand.git
 
 A list of `requirements.txt <https://github.com/AlexanderJuestel/pyheatdemand/blob/main/requirements.txt>`_ and an `environment.yml <https://github.com/AlexanderJuestel/pyheatdemand/blob/main/environment.yml>`_ can be found in the repository.
+
+
+Continuous Integration
+_______________________
+
+A CI is present to test the current code. It can be initiated using `pytest --cov` within the `test` folder. After
+running the tests, `coverage report -m` can be executed to get an report on the coverage and which lines are not covered
+by the tests.
