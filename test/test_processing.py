@@ -976,6 +976,8 @@ def test_convert_dtype_error(path):
 def test_calculate_hd_street_segments(gdf_buildings, gdf_roads):
     from pyheatdemand.processing import calculate_hd_street_segments
 
+    gdf_roads = gdf_roads.set_crs('EPSG:4326').to_crs('EPSG:25832')
+
     gdf_hd = calculate_hd_street_segments(gdf_buildings=gdf_buildings,
                                           gdf_roads=gdf_roads,
                                           hd_data_column='WB_HU')
@@ -989,6 +991,8 @@ def test_calculate_hd_street_segments(gdf_buildings, gdf_roads):
                          [gpd.read_file('data/Aachen_Streets.shp')])
 def test_calculate_hd_street_segments_error(gdf_buildings, gdf_roads):
     from pyheatdemand.processing import calculate_hd_street_segments
+
+    gdf_roads = gdf_roads.set_crs('EPSG:4326').to_crs('EPSG:25832')
 
     with pytest.raises(TypeError):
         gdf_hd = calculate_hd_street_segments(gdf_buildings=[gdf_buildings],
