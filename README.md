@@ -28,6 +28,11 @@ original heat demand map as part of their respective master thesis project at RW
 demand map is also accessible within the [DGE Rollout Webviewer](https://data.geus.dk/egdi/?mapname=dgerolloutwebtool#baslay=baseMapGEUS&extent=39620,-1581250,8465360,8046630&layers=dge_heat_final).
 
 
+## Documentation
+A documentation page illustrating the functionality of PyHeatDemand is available at https://pyhd.readthedocs.io/en/latest/. 
+
+It also features installation instructions (also see below), tutorials on how to calculate heat demands, and the API Reference. 
+
 <a name="installation"></a>
 ## Installation  
 
