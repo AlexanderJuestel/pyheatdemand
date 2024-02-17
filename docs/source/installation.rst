@@ -24,6 +24,12 @@ PyHeatDemand is also available from `conda-forge <https://conda-forge.org/>`_::
 
     conda install -c conda-forge pyheatdemand
 
+Installation using YML-file
+---------------------------------
+
+It is recommended to use the provided `environment.yml <https://github.com/AlexanderJuestel/pyheatdemand/blob/main/environment.yml>`_ to ensure that all dependencies are installed correctly::
+
+    conda env create -f environment.yml
 
 Forking or cloning the repository
 ---------------------------------

@@ -29,12 +29,43 @@ demand map is also accessible within the [DGE Rollout Webviewer](https://data.ge
 
 
 <a name="installation"></a>
-## Installation
-**PyHeatDemand** can be installed via PyPi using `pip install pyheatdemand` or via Anaconda using `conda install -c conda-forge pyheatdemand`. 
-It is recommended to use the provided 
-environment.yml and use `conda env create -f environment.yml` to ensure that all dependencies are installed correctly. 
-Make sure that you have downloaded the environment file in that case. Alternatively, you can fork and clone the 
-repository or clone it directly from the repository page. An additional `requirements.txt` provides a list of all necessary dependencies.
+## Installation  
+
+PyHeatDemand is supported for Python version 3.10 and younger. Previous versions are officially not supported.
+It is recommended to create a new virtual environment using the [Anaconda Distribution](https://www.anaconda.com/download) before using PyHeatDemand.
+The main dependencies of PyHeatDemand are [GeoPandas](https://geopandas.org/en/stable/>) and [Rasterio](https://rasterio.readthedocs.io/en/stable/) for the vector data and raster data processing, [Matplotlib](https://matplotlib.org/) for plotting,
+[GeoPy](https://geopy.readthedocs.io/en/stable/) for extracting coordinates from addresses, [OSMnx](https://osmnx.readthedocs.io/en/stable/) for getting [OpenStreet Maps](https://www.openstreetmap.org/#map=6/51.330/10.453) building footprints from coordinates,
+[Rasterstats](https://pythonhosted.org/rasterstats/) for analyzing the resulting heat demand maps and more secondary dependencies like [Pandas](https://pandas.pydata.org/), [NumPy](https://numpy.org/), [Shapely](https://shapely.readthedocs.io/en/stable/manual.html), etc.
+
+
+### Installation via PyPi 
+
+**PyHeatDemand** can be installed via [PyPi](https://pypi.org/) using:
+
+`pip install pyheatdemand`
+
+### Installation via Anaconda 
+
+**PyHeatDemand** is also available from [conda-forge](https://conda-forge.org/):
+
+`conda install -c conda-forge pyheatdemand`
+
+### Installation using YML-file
+
+It is recommended to use the provided [environment.yml](https://github.com/AlexanderJuestel/pyheatdemand/blob/main/environment.yml) to ensure that all dependencies are installed correctly:
+
+`conda env create -f environment.yml` 
+
+Make sure that you have downloaded the environment file in that case.
+
+### Forking or cloning the repository
+
+The PyHeatDemand repository can be forked or cloned from https://github.com/AlexanderJuestel/pyheatdemand:
+
+`git clone https://github.com/AlexanderJuestel/pyheatdemand.git`
+
+A list of `requirements.txt` provides a list of all necessary dependencies.
+
 
 <a name="workflow"></a>
 ## General Workflow
