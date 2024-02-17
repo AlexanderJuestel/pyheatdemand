@@ -69,7 +69,7 @@ The PyHeatDemand repository can be forked or cloned from https://github.com/Alex
 
 `git clone https://github.com/AlexanderJuestel/pyheatdemand.git`
 
-A list of `requirements.txt` provides a list of all necessary dependencies.
+A list of [requirements.txt](https://github.com/AlexanderJuestel/pyheatdemand/blob/main/requirements.txt) and an [environment.yml](https://github.com/AlexanderJuestel/pyheatdemand/blob/main/environment.yml) provide a list of all necessary dependencies to run PyHeatDemand from source.
 
 
 <a name="workflow"></a>
