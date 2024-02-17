@@ -87,7 +87,7 @@ The actual heat demand data is divided into four categories or data categories:
 * Data Category 2: Heat demand data as vector data; building footprints as polygons, street network as linestrings, 
 single houses as points
 * Data Category 3: Heat demand as points representative for an administrative area
-* Data Category 4: Other forms of Heat Demand data such as addresses with assciated heat demand or heat demand provided
+* Data Category 4: Other forms of Heat Demand data such as addresses with associated heat demand or heat demand provided
 as usage of other fuels, e.g. gas demand, biomass demand etc.
 
 Processing steps for Data Types 1 + 2
@@ -95,6 +95,12 @@ Processing steps for Data Types 1 + 2
 
 Processing steps for Data Types 3
 ![Fig1](docs/images/fig3.png)
+
+## Contribution Guidelines
+
+Contributing to PyHeatDemand is as easy as opening issues, reporting bugs, suggesting new features or opening Pull Requests to propose changes.
+
+For more information on how to contribute, have a look at the [Contribution Guidelines](https://github.com/AlexanderJuestel/pyheatdemand/blob/main/CONTRIBUTING.md). 
 
 ## Continuous Integration
 A CI is present to test the current code. It can be initiated using `pytest --cov` within the `test` folder. After 
