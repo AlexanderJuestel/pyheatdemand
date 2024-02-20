@@ -455,6 +455,15 @@ def _check_hd_input(hd_gdf: gpd.GeoDataFrame,
         hd_data_column : str, default: ``''``
             Name of the column that contains the Heat Demand Data, e.g. ``hd_data_column='HD'``.
 
+    Returns
+    _______
+        hd_gdf : gpd.GeoDataFrame
+            Heat demand data as GeoDataFrame.
+        mask_gdf : Union[gpd.GeoDataFrame, shapely.geometry.Polygon]
+            Mask for the output Heat Demand Data.
+        hd_data_column : str, default: ``''``
+            Name of the column that contains the Heat Demand Data, e.g. ``hd_data_column='HD'``.
+
     Raises
     ______
         TypeError
