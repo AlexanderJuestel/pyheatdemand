@@ -417,7 +417,7 @@ def test_get_building_footprint():
                                  dist=1)
 
     assert isinstance(gdf, gpd.GeoDataFrame)
-    assert len(gdf)==0
+    assert len(gdf) == 0
 
 
 def test_get_building_footprint_error():
@@ -970,6 +970,7 @@ def test_convert_dtype_error(path):
         convert_dtype(path_in=[path],
                       path_out='data/Data_Type_I_Raster_out.tif')
 
+
 @pytest.mark.parametrize('gdf_buildings',
                          [gpd.read_file('data/Aachen_Buildings.shp')])
 @pytest.mark.parametrize('gdf_roads',
@@ -1014,4 +1015,3 @@ def test_calculate_hd_street_segments_error(gdf_buildings, gdf_roads):
         gdf_hd = calculate_hd_street_segments(gdf_buildings=gdf_buildings,
                                               gdf_roads=gdf_roads,
                                               hd_data_column='WB_HU1')
-
