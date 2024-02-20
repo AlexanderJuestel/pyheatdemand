@@ -441,6 +441,68 @@ def create_outline(gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
                             crs=gdf.crs)
 
 
+def _check_hd_input(hd_gdf: gpd.GeoDataFrame,
+                    mask_gdf: Union[gpd.GeoDataFrame, Polygon],
+                    hd_data_column: str = ''):
+    """Check heat demand input data.
+
+    Parameters
+    __________
+        hd_gdf : gpd.GeoDataFrame
+            Heat demand data as GeoDataFrame.
+        mask_gdf : Union[gpd.GeoDataFrame, shapely.geometry.Polygon]
+            Mask for the output Heat Demand Data.
+        hd_data_column : str, default: ``''``
+            Name of the column that contains the Heat Demand Data, e.g. ``hd_data_column='HD'``.
+
+    Raises
+    ______
+        TypeError
+            If the wrong input data types are provided.
+
+    """
+    # Converting Shapely Polygon to GeoDataFrame
+    if isinstance(mask_gdf, Polygon):
+        mask_gdf = gpd.GeoDataFrame(geometry=[mask_gdf],
+                                    crs=hd_gdf.crs)
+
+    # Checking that the hd_gdf is of type GeoDataFrame
+    if not isinstance(hd_gdf, gpd.GeoDataFrame):
+        raise TypeError('The heat demand gdf must be provided as GeoDataFrame')
+
+    # Checking that the mask_gdf is of type GeoDataFrame
+    if not isinstance(mask_gdf, gpd.GeoDataFrame):
+        raise TypeError('The mask gdf must be provided as GeoDataFrame')
+
+    # Checking that the Heat Demand Data Column is provided as string
+    if not isinstance(hd_data_column, str):
+        raise TypeError('The heat demand data column must be provided as string')
+
+    # Checking that the HD Data Column is in the HD GeoDataFrame
+    if hd_data_column not in hd_gdf:
+        raise ValueError('%s is not a column in the GeoDataFrame' % hd_data_column)
+
+    # Reprojecting Data if necessary
+    if mask_gdf.crs != hd_gdf.crs:
+        hd_gdf = hd_gdf.to_crs(mask_gdf.crs)
+
+    # Exploding MultiPolygons
+    if any(shapely.get_type_id(hd_gdf.geometry) == 6):
+        hd_gdf = hd_gdf.explode(index_parts=True).reset_index(drop=True)
+
+    # Assigning area to Polygons
+    if all(shapely.get_type_id(hd_gdf.geometry) == 3):
+        # Assigning area of original geometries to GeoDataFrame
+        hd_gdf['area'] = hd_gdf.area
+
+    # Assigning lengths to LineStrings
+    elif all(shapely.get_type_id(hd_gdf.geometry) == 1):
+        # Assigning length of original geometries to GeoDataFrame
+        hd_gdf['length'] = hd_gdf.length
+
+    return hd_gdf, mask_gdf, hd_data_column
+
+
 def calculate_hd(hd_gdf: gpd.GeoDataFrame,
                  mask_gdf: Union[gpd.GeoDataFrame, Polygon],
                  hd_data_column: str = '') -> gpd.GeoDataFrame:
@@ -492,44 +554,10 @@ def calculate_hd(hd_gdf: gpd.GeoDataFrame,
         calculate_hd_sindex : Calculate Heat Demand using Spatial Indices.
 
     """
-    # Converting Shapely Polygon to GeoDataFrame
-    if isinstance(mask_gdf, Polygon):
-        mask_gdf = gpd.GeoDataFrame(geometry=[mask_gdf],
-                                    crs=hd_gdf.crs)
-
-    # Checking that the hd_gdf is of type GeoDataFrame
-    if not isinstance(hd_gdf, gpd.GeoDataFrame):
-        raise TypeError('The heat demand gdf must be provided as GeoDataFrame')
-
-    # Checking that the mask_gdf is of type GeoDataFrame
-    if not isinstance(mask_gdf, gpd.GeoDataFrame):
-        raise TypeError('The mask gdf must be provided as GeoDataFrame')
-
-    # Checking that the Heat Demand Data Column is provided as string
-    if not isinstance(hd_data_column, str):
-        raise TypeError('The heat demand data column must be provided as string')
-
-    # Checking that the HD Data Column is in the HD GeoDataFrame
-    if not hd_data_column in hd_gdf:
-        raise ValueError('%s is not a column in the GeoDataFrame' % hd_data_column)
-
-    # Reprojecting Data if necessary
-    if mask_gdf.crs != hd_gdf.crs:
-        hd_gdf = hd_gdf.to_crs(mask_gdf.crs)
-
-    # Exploding MultiPolygons
-    if any(shapely.get_type_id(hd_gdf.geometry) == 6):
-        hd_gdf = hd_gdf.explode(index_parts=True).reset_index(drop=True)
-
-    # Assigning area to Polygons
-    if all(shapely.get_type_id(hd_gdf.geometry) == 3):
-        # Assigning area of original geometries to GeoDataFrame
-        hd_gdf['area'] = hd_gdf.area
-
-    # Assigning lengths to LineStrings
-    elif all(shapely.get_type_id(hd_gdf.geometry) == 1):
-        # Assigning length of original geometries to GeoDataFrame
-        hd_gdf['length'] = hd_gdf.length
+    # Checking input data
+    hd_gdf, mask_gdf, hd_data_column = _check_hd_input(hd_gdf=hd_gdf,
+                                                       mask_gdf=mask_gdf,
+                                                       hd_data_column=hd_data_column)
 
     # Overlaying Heat Demand Data with Mask
     overlay = gpd.overlay(df1=hd_gdf,
@@ -635,44 +663,10 @@ def calculate_hd_sindex(hd_gdf: gpd.GeoDataFrame,
         =======  ==============  ===================================================
 
     """
-    # Converting Shapely Polygon to GeoDataFrame
-    if isinstance(mask_gdf, Polygon):
-        mask_gdf = gpd.GeoDataFrame(geometry=[mask_gdf],
-                                    crs=hd_gdf.crs)
-
-    # Checking that the hd_gdf is of type GeoDataFrame
-    if not isinstance(hd_gdf, gpd.GeoDataFrame):
-        raise TypeError('The heat demand gdf must be provided as GeoDataFrame')
-
-    # Checking that the mask_gdf is of type GeoDataFrame
-    if not isinstance(mask_gdf, gpd.GeoDataFrame):
-        raise TypeError('The mask gdf must be provided as GeoDataFrame')
-
-    # Checking that the Heat Demand Data Column is provided as string
-    if not isinstance(hd_data_column, str):
-        raise TypeError('The heat demand data column must be provided as string')
-
-    # Checking that the HD Data Column is in the HD GeoDataFrame
-    if not hd_data_column in hd_gdf:
-        raise ValueError('%s is not a column in the GeoDataFrame' % hd_data_column)
-
-    # Reprojecting Data if necessary
-    if mask_gdf.crs != hd_gdf.crs:
-        hd_gdf = hd_gdf.to_crs(mask_gdf.crs)
-
-    # Exploding MultiPolygons
-    if any(shapely.get_type_id(hd_gdf.geometry) == 6):
-        hd_gdf = hd_gdf.explode(index_parts=True).reset_index(drop=True)
-
-    # Assigning area to Polygons
-    if all(shapely.get_type_id(hd_gdf.geometry) == 3):
-        # Assigning area of original geometries to GeoDataFrame
-        hd_gdf['area'] = hd_gdf.area
-
-    # Assigning lengths to LineStrings
-    elif all(shapely.get_type_id(hd_gdf.geometry) == 1):
-        # Assigning length of original geometries to GeoDataFrame
-        hd_gdf['length'] = hd_gdf.length
+    # Checking input data
+    hd_gdf, mask_gdf, hd_data_column = _check_hd_input(hd_gdf=hd_gdf,
+                                                       mask_gdf=mask_gdf,
+                                                       hd_data_column=hd_data_column)
 
     # Querying spatial index
     grid_ix, buildings_ix = hd_gdf.sindex.query(mask_gdf.geometry, predicate=None)
@@ -779,7 +773,7 @@ def rasterize_gdf_hd(gdf_hd: gpd.GeoDataFrame,
         out_arr = out.read(1)
 
         # this is where the code creates a generator of geom, value pairs (geometry and HD_new) to use in rasterizing
-        shapes = [(geom, value) for geom, value in zip(gdf_hd['geometry'], gdf_hd['HD'])]
+        shapes = list(zip(gdf_hd['geometry'], gdf_hd['HD']))
 
         burned = rasterio.features.rasterize(shapes=shapes, fill=0, out=out_arr, transform=out.transform)
         out.write_band(1, burned)
@@ -961,7 +955,7 @@ def get_building_footprint(point: shapely.geometry.Point,
                                                  tags={'building': True},
                                                  dist=dist)
     except:
-        gdf = None
+        gdf = gpd.GeoDataFrame(columns=['id', 'geometry'], geometry='geometry')
 
     return gdf
 
@@ -1369,7 +1363,7 @@ def create_connections(gdf_buildings: gpd.GeoDataFrame,
             raise TypeError('The heat demand data column must be provided as string')
 
         # Checking that the HD Data Column is in the HD GeoDataFrame
-        if not hd_data_column in gdf_buildings:
+        if hd_data_column not in gdf_buildings:
             raise ValueError('%s is not a column in the GeoDataFrame' % hd_data_column)
 
         gdf_connections[hd_data_column] = gdf_joined.reset_index()[hd_data_column]
@@ -1438,7 +1432,7 @@ def calculate_hd_street_segments(gdf_buildings: gpd.GeoDataFrame,
         raise TypeError('The heat demand data column must be provided as string')
 
     # Checking that the HD Data Column is in the HD GeoDataFrame
-    if not hd_data_column in gdf_buildings:
+    if hd_data_column not in gdf_buildings:
         raise ValueError('%s is not a column in the GeoDataFrame' % hd_data_column)
 
     # Getting centroids of the buildings

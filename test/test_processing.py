@@ -416,7 +416,8 @@ def test_get_building_footprint():
     gdf = get_building_footprint(point=Point(6.07868, 50.77918),
                                  dist=1)
 
-    assert isinstance(gdf, type(None))
+    assert isinstance(gdf, gpd.GeoDataFrame)
+    assert len(gdf)==0
 
 
 def test_get_building_footprint_error():
