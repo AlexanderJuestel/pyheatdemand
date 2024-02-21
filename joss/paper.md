@@ -82,9 +82,6 @@ The data processing for data category 4 corresponds to a bottom-up approach. Her
 
 If no heat demand input data is available, the heat demand can be estimated using cultural data such as population density, landuse, and building-specific heat usage [@novosel; @meha] which will be implemented in a later development stage.
 
-![The main steps of the methodology to process the provided HD polygons for the heat demand data category 2 (top) and category 3 (bottom). \label{fig3}](../docs/images/fig3.png)
-
-
 ## Processing Heat Demand Map Data
 
 Heat demand maps may contain millions of cells. Evaluating each cell would not be feasible. Therefore, **PyHeatDemand** utilizes the rasterstats package [@rasterstats] returning statistical values of the heat demand map for further analysis and results reporting.
@@ -99,6 +96,8 @@ The following resources are available for **PyHeatDemand**:
 * [DGE Rollout Webviewer](https://data.geus.dk/egdi/?mapname=dgerolloutwebtool#baslay=baseMapGEUS&extent=39620,-1581250,8465360,8046630&layers=dge_heat_final) 
 
 We welcome contributions of users in the form of questions on how to use **PyHeatDemand**, bug reports, and feature requests. 
+
+![The main steps of the methodology to process the provided HD polygons for the heat demand data category 2 (top) and category 3 (bottom). \label{fig3}](../docs/images/fig3.png)
 
 # Acknowledgements
 
