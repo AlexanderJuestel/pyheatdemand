@@ -24,17 +24,15 @@ bibliography: paper.bib
 
 # Summary
 **PyHeatDemand** is an open-source Python package for processing and harmonizing multi-scale-multi-type heat demand input data for
-
-constructing local to transnational harmonized heat demand maps (rasters). Knowledge about the heat demand (MWh/area/year) of a respective building, 
+constructing local to transnational harmonized heat demand maps (rasters). Knowledge about the heat demand in megawatt hours per area and per year of a respective building, 
 district, city, state, country, or even on a continental scale is crucial for an adequate heat demand analysis or 
 planning for providing power plant capacities. Mapping of the heat demand may also identify potential areas for new
 district heating networks or even geothermal power plants for climate-friendly heat production. 
 
 The aim of **PyHeatDemand** is to provide processing tools for heat demand input data of various categories on various scales. This
 includes heat demand input data provided as rasters or gridded polygons, heat demand input data associated with administrative areas
-(points or polygons), with building footprints (polygons), with street segments (lines), or with addresses directly provided in
-
-MWh but also as gas usage, district heating usage, or sources of heat. It is also possible to calculate the heat demand
+(points or polygons), with building footprints (polygons), with street segments (lines), or with addresses directly provided in 
+kWh or MWh but also as gas usage, district heating usage, or other sources of heat. It is also possible to calculate the heat demand
 based on a set of cultural data sets (building footprints, height of the buildings, population density, building type, etc.).
 The study area is first divided into a coarse
 mask before heat demands are calculated and harmonized for each cell with the size of the target resolution (e.g. 100 m
@@ -55,7 +53,7 @@ map the heat demand for a more accurate planning of power plant capacities. In a
 become necessary according to directives of the European Union regarding energy efficiency to reach its aim of reducing 
 greenhouse gas emissions by 55% of the 1990-levels by 2030. 
 
-Evaluating the heat demand (usually in MWh = Mega Watt Hours) on a national or regional scale, including space and water heating for each apartment or each
+Evaluating the annual heat demand (HD, usually in MWh = megawatt Hours) on a national or regional scale, including space and water heating for each apartment or each
 building for every day of a year separately is from a perspective of resolution (spatial and temporal scale) and computing power 
 not feasible. Therefore, heat demand maps summarize the heat demand on a lower spatial resolution (e.g. 100 m x 100 m
 raster) cumulated for one year (lower temporal resolution) for different sectors such as the residential and tertiary
