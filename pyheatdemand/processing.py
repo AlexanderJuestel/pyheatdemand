@@ -700,8 +700,7 @@ def rasterize_gdf_hd(gdf_hd: gpd.GeoDataFrame,
                      path_out: str,
                      crs: Union[str, pyproj.crs.crs.CRS] = 'EPSG:3034',
                      xsize: int = 100,
-                     ysize: int = 100,
-                     flip_raster : bool = True):
+                     ysize: int = 100):
     """Rasterize Heat Demand GeoDataFrame and save as raster.
 
     Parameters
@@ -716,8 +715,6 @@ def rasterize_gdf_hd(gdf_hd: gpd.GeoDataFrame,
             Cell size of the output raster, e.g. ``xsize=100``.
         ysize : int, default: ``100``
             Cell size of the output raster, e.g. ``ysize=100``.
-        flip_raster : bool, default: ``True``
-            Boolean value to flip the raster.
 
     Raises
     ______
@@ -750,10 +747,6 @@ def rasterize_gdf_hd(gdf_hd: gpd.GeoDataFrame,
     if not isinstance(ysize, int):
         raise TypeError('The ysize must be provided as int')
 
-    # Checking that the flip_raster variable is of type bool
-    if not isinstance(flip_raster, int):
-        raise TypeError('The flip_raster value must be provided as bool')
-
     # Creating array with the length of polygons in x and y direction
     x = np.arange(gdf_hd.total_bounds[0], gdf_hd.total_bounds[2], xsize)
     y = np.arange(gdf_hd.total_bounds[1], gdf_hd.total_bounds[3], ysize)
@@ -762,10 +755,7 @@ def rasterize_gdf_hd(gdf_hd: gpd.GeoDataFrame,
     matrix = np.zeros(len(y) * len(x)).reshape(len(y),
                                                len(x))
     # Creating transform
-    if flip_raster:
-        transform = rasterio.transform.from_origin(x[0], y[-1], xsize, ysize)
-    else:
-        transform = rasterio.transform.from_origin(x[0], y[0], xsize, -ysize)
+    transform = rasterio.transform.from_origin(x[0], y[1], xsize, -ysize)
 
     # Saving mask raster
     with rasterio.open(
@@ -787,7 +777,7 @@ def rasterize_gdf_hd(gdf_hd: gpd.GeoDataFrame,
     meta = rst.meta.copy()
     meta.update(compress='lzw')
 
-    # Rasterization of the quadratic-polygon-shapefile using the rasterize-function from rasterio
+    # Rasterisation of the quadratic-polygon-shapefile using the rasterize-function from rasterio
     with rasterio.open(path_out, 'w+', **meta) as out:
         out_arr = out.read(1)
 
