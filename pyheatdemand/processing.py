@@ -21,10 +21,12 @@ import geopy
 import osmnx
 
 
-def create_polygon_mask(gdf: Union[gpd.GeoDataFrame, Polygon],
-                        step_size: int,
-                        crop_gdf: bool = False,
-                        crs: Union[str, pyproj.crs.crs.CRS] = None) -> gpd.GeoDataFrame:
+def create_polygon_mask(
+    gdf: Union[gpd.GeoDataFrame, Polygon],
+    step_size: int,
+    crop_gdf: bool = False,
+    crs: Union[str, pyproj.crs.crs.CRS] = None,
+) -> gpd.GeoDataFrame:
     """Create a mask GeoDataFrame consisting of squares with a defined step_size.
 
     Parameters
@@ -75,56 +77,59 @@ def create_polygon_mask(gdf: Union[gpd.GeoDataFrame, Polygon],
     # Converting Polygon to GeoDataFrame
     if isinstance(gdf, Polygon):
         if not isinstance(crs, (str, pyproj.crs.crs.CRS)):
-            raise TypeError('CRS must be provided as string or pyproj CRS object')
-        gdf = gpd.GeoDataFrame(geometry=[gdf],
-                               crs=crs)
+            raise TypeError("CRS must be provided as string or pyproj CRS object")
+        gdf = gpd.GeoDataFrame(geometry=[gdf], crs=crs)
 
     # Checking that the gdf is of type GeoDataFrame
     if not isinstance(gdf, gpd.GeoDataFrame):
-        raise TypeError('gdf must be provided as GeoDataFrame')
+        raise TypeError("gdf must be provided as GeoDataFrame")
 
     # Checking that the step_size is of type int
     if not isinstance(step_size, int):
-        raise TypeError('The step_size must be provided as int')
+        raise TypeError("The step_size must be provided as int")
 
     # Checking that crop_gdf is of type bool
     if not isinstance(crop_gdf, bool):
-        raise TypeError('crop_gdf must be provided as bool')
+        raise TypeError("crop_gdf must be provided as bool")
 
     # Creating arrays
-    x = np.arange(gdf.total_bounds[0],
-                  gdf.total_bounds[2], step_size)
+    x = np.arange(gdf.total_bounds[0], gdf.total_bounds[2], step_size)
 
-    y = np.arange(gdf.total_bounds[1],
-                  gdf.total_bounds[3], step_size)
+    y = np.arange(gdf.total_bounds[1], gdf.total_bounds[3], step_size)
 
     # Creating polygons
-    polygons = [Polygon([(a, b),
-                         (a + step_size, b),
-                         (a + step_size, b + step_size),
-                         (a, b + step_size)]) for a,
-                                                  b in
-                product(x, y)]
+    polygons = [
+        Polygon(
+            [
+                (a, b),
+                (a + step_size, b),
+                (a + step_size, b + step_size),
+                (a, b + step_size),
+            ]
+        )
+        for a, b in product(x, y)
+    ]
 
     # Converting polygons to GeoDataFrame
-    gdf_mask = gpd.GeoDataFrame(geometry=polygons,
-                                crs=gdf.crs)
+    gdf_mask = gpd.GeoDataFrame(geometry=polygons, crs=gdf.crs)
 
     # Dropping duplicate cells
     gdf_mask = gdf_mask.drop_duplicates(ignore_index=True)
 
     # Cropping the gdf if crop_gdf is True
     if crop_gdf:
-        gdf_mask = gdf_mask.sjoin(gdf).reset_index()[['geometry']]
+        gdf_mask = gdf_mask.sjoin(gdf).reset_index()[["geometry"]]
 
     return gdf_mask
 
 
-def refine_mask(mask: gpd.GeoDataFrame,
-                data: gpd.GeoDataFrame,
-                num_of_points: int,
-                cell_size: int,
-                area_limit: Union[float, int] = None) -> gpd.GeoDataFrame:
+def refine_mask(
+    mask: gpd.GeoDataFrame,
+    data: gpd.GeoDataFrame,
+    num_of_points: int,
+    cell_size: int,
+    area_limit: Union[float, int] = None,
+) -> gpd.GeoDataFrame:
     """Refine polygon mask.
 
     Parameters
@@ -174,24 +179,24 @@ def refine_mask(mask: gpd.GeoDataFrame,
     """
     # Checking that the mask is of type GeoDataFrame
     if not isinstance(mask, gpd.GeoDataFrame):
-        raise TypeError('Mask must be provided as GeoPandas GeoDataFrame.')
+        raise TypeError("Mask must be provided as GeoPandas GeoDataFrame.")
 
     # Checking that the data is of type GeoDataFrame
     if not isinstance(data, gpd.GeoDataFrame):
-        raise TypeError('Input data must be provided as GeoPandas GeoDataFrame.')
+        raise TypeError("Input data must be provided as GeoPandas GeoDataFrame.")
 
     # Checking that the number of points is of type int
     if not isinstance(num_of_points, int):
-        raise TypeError('Number of points must be provided as int.')
+        raise TypeError("Number of points must be provided as int.")
 
     # Checking that the cell size is of type int
     if not isinstance(cell_size, int):
-        raise TypeError('Cell size must be provided as int.')
+        raise TypeError("Cell size must be provided as int.")
 
     # Checking that the area limit is of type float
     if area_limit:
         if not isinstance(area_limit, (float, int)):
-            raise TypeError('Area limit must be provided as type float.')
+            raise TypeError("Area limit must be provided as type float.")
 
     # Only select already redefined polygons for further refinement
     mask_above_limit = pd.DataFrame()
@@ -200,39 +205,47 @@ def refine_mask(mask: gpd.GeoDataFrame,
         mask = mask[mask.area <= area_limit].reset_index(drop=True)
 
     # Create centroids of geometries
-    data['geometry'] = data.centroid
+    data["geometry"] = data.centroid
 
     # Join data with grid
-    grid_joined = gpd.sjoin(left_df=data,
-                            right_df=mask)
+    grid_joined = gpd.sjoin(left_df=data, right_df=mask)
 
     # Count number of points per polygon
-    df_value_counts = pd.DataFrame(data=grid_joined['index_right'].value_counts())
+    df_value_counts = pd.DataFrame(data=grid_joined["index_right"].value_counts())
 
     # Filter df_value_counts by threshold number of data points within one Polygon
-    df_sel = df_value_counts[df_value_counts['count'] >= num_of_points]
+    df_sel = df_value_counts[df_value_counts["count"] >= num_of_points]
 
     # Select Polygons from mask
     grid_sel = mask.iloc[df_sel.index].sort_index().reset_index(drop=True)
 
     # Create masks within selected polygons
-    grid_ref = pd.concat([create_polygon_mask(gdf=grid_sel.iloc[i]['geometry'],
-                                              step_size=cell_size,
-                                              crs=mask.crs) for i in range(len(grid_sel))]).reset_index(drop=True)
+    grid_ref = pd.concat(
+        [
+            create_polygon_mask(
+                gdf=grid_sel.iloc[i]["geometry"], step_size=cell_size, crs=mask.crs
+            )
+            for i in range(len(grid_sel))
+        ]
+    ).reset_index(drop=True)
 
     # Drop old polygons
     grid_dropped = mask.drop(index=df_sel.index).reset_index(drop=True)
 
     # Merge GeoDataFrames
-    grid_refs = pd.concat([mask_above_limit, grid_dropped, grid_ref]).reset_index(drop=True)
+    grid_refs = pd.concat([mask_above_limit, grid_dropped, grid_ref]).reset_index(
+        drop=True
+    )
 
     return grid_refs
 
 
-def quad_tree_mask_refinement(mask: gpd.GeoDataFrame,
-                              data: gpd.GeoDataFrame,
-                              max_depth: int = 4,
-                              num_of_points: Union[int, list] = 100) -> gpd.GeoDataFrame:
+def quad_tree_mask_refinement(
+    mask: gpd.GeoDataFrame,
+    data: gpd.GeoDataFrame,
+    max_depth: int = 4,
+    num_of_points: Union[int, list] = 100,
+) -> gpd.GeoDataFrame:
     """Quad Tree Mask Refinement.
 
     Parameters
@@ -280,19 +293,21 @@ def quad_tree_mask_refinement(mask: gpd.GeoDataFrame,
     """
     # Checking that the mask is of type GeoDataFrame
     if not isinstance(mask, gpd.GeoDataFrame):
-        raise TypeError('The mask must be provided as GeoDataFrame.')
+        raise TypeError("The mask must be provided as GeoDataFrame.")
 
     # Checking that the data is of type GeoDataFrame
     if not isinstance(data, gpd.GeoDataFrame):
-        raise TypeError('The data must be provided as GeoDataFrame.')
+        raise TypeError("The data must be provided as GeoDataFrame.")
 
     # Checking that the max_depth is of type int
     if not isinstance(max_depth, int):
-        raise TypeError('The max_depth must be provided as int.')
+        raise TypeError("The max_depth must be provided as int.")
 
     # Checking that the number of points is either an integer or a list
     if not isinstance(num_of_points, (int, list)):
-        raise TypeError('The number of points must be provided as integer or list of integers.')
+        raise TypeError(
+            "The number of points must be provided as integer or list of integers."
+        )
 
     # Getting the original size of the cells
     original_cell_size = np.sqrt(mask.iloc[0].geometry.area)
@@ -306,19 +321,20 @@ def quad_tree_mask_refinement(mask: gpd.GeoDataFrame,
         if i == 0:
             area_limit = None
         else:
-            area_limit = int(original_cell_size / 2 ** i) * int(original_cell_size / 2 ** i)
+            area_limit = int(original_cell_size / 2**i) * int(original_cell_size / 2**i)
 
         # Refining mask
-        mask = refine_mask(mask=mask,
-                           data=data,
-                           num_of_points=num_of_points[i],
-                           cell_size=int(original_cell_size / 2 ** (i + 1)),
-                           area_limit=area_limit)
+        mask = refine_mask(
+            mask=mask,
+            data=data,
+            num_of_points=num_of_points[i],
+            cell_size=int(original_cell_size / 2 ** (i + 1)),
+            area_limit=area_limit,
+        )
     return mask
 
 
-def vectorize_raster(path: str,
-                     merge_polygons: bool = True) -> gpd.GeoDataFrame:
+def vectorize_raster(path: str, merge_polygons: bool = True) -> gpd.GeoDataFrame:
     """Vectorize Raster.
 
     Parameters
@@ -364,35 +380,28 @@ def vectorize_raster(path: str,
     """
     # Checking that the path is provided as str
     if not isinstance(path, str):
-        raise TypeError('The path must be provided as string')
+        raise TypeError("The path must be provided as string")
 
     # Checking that merge_polygon is provided as bool
     if not isinstance(merge_polygons, bool):
-        raise TypeError('merge_polygons must be either True or False')
+        raise TypeError("merge_polygons must be either True or False")
 
     # Opening raster
     with rasterio.open(path) as src:
-        data = src.read(1,
-                        masked=True)
+        data = src.read(1, masked=True)
 
         # Adding small random value to raster value to split pixels into separate polygons
         if not merge_polygons:
-            val = np.random.uniform(0,
-                                    0.001,
-                                    size=data.shape).astype(np.float32)
+            val = np.random.uniform(0, 0.001, size=data.shape).astype(np.float32)
             data = data + val
 
         # Using a generator instead of a list
-        shape_gen = ((shape(s),
-                      v) for s,
-                             v in shapes(data,
-                                         transform=src.transform))
+        shape_gen = ((shape(s), v) for s, v in shapes(data, transform=src.transform))
 
         # or build a dict from unpacked shapes
-        gdf = gpd.GeoDataFrame(dict(zip(["geometry",
-                                         "class"],
-                                        zip(*shape_gen))),
-                               crs=src.crs)
+        gdf = gpd.GeoDataFrame(
+            dict(zip(["geometry", "class"], zip(*shape_gen))), crs=src.crs
+        )
 
     return gdf
 
@@ -435,15 +444,16 @@ def create_outline(gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     """
     # Checking that the gdf is of type GeoDataFrame
     if not isinstance(gdf, gpd.GeoDataFrame):
-        raise TypeError('The gdf must be provided as GeoDataFrame')
+        raise TypeError("The gdf must be provided as GeoDataFrame")
 
-    return gpd.GeoDataFrame(geometry=[box(*gdf.total_bounds)],
-                            crs=gdf.crs)
+    return gpd.GeoDataFrame(geometry=[box(*gdf.total_bounds)], crs=gdf.crs)
 
 
-def _check_hd_input(hd_gdf: gpd.GeoDataFrame,
-                    mask_gdf: Union[gpd.GeoDataFrame, Polygon],
-                    hd_data_column: str = ''):
+def _check_hd_input(
+    hd_gdf: gpd.GeoDataFrame,
+    mask_gdf: Union[gpd.GeoDataFrame, Polygon],
+    hd_data_column: str = "",
+):
     """Check heat demand input data.
 
     Parameters
@@ -472,24 +482,23 @@ def _check_hd_input(hd_gdf: gpd.GeoDataFrame,
     """
     # Converting Shapely Polygon to GeoDataFrame
     if isinstance(mask_gdf, Polygon):
-        mask_gdf = gpd.GeoDataFrame(geometry=[mask_gdf],
-                                    crs=hd_gdf.crs)
+        mask_gdf = gpd.GeoDataFrame(geometry=[mask_gdf], crs=hd_gdf.crs)
 
     # Checking that the hd_gdf is of type GeoDataFrame
     if not isinstance(hd_gdf, gpd.GeoDataFrame):
-        raise TypeError('The heat demand gdf must be provided as GeoDataFrame')
+        raise TypeError("The heat demand gdf must be provided as GeoDataFrame")
 
     # Checking that the mask_gdf is of type GeoDataFrame
     if not isinstance(mask_gdf, gpd.GeoDataFrame):
-        raise TypeError('The mask gdf must be provided as GeoDataFrame')
+        raise TypeError("The mask gdf must be provided as GeoDataFrame")
 
     # Checking that the Heat Demand Data Column is provided as string
     if not isinstance(hd_data_column, str):
-        raise TypeError('The heat demand data column must be provided as string')
+        raise TypeError("The heat demand data column must be provided as string")
 
     # Checking that the HD Data Column is in the HD GeoDataFrame
     if hd_data_column not in hd_gdf:
-        raise ValueError('%s is not a column in the GeoDataFrame' % hd_data_column)
+        raise ValueError("%s is not a column in the GeoDataFrame" % hd_data_column)
 
     # Reprojecting Data if necessary
     if mask_gdf.crs != hd_gdf.crs:
@@ -502,19 +511,21 @@ def _check_hd_input(hd_gdf: gpd.GeoDataFrame,
     # Assigning area to Polygons
     if all(shapely.get_type_id(hd_gdf.geometry) == 3):
         # Assigning area of original geometries to GeoDataFrame
-        hd_gdf['area'] = hd_gdf.area
+        hd_gdf["area"] = hd_gdf.area
 
     # Assigning lengths to LineStrings
     elif all(shapely.get_type_id(hd_gdf.geometry) == 1):
         # Assigning length of original geometries to GeoDataFrame
-        hd_gdf['length'] = hd_gdf.length
+        hd_gdf["length"] = hd_gdf.length
 
     return hd_gdf, mask_gdf, hd_data_column
 
 
-def calculate_hd(hd_gdf: gpd.GeoDataFrame,
-                 mask_gdf: Union[gpd.GeoDataFrame, Polygon],
-                 hd_data_column: str = '') -> gpd.GeoDataFrame:
+def calculate_hd(
+    hd_gdf: gpd.GeoDataFrame,
+    mask_gdf: Union[gpd.GeoDataFrame, Polygon],
+    hd_data_column: str = "",
+) -> gpd.GeoDataFrame:
     """Calculate Heat Demand.
 
     Parameters
@@ -564,54 +575,51 @@ def calculate_hd(hd_gdf: gpd.GeoDataFrame,
 
     """
     # Checking input data
-    hd_gdf, mask_gdf, hd_data_column = _check_hd_input(hd_gdf=hd_gdf,
-                                                       mask_gdf=mask_gdf,
-                                                       hd_data_column=hd_data_column)
+    hd_gdf, mask_gdf, hd_data_column = _check_hd_input(
+        hd_gdf=hd_gdf, mask_gdf=mask_gdf, hd_data_column=hd_data_column
+    )
 
     # Overlaying Heat Demand Data with Mask
-    overlay = gpd.overlay(df1=hd_gdf,
-                          df2=mask_gdf)
+    overlay = gpd.overlay(df1=hd_gdf, df2=mask_gdf)
 
     # Calculate HD for Polygons
     if all(shapely.get_type_id(hd_gdf.geometry) == 3):
         # Assigning area of splitted geometries to GeoDataFrame
-        overlay['area_new'] = overlay.area
+        overlay["area_new"] = overlay.area
 
         # Calculating the share of the original Heat Demand for each splitted geometry
-        overlay['HD'] = overlay[hd_data_column] * overlay['area_new'] / overlay['area']
+        overlay["HD"] = overlay[hd_data_column] * overlay["area_new"] / overlay["area"]
 
     #  Calculate HD for LineStrings
     elif all(shapely.get_type_id(hd_gdf.geometry) == 1):
         # Assigning length of splitted geometries to GeoDataFrame
-        overlay['length_new'] = overlay.length
+        overlay["length_new"] = overlay.length
 
         # Calculating the share of the original Heat Demand for each splitted geometry
-        overlay['HD'] = overlay[hd_data_column] * overlay['length_new'] / overlay['length']
+        overlay["HD"] = (
+            overlay[hd_data_column] * overlay["length_new"] / overlay["length"]
+        )
 
     # Calculate HD for Points
     elif all(shapely.get_type_id(hd_gdf.geometry) == 0):
-        overlay['HD'] = overlay[hd_data_column]
+        overlay["HD"] = overlay[hd_data_column]
 
     # Assigning centroid as geometry for spatial join
-    overlay['geometry'] = overlay.centroid
+    overlay["geometry"] = overlay.centroid
 
     # Spatial join of overlay and mask
-    leftjoin_gdf = gpd.sjoin(left_df=overlay,
-                             right_df=mask_gdf,
-                             how='left')
+    leftjoin_gdf = gpd.sjoin(left_df=overlay, right_df=mask_gdf, how="left")
 
     # Adding the heat demand for each raster cell
-    gdf_grouped = (leftjoin_gdf.groupby('index_right')['HD'].sum())
+    gdf_grouped = leftjoin_gdf.groupby("index_right")["HD"].sum()
 
     # Concatenating cut polygons with mask polygons
-    gdf_hd = pd.concat([gdf_grouped,
-                        mask_gdf],
-                       axis=1)
+    gdf_hd = pd.concat([gdf_grouped, mask_gdf], axis=1)
 
     # Creating GeoDataFrame
-    gdf_hd = gpd.GeoDataFrame(geometry=gdf_hd['geometry'],
-                              data=gdf_hd,
-                              crs=mask_gdf.crs)
+    gdf_hd = gpd.GeoDataFrame(
+        geometry=gdf_hd["geometry"], data=gdf_hd, crs=mask_gdf.crs
+    )
 
     # Filling NaNs
     gdf_hd.dropna(inplace=True)
@@ -620,15 +628,16 @@ def calculate_hd(hd_gdf: gpd.GeoDataFrame,
     gdf_hd = gdf_hd.drop_duplicates()
 
     # Resetting index
-    gdf_hd = gdf_hd.reset_index().drop('index',
-                                       axis=1)
+    gdf_hd = gdf_hd.reset_index().drop("index", axis=1)
 
     return gdf_hd
 
 
-def calculate_hd_sindex(hd_gdf: gpd.GeoDataFrame,
-                        mask_gdf: Union[gpd.GeoDataFrame, Polygon],
-                        hd_data_column: str = '') -> gpd.GeoDataFrame:
+def calculate_hd_sindex(
+    hd_gdf: gpd.GeoDataFrame,
+    mask_gdf: Union[gpd.GeoDataFrame, Polygon],
+    hd_data_column: str = "",
+) -> gpd.GeoDataFrame:
     """Calculate Heat Demand using Spatial Indices.
 
     Parameters
@@ -673,35 +682,38 @@ def calculate_hd_sindex(hd_gdf: gpd.GeoDataFrame,
 
     """
     # Checking input data
-    hd_gdf, mask_gdf, hd_data_column = _check_hd_input(hd_gdf=hd_gdf,
-                                                       mask_gdf=mask_gdf,
-                                                       hd_data_column=hd_data_column)
+    hd_gdf, mask_gdf, hd_data_column = _check_hd_input(
+        hd_gdf=hd_gdf, mask_gdf=mask_gdf, hd_data_column=hd_data_column
+    )
 
     # Querying spatial index
     grid_ix, buildings_ix = hd_gdf.sindex.query(mask_gdf.geometry, predicate=None)
 
     # Getting heat demand per mask cell
-    heat_per_grid_cell = hd_gdf[hd_data_column].iloc[buildings_ix].groupby(grid_ix).sum()
+    heat_per_grid_cell = (
+        hd_gdf[hd_data_column].iloc[buildings_ix].groupby(grid_ix).sum()
+    )
 
     # Creating GeoDataFrame
     gdf_hd = mask_gdf.iloc[pd.DataFrame(heat_per_grid_cell).index]
 
     # Assigning Heat Demand Values
-    gdf_hd['HD'] = heat_per_grid_cell.values
+    gdf_hd["HD"] = heat_per_grid_cell.values
 
     # Resetting index
-    gdf_hd = gdf_hd.reset_index().drop('index',
-                                       axis=1)
+    gdf_hd = gdf_hd.reset_index().drop("index", axis=1)
 
     return gdf_hd
 
 
-def rasterize_gdf_hd(gdf_hd: gpd.GeoDataFrame,
-                     path_out: str,
-                     crs: Union[str, pyproj.crs.crs.CRS] = 'EPSG:3034',
-                     xsize: int = 100,
-                     ysize: int = 100,
-                     flip_raster : bool = True):
+def rasterize_gdf_hd(
+    gdf_hd: gpd.GeoDataFrame,
+    path_out: str,
+    crs: Union[str, pyproj.crs.crs.CRS] = "EPSG:3034",
+    xsize: int = 100,
+    ysize: int = 100,
+    flip_raster: bool = True,
+):
     """Rasterize Heat Demand GeoDataFrame and save as raster.
 
     Parameters
@@ -732,35 +744,34 @@ def rasterize_gdf_hd(gdf_hd: gpd.GeoDataFrame,
     """
     # Checking that the gdf_hd if of type GeoDataFrame
     if not isinstance(gdf_hd, gpd.GeoDataFrame):
-        raise TypeError('The gdf_hd must be provided as GeoDataFrame')
+        raise TypeError("The gdf_hd must be provided as GeoDataFrame")
 
     # Checking that the output path is of type string
     if not isinstance(path_out, str):
-        raise TypeError('The output path must be provided as string')
+        raise TypeError("The output path must be provided as string")
 
     # Checking that the CRS is provided as string or Pyproj CRS
     if not isinstance(crs, (str, pyproj.crs.crs.CRS)):
-        raise TypeError('The CRS must be provided as string or PyProj CRS')
+        raise TypeError("The CRS must be provided as string or PyProj CRS")
 
     # Checking that the xsize is of type int
     if not isinstance(xsize, int):
-        raise TypeError('The xsize must be provided as int')
+        raise TypeError("The xsize must be provided as int")
 
     # Checking that the ysize is of type int
     if not isinstance(ysize, int):
-        raise TypeError('The ysize must be provided as int')
+        raise TypeError("The ysize must be provided as int")
 
     # Checking that the flip_raster variable is of type bool
     if not isinstance(flip_raster, int):
-        raise TypeError('The flip_raster value must be provided as bool')
+        raise TypeError("The flip_raster value must be provided as bool")
 
     # Creating array with the length of polygons in x and y direction
     x = np.arange(gdf_hd.total_bounds[0], gdf_hd.total_bounds[2], xsize)
     y = np.arange(gdf_hd.total_bounds[1], gdf_hd.total_bounds[3], ysize)
 
     # Creating matrix
-    matrix = np.zeros(len(y) * len(x)).reshape(len(y),
-                                               len(x))
+    matrix = np.zeros(len(y) * len(x)).reshape(len(y), len(x))
     # Creating transform
     if flip_raster:
         transform = rasterio.transform.from_origin(x[0], y[-1], xsize, ysize)
@@ -769,46 +780,50 @@ def rasterize_gdf_hd(gdf_hd: gpd.GeoDataFrame,
 
     # Saving mask raster
     with rasterio.open(
-            path_out.split('.tif')[0] + '_temp.tif',
-            'w',
-            driver='GTiff',
-            height=matrix.shape[0],
-            width=matrix.shape[1],
-            count=1,
-            dtype=matrix.dtype,
-            crs=crs,
-            transform=transform,
-            nodata=-9999
+        path_out.split(".tif")[0] + "_temp.tif",
+        "w",
+        driver="GTiff",
+        height=matrix.shape[0],
+        width=matrix.shape[1],
+        count=1,
+        dtype=matrix.dtype,
+        crs=crs,
+        transform=transform,
+        nodata=-9999,
     ) as dst:
         dst.write(matrix, 1)
 
     # Copy meta data
-    rst = rasterio.open(path_out.split('.tif')[0] + '_temp.tif')
+    rst = rasterio.open(path_out.split(".tif")[0] + "_temp.tif")
     meta = rst.meta.copy()
-    meta.update(compress='lzw')
+    meta.update(compress="lzw")
 
     # Rasterization of the quadratic-polygon-shapefile using the rasterize-function from rasterio
-    with rasterio.open(path_out, 'w+', **meta) as out:
+    with rasterio.open(path_out, "w+", **meta) as out:
         out_arr = out.read(1)
 
         # this is where the code creates a generator of geom, value pairs (geometry and HD_new) to use in rasterizing
-        shapes = list(zip(gdf_hd['geometry'], gdf_hd['HD']))
+        shapes = list(zip(gdf_hd["geometry"], gdf_hd["HD"]))
 
-        burned = rasterio.features.rasterize(shapes=shapes, fill=0, out=out_arr, transform=out.transform)
+        burned = rasterio.features.rasterize(
+            shapes=shapes, fill=0, out=out_arr, transform=out.transform
+        )
         out.write_band(1, burned)
 
     # Closing and deleting dataset
     rst.close()
-    os.remove(path_out.split('.tif')[0] + '_temp.tif')
+    os.remove(path_out.split(".tif")[0] + "_temp.tif")
     out.close()
 
 
-def obtain_coordinates_from_addresses(df: pd.DataFrame,
-                                      street_column: str,
-                                      house_number_column: str,
-                                      postal_code_column: str,
-                                      location_column: str,
-                                      output_crs: Union[str, pyproj.crs.crs.CRS]) -> gpd.GeoDataFrame:
+def obtain_coordinates_from_addresses(
+    df: pd.DataFrame,
+    street_column: str,
+    house_number_column: str,
+    postal_code_column: str,
+    location_column: str,
+    output_crs: Union[str, pyproj.crs.crs.CRS],
+) -> gpd.GeoDataFrame:
     """Obtain coordinates from building addresses.
 
     Parameters
@@ -867,53 +882,67 @@ def obtain_coordinates_from_addresses(df: pd.DataFrame,
     """
     # Checking that the address DataFrame is of type DataFrame
     if not isinstance(df, pd.DataFrame):
-        raise TypeError('Addresses must be provided as Pandas DataFrame')
+        raise TypeError("Addresses must be provided as Pandas DataFrame")
 
     # Checking that the column is of type string
     if not isinstance(street_column, str):
-        raise TypeError('Column names must be provided as string')
+        raise TypeError("Column names must be provided as string")
 
     # Checking that the column is of type string
     if not isinstance(house_number_column, str):
-        raise TypeError('Column names must be provided as string')
+        raise TypeError("Column names must be provided as string")
 
     # Checking that the column is of type string
     if not isinstance(postal_code_column, str):
-        raise TypeError('Column names must be provided as string')
+        raise TypeError("Column names must be provided as string")
 
     # Checking that the column is of type string
     if not isinstance(location_column, str):
-        raise TypeError('Column names must be provided as string')
+        raise TypeError("Column names must be provided as string")
 
     # Checking that the output crs is of type string or PyProj CRS
     if not isinstance(output_crs, (str, pyproj.crs.crs.CRS)):
-        raise TypeError('The output CRS must be provided as string or PyProj CRS')
+        raise TypeError("The output CRS must be provided as string or PyProj CRS")
 
     # Converting the data types of the columns
-    df = df.astype({street_column: 'str',
-                    house_number_column: 'str',
-                    postal_code_column: 'str',
-                    location_column: 'str'})
+    df = df.astype(
+        {
+            street_column: "str",
+            house_number_column: "str",
+            postal_code_column: "str",
+            location_column: "str",
+        }
+    )
 
     # Modifying the addresses
-    df['address'] = df[[street_column, house_number_column, postal_code_column, location_column]].apply(
-        lambda x: ' '.join(x), axis=1)
+    df["address"] = df[
+        [street_column, house_number_column, postal_code_column, location_column]
+    ].apply(lambda x: " ".join(x), axis=1)
 
     # Extracting the coordinates from the addresses
-    coordinates = [geopy.geocoders.Nominatim(user_agent=df['address'].iloc[i]).geocode(df['address'].iloc[i]) for i in
-                   tqdm(range(len(df)))]
+    coordinates = [
+        geopy.geocoders.Nominatim(user_agent=df["address"].iloc[i]).geocode(
+            df["address"].iloc[i]
+        )
+        for i in tqdm(range(len(df)))
+    ]
 
     # Creating GeoDataFrame
-    gdf = gpd.GeoDataFrame(geometry=gpd.points_from_xy([coordinates[i][1][1] for i in range(len(coordinates))],
-                                                       [coordinates[i][1][0] for i in range(len(coordinates))],
-                                                       crs='EPSG:4326'),
-                           data=df).to_crs(output_crs)
+    gdf = gpd.GeoDataFrame(
+        geometry=gpd.points_from_xy(
+            [coordinates[i][1][1] for i in range(len(coordinates))],
+            [coordinates[i][1][0] for i in range(len(coordinates))],
+            crs="EPSG:4326",
+        ),
+        data=df,
+    ).to_crs(output_crs)
 
     return gdf
 
 
-def get_building_footprint(point: shapely.geometry.Point,
-                           dist: int) -> gpd.GeoDataFrame:
+def get_building_footprint(
+    point: shapely.geometry.Point, dist: int
+) -> gpd.GeoDataFrame:
     """Get Building footprint from Shapely Point.
 
     Parameters
@@ -962,26 +991,27 @@ def get_building_footprint(point: shapely.geometry.Point,
 
     # Checking that the point is a Shapely Point
     if not isinstance(point, shapely.geometry.Point):
-        raise TypeError('Point must be provided as Shapely Point')
+        raise TypeError("Point must be provided as Shapely Point")
 
     # Checking that the distance is provided as int
     if not isinstance(dist, int):
-        raise TypeError('Distance must be provided as int')
+        raise TypeError("Distance must be provided as int")
 
     try:
-        gdf = osmnx.features.features_from_point(center_point=(list(point.coords)[0][1],
-                                                               list(point.coords)[0][0]),
-                                                 tags={'building': True},
-                                                 dist=dist)
+        gdf = osmnx.features.features_from_point(
+            center_point=(list(point.coords)[0][1], list(point.coords)[0][0]),
+            tags={"building": True},
+            dist=dist,
+        )
     except:
-        gdf = gpd.GeoDataFrame(columns=['id', 'geometry'], geometry='geometry')
+        gdf = gpd.GeoDataFrame(columns=["id", "geometry"], geometry="geometry")
 
     return gdf
 
 
-def get_building_footprints(points: gpd.GeoDataFrame,
-                            dist: int,
-                            perform_sjoin: bool = True) -> gpd.GeoDataFrame:
+def get_building_footprints(
+    points: gpd.GeoDataFrame, dist: int, perform_sjoin: bool = True
+) -> gpd.GeoDataFrame:
     """Get Building footprints from GeoDataFrame.
 
     Parameters
@@ -1032,25 +1062,28 @@ def get_building_footprints(points: gpd.GeoDataFrame,
     """
     # Checking that the points are provided as GeoDataFrame
     if not isinstance(points, gpd.GeoDataFrame):
-        raise TypeError('Points must be provided as GeoDataFrame')
+        raise TypeError("Points must be provided as GeoDataFrame")
 
     # Checking that the distance is provided as int
     if not isinstance(dist, int):
-        raise TypeError('Distance must be provided as int')
+        raise TypeError("Distance must be provided as int")
 
     # Checking that the perform_sjoin is provided as bool
     if not isinstance(perform_sjoin, bool):
-        raise TypeError('perform_sjoin must be provided as bool')
+        raise TypeError("perform_sjoin must be provided as bool")
 
     # Reprojecting GeoDataFrame
-    if points.crs != 'EPSG:4326':
+    if points.crs != "EPSG:4326":
         crs = points.crs
-        points = points.to_crs('EPSG:4326')
+        points = points.to_crs("EPSG:4326")
     else:
-        crs = 'EPSG:4326'
+        crs = "EPSG:4326"
 
     # Getting GeoDataFrames
-    gdfs = [get_building_footprint(points['geometry'].iloc[i], dist=dist) for i in tqdm(range(len(points)))]
+    gdfs = [
+        get_building_footprint(points["geometry"].iloc[i], dist=dist)
+        for i in tqdm(range(len(points)))
+    ]
 
     # Concatenate GeoDataFrames
     gdf = pd.concat(gdfs)
@@ -1065,8 +1098,7 @@ def get_building_footprints(points: gpd.GeoDataFrame,
     return gdf
 
 
-def merge_rasters(file_names: list,
-                  path_out: str) -> rasterio.io.DatasetReader:
+def merge_rasters(file_names: list, path_out: str) -> rasterio.io.DatasetReader:
     """Merge rasters.
 
     Parameters
@@ -1095,7 +1127,7 @@ def merge_rasters(file_names: list,
 
     # Checking that the file names are stored in a list
     if not isinstance(file_names, list):
-        raise TypeError('The file names must be provided as list')
+        raise TypeError("The file names must be provided as list")
 
     # Opening Files
     files = [rasterio.open(path) for path in file_names]
@@ -1107,34 +1139,35 @@ def merge_rasters(file_names: list,
     out_meta = files[0].meta.copy()
 
     # Updating Meta Data
-    out_meta.update({"driver": "GTiff",
-                     "height": mosaic.shape[1],
-                     "width": mosaic.shape[2],
-                     "transform": out_trans,
-                     "crs": files[0].crs
-                     }
-                    )
+    out_meta.update(
+        {
+            "driver": "GTiff",
+            "height": mosaic.shape[1],
+            "width": mosaic.shape[2],
+            "transform": out_trans,
+            "crs": files[0].crs,
+        }
+    )
 
     # Removing existing file
     os.remove(path_out)
 
     # Saving file
-    with rasterio.open(path_out,
-                       "w",
-                       **out_meta) as dest:
+    with rasterio.open(path_out, "w", **out_meta) as dest:
         dest.write(mosaic)
 
     # Closing file
     dest.close()
 
-    print('Raster successfully merged')
+    print("Raster successfully merged")
 
 
-def calculate_zonal_stats(path_mask: str,
-                          path_raster: str,
-                          crs: Union[str, pyproj.crs.crs.CRS],
-                          calculate_heated_area: bool = True
-                          ) -> gpd.GeoDataFrame:
+def calculate_zonal_stats(
+    path_mask: str,
+    path_raster: str,
+    crs: Union[str, pyproj.crs.crs.CRS],
+    calculate_heated_area: bool = True,
+) -> gpd.GeoDataFrame:
     """Calculate zonal statistics and return GeoDataFrame.
 
     Parameters
@@ -1192,73 +1225,76 @@ def calculate_zonal_stats(path_mask: str,
     """
     # Checking that the path to the mask is of type string
     if not isinstance(path_mask, str):
-        raise TypeError('The path to the mask must be provided as string')
+        raise TypeError("The path to the mask must be provided as string")
 
     # Checking that the path to the raster is of type string
     if not isinstance(path_raster, str):
-        raise TypeError('The path to the raster must be provided as string')
+        raise TypeError("The path to the raster must be provided as string")
 
     # Checking that the CRS is of type string or a pyproj CRS object
     if not isinstance(crs, (str, pyproj.crs.crs.CRS)):
-        raise TypeError('The CRS must be provided as string or pyproj object')
+        raise TypeError("The CRS must be provided as string or pyproj object")
 
     # Checking that the boolean value for calculate_heated_area is a boolean
     if not isinstance(calculate_heated_area, bool):
-        raise TypeError('calculate_heatead_area value must be provided as bool')
+        raise TypeError("calculate_heatead_area value must be provided as bool")
 
     # Calculating zonal statistics
-    stats = zonal_stats(vectors=path_mask,
-                        raster=path_raster,
-                        stats="count min mean max median sum std",
-                        geojson_out=True)
+    stats = zonal_stats(
+        vectors=path_mask,
+        raster=path_raster,
+        stats="count min mean max median sum std",
+        geojson_out=True,
+    )
 
     # Converting zonal statistics to GeoDataFrame
     gdf = gpd.GeoDataFrame.from_features(stats)
 
     # Calculating total heat demand
-    total_hd = sum(gdf['sum'])
+    total_hd = sum(gdf["sum"])
 
     # Calculating total area
     total_area = sum(gdf.area)
 
     # Assigning the area of the Polygons to the DataFrame
     # NB: GeoPandas calculated the planimetric area; for larger regions, the ellipsoidal area should be calculated
-    gdf['Area (planimetric)'] = gdf.area
+    gdf["Area (planimetric)"] = gdf.area
 
     # Calculating the total heat demand per geometry
-    gdf['Total Heat Demand'] = gdf['sum']
+    gdf["Total Heat Demand"] = gdf["sum"]
 
     # Calculating the average heat demand per unit area
-    gdf['Average Heat demand per unit area'] = gdf['mean']
+    gdf["Average Heat demand per unit area"] = gdf["mean"]
 
     # Calculating share of total heat demand for every geometry
-    gdf['Share of Total HD [%]'] = gdf['sum'] * 100 / total_hd
+    gdf["Share of Total HD [%]"] = gdf["sum"] * 100 / total_hd
 
     # Calculating share of total area for every geometry
-    gdf['Share of Total Area [%]'] = gdf.area * 100 / total_area
+    gdf["Share of Total Area [%]"] = gdf.area * 100 / total_area
 
     if calculate_heated_area:
         # Opening raster to get resolution
         raster = rasterio.open(path_raster)
 
         # Calculating for heated area
-        gdf['Heated Area'] = gdf['count'] * raster.res[0] * raster.res[1]
+        gdf["Heated Area"] = gdf["count"] * raster.res[0] * raster.res[1]
 
         # Calculating share for heated area
-        gdf['Share of Heated Area [%]'] = gdf['Heated Area'] * 100 / gdf.area
+        gdf["Share of Heated Area [%]"] = gdf["Heated Area"] * 100 / gdf.area
 
     # Adding CRS manually as it is not passed from rasterstats,
     # see also https://github.com/perrygeo/python-rasterstats/issues/295
     gdf.crs = crs
 
     # Dropping columns
-    gdf = gdf.drop(['sum', 'mean', 'count'], axis=1)
+    gdf = gdf.drop(["sum", "mean", "count"], axis=1)
 
     return gdf
 
 
-def create_connection(linestring: shapely.geometry.LineString,
-                      point: shapely.geometry.Point) -> shapely.geometry.LineString:
+def create_connection(
+    linestring: shapely.geometry.LineString, point: shapely.geometry.Point
+) -> shapely.geometry.LineString:
     """Create LineString between Point and LineString.
 
     Parameters
@@ -1289,11 +1325,11 @@ def create_connection(linestring: shapely.geometry.LineString,
     """
     # Checking that the street segment is of type LineString
     if not isinstance(linestring, shapely.geometry.LineString):
-        raise TypeError('Street segment must be provided as Shapely LineString')
+        raise TypeError("Street segment must be provided as Shapely LineString")
 
     # Checking that the building footprint is represented by a point
     if not isinstance(point, shapely.geometry.Point):
-        raise TypeError('Building footprint must be provided as Shapely Point')
+        raise TypeError("Building footprint must be provided as Shapely Point")
 
     # Find distance on line that is closest to the point
     projected_point = linestring.project(point)
@@ -1307,9 +1343,11 @@ def create_connection(linestring: shapely.geometry.LineString,
     return linestring_connection
 
 
-def create_connections(gdf_buildings: gpd.GeoDataFrame,
-                       gdf_roads: gpd.GeoDataFrame,
-                       hd_data_column: str = None) -> gpd.GeoDataFrame:
+def create_connections(
+    gdf_buildings: gpd.GeoDataFrame,
+    gdf_roads: gpd.GeoDataFrame,
+    hd_data_column: str = None,
+) -> gpd.GeoDataFrame:
     """Create LineString between Points and LineStrings.
 
     Parameters
@@ -1354,45 +1392,50 @@ def create_connections(gdf_buildings: gpd.GeoDataFrame,
     """
     # Checking that gdf_building is of type GeoDataFrame
     if not isinstance(gdf_buildings, gpd.GeoDataFrame):
-        raise TypeError('Building footprints must be provided as GeoDataFrame')
+        raise TypeError("Building footprints must be provided as GeoDataFrame")
 
     # Checking that gdf_roads is of type GeoDataFrame
     if not isinstance(gdf_roads, gpd.GeoDataFrame):
-        raise TypeError('Road segments must be provided as GeoDataFrame')
+        raise TypeError("Road segments must be provided as GeoDataFrame")
 
     # Getting centroids of the buildings
-    gdf_buildings['geometry'] = gdf_buildings.centroid
+    gdf_buildings["geometry"] = gdf_buildings.centroid
 
     # Performing spatial join
-    gdf_joined = gpd.sjoin_nearest(gdf_buildings,
-                                   gdf_roads)
+    gdf_joined = gpd.sjoin_nearest(gdf_buildings, gdf_roads)
 
     # Creating connections between building footprints and road segments
-    linestrings_connections = [create_connection(linestring=gdf_roads.iloc[row['index_right']].geometry,
-                                                 point=row['geometry']) for index, row in gdf_joined.iterrows()]
+    linestrings_connections = [
+        create_connection(
+            linestring=gdf_roads.iloc[row["index_right"]].geometry,
+            point=row["geometry"],
+        )
+        for index, row in gdf_joined.iterrows()
+    ]
 
     # Creating GeoDataFrame from list of LineStrings
-    gdf_connections = gpd.GeoDataFrame(geometry=linestrings_connections,
-                                       crs=gdf_roads.crs)
+    gdf_connections = gpd.GeoDataFrame(
+        geometry=linestrings_connections, crs=gdf_roads.crs
+    )
 
     if hd_data_column:
 
         # Checking that the Heat Demand Data Column is provided as string
         if not isinstance(hd_data_column, str):
-            raise TypeError('The heat demand data column must be provided as string')
+            raise TypeError("The heat demand data column must be provided as string")
 
         # Checking that the HD Data Column is in the HD GeoDataFrame
         if hd_data_column not in gdf_buildings:
-            raise ValueError('%s is not a column in the GeoDataFrame' % hd_data_column)
+            raise ValueError("%s is not a column in the GeoDataFrame" % hd_data_column)
 
         gdf_connections[hd_data_column] = gdf_joined.reset_index()[hd_data_column]
 
     return gdf_connections
 
 
-def calculate_hd_street_segments(gdf_buildings: gpd.GeoDataFrame,
-                                 gdf_roads: gpd.GeoDataFrame,
-                                 hd_data_column: str) -> gpd.GeoDataFrame:
+def calculate_hd_street_segments(
+    gdf_buildings: gpd.GeoDataFrame, gdf_roads: gpd.GeoDataFrame, hd_data_column: str
+) -> gpd.GeoDataFrame:
     """Calculate heat demand for street segments based on the heat demand of the nearest houses.
 
     Parameters
@@ -1440,47 +1483,43 @@ def calculate_hd_street_segments(gdf_buildings: gpd.GeoDataFrame,
     """
     # Checking that gdf_building is of type GeoDataFrame
     if not isinstance(gdf_buildings, gpd.GeoDataFrame):
-        raise TypeError('Building footprints must be provided as GeoDataFrame')
+        raise TypeError("Building footprints must be provided as GeoDataFrame")
 
     # Checking that gdf_roads is of type GeoDataFrame
     if not isinstance(gdf_roads, gpd.GeoDataFrame):
-        raise TypeError('Road segments must be provided as GeoDataFrame')
+        raise TypeError("Road segments must be provided as GeoDataFrame")
 
     # Checking that the Heat Demand Data Column is provided as string
     if not isinstance(hd_data_column, str):
-        raise TypeError('The heat demand data column must be provided as string')
+        raise TypeError("The heat demand data column must be provided as string")
 
     # Checking that the HD Data Column is in the HD GeoDataFrame
     if hd_data_column not in gdf_buildings:
-        raise ValueError('%s is not a column in the GeoDataFrame' % hd_data_column)
+        raise ValueError("%s is not a column in the GeoDataFrame" % hd_data_column)
 
     # Getting centroids of the buildings
-    gdf_buildings['geometry'] = gdf_buildings.centroid
+    gdf_buildings["geometry"] = gdf_buildings.centroid
 
     # Performing spatial join
-    gdf_joined = gpd.sjoin_nearest(gdf_buildings,
-                                   gdf_roads)
+    gdf_joined = gpd.sjoin_nearest(gdf_buildings, gdf_roads)
     # Group Heat Demands
-    heat_demands = gdf_joined.groupby('index_right')[hd_data_column].sum()
+    heat_demands = gdf_joined.groupby("index_right")[hd_data_column].sum()
 
     # Concatenating data
-    gdf_hd = pd.concat([heat_demands,
-                        gdf_roads],
-                       axis=1)
+    gdf_hd = pd.concat([heat_demands, gdf_roads], axis=1)
 
     # Creating GeoDataFrame
-    gdf_hd = gpd.GeoDataFrame(geometry=gdf_hd['geometry'],
-                              data=gdf_hd,
-                              crs=gdf_roads.crs)
+    gdf_hd = gpd.GeoDataFrame(
+        geometry=gdf_hd["geometry"], data=gdf_hd, crs=gdf_roads.crs
+    )
 
     # Assigning normalized heat demand
-    gdf_hd['HD_normalized'] = gdf_hd[hd_data_column] / gdf_hd.length
+    gdf_hd["HD_normalized"] = gdf_hd[hd_data_column] / gdf_hd.length
 
     return gdf_hd
 
 
-def convert_dtype(path_in: str,
-                  path_out: str):
+def convert_dtype(path_in: str, path_out: str):
     """Convert dtype of raster.
 
     Parameters
@@ -1498,11 +1537,11 @@ def convert_dtype(path_in: str,
     """
     # Checking that the input path is of type string
     if not isinstance(path_in, str):
-        raise TypeError('Input path must be provided as string')
+        raise TypeError("Input path must be provided as string")
 
     # Checking that the output path is of type string
     if not isinstance(path_out, str):
-        raise TypeError('Output path must be provided as string')
+        raise TypeError("Output path must be provided as string")
 
     # Opening dataset
     with rasterio.open(path_in) as src:
@@ -1513,9 +1552,9 @@ def convert_dtype(path_in: str,
 
         # Editing meta data
         m = src.meta
-        m['count'] = 1
-        m['dtype'] = 'uint16'
+        m["count"] = 1
+        m["dtype"] = "uint16"
 
         # Saving converted dataset to file
-        with rasterio.open(path_out, 'w', **m) as dst:
+        with rasterio.open(path_out, "w", **m) as dst:
             dst.write(resband, 1)
