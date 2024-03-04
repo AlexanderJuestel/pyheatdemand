@@ -393,11 +393,7 @@ def vectorize_raster(path: str, merge_polygons: bool = True) -> gpd.GeoDataFrame
         # Adding small random value to raster value to split pixels into separate polygons
         if not merge_polygons:
             generator = np.random.default_rng(42)  # set seed number for reproducibility
-            val = generator.uniform(
-                0,
-                0.001,
-                size=data.shape
-            ).astype(np.float32)
+            val = generator.uniform(0, 0.001, size=data.shape).astype(np.float32)
             data = data + val
 
         # Using a generator instead of a list
