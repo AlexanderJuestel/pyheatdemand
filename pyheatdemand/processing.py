@@ -136,7 +136,7 @@ def refine_mask(mask: gpd.GeoDataFrame,
         num_of_points : int
             Number of points that need to be in one cell for refinement, e.g. ``num_of_points=100``.
         cell_size : int
-            Cell size of the new cells, cell size should be a divisor of of the original cell size, e.g. ``cell_size=1000``.
+            Cell size of the new cells, cell size should be a divisor of the original cell size, e.g. ``cell_size=1000``.
         area_limit : Union[float, int]
             For multiple refinements, the area limit can be defined to only further refine already refined cells, e.g. ``area_limit=10000``.
 
