@@ -64,6 +64,7 @@ test = [
     'tqdm',
     'geopy',
     'osmnx',
+    'black',
     ]
 
 [project.urls]
